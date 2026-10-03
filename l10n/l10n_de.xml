@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+        <text name="function_VariableBunker" text="Einstellbares Bunkersilo zum Vergären von Häckselgut, Gras und Heu zu Silage." />
+        <text name="configuration_VariableBunkerWidth" text="Innenbreite" />
+        <text name="configuration_VariableBunkerLength" text="Länge" />
+        <text name="configuration_VariableBunkerHeight" text="Wandhöhe" />
+    </texts>
+</l10n>

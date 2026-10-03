@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<i3D name="VariableBunker.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+  <Asset>
+    <Export program="GIANTS Editor 64bit" version="10.0.13"/>
+  </Asset>
+  <Materials>
+    <Material name="concrete" materialId="5" diffuseColor="0.42 0.44 0.45 1"/>
+    <Material name="nonRenderable" materialId="6" diffuseColor="0.5 0.5 0.5 1"/>
+  </Materials>
+  <Shapes externalShapesFile="VariableBunker.i3d.shapes">
+  </Shapes>
+  <Scene>
+    <TransformGroup name="VariableBunker" nodeId="10">
+      <TransformGroup name="walls" nodeId="11">
+        <Shape name="leftWall" translation="-5.2 2 0" scale="0.4 4 40" shapeId="1" clipDistance="500" nodeId="12" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rightWall" translation="5.2 2 0" scale="0.4 4 40" shapeId="1" clipDistance="500" nodeId="13" castsShadows="true" receiveShadows="true" materialIds="5"/>
+      </TransformGroup>
+      <TransformGroup name="collisions" nodeId="14">
+        <Shape name="leftWallCollision" translation="-5.2 2 0" scale="0.4 4 40" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="15" nonRenderable="true" materialIds="6"/>
+        <Shape name="rightWallCollision" translation="5.2 2 0" scale="0.4 4 40" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="16" nonRenderable="true" materialIds="6"/>
+      </TransformGroup>
+      <TransformGroup name="clearAreas" nodeId="17">
+        <TransformGroup name="clearAreaStart" translation="-5.4 0 -20" nodeId="18">
+          <TransformGroup name="clearAreaWidth" translation="0 0 40" nodeId="19"/>
+          <TransformGroup name="clearAreaHeight" translation="10.8 0 0" nodeId="20"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="levelAreas" nodeId="21">
+        <TransformGroup name="levelAreaStart" translation="-6.4 0 -21" nodeId="22">
+          <TransformGroup name="levelAreaWidth" translation="0 0 42" nodeId="23"/>
+          <TransformGroup name="levelAreaHeight" translation="12.8 0 0" nodeId="24"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="testAreas" nodeId="25">
+        <TransformGroup name="testAreaStart" translation="-5.4 0 -20" nodeId="26">
+          <TransformGroup name="testAreaEnd" translation="10.8 4 40" nodeId="27"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="tipOcclusionUpdateAreas" nodeId="28">
+        <TransformGroup name="tipOcclusionStart" translation="-5.4 0 -20" nodeId="29">
+          <TransformGroup name="tipOcclusionEnd" translation="10.8 0 40" nodeId="30"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="bunkerSilo" nodeId="31">
+        <TransformGroup name="siloArea" nodeId="32">
+          <TransformGroup name="siloAreaStart" translation="5 0 20" nodeId="33"/>
+          <TransformGroup name="siloAreaWidth" translation="-5 0 20" nodeId="34"/>
+          <TransformGroup name="siloAreaHeight" translation="5 0 -20" nodeId="35"/>
+          <Shape name="siloTrigger" translation="0 3 0" scale="12 6 42" shapeId="1" static="true" trigger="true" collisionFilterGroup="0x20000000" collisionFilterMask="0x110000" nodeId="36" nonRenderable="true" materialIds="6"/>
+        </TransformGroup>
+        <TransformGroup name="innerArea" nodeId="37">
+          <TransformGroup name="innerAreaStart" translation="4.75 0 19.75" nodeId="38"/>
+          <TransformGroup name="innerAreaWidth" translation="-4.75 0 19.75" nodeId="39"/>
+          <TransformGroup name="innerAreaHeight" translation="4.75 0 -19.75" nodeId="40"/>
+        </TransformGroup>
+      </TransformGroup>
+    </TransformGroup>
+  </Scene>
+</i3D>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="113">
+    <author>BLU3COW</author>
+    <version>1.0.0.0</version>
+
+    <title>
+        <en>VariableBunker</en>
+    </title>
+
+    <description>
+        <en><![CDATA[VariableBunker
+Category: Silos
+Price: $60,000
+Daily upkeep: $60
+
+A configurable drive-through bunker silo with simple concrete walls.
+
+Dimensions:
+- Interior width: 6–20 meters
+- Length: 20–80 meters
+- Wall height: 2–6 meters
+
+The selected dimensions are applied to the walls, collisions, bunker area, placement areas and interaction trigger. Chaff, grass and hay can be fermented into silage.
+
+Source code, help and issue reports: https://github.com/BLU3COW/FS25_VariableBunker]]></en>
+        <de><![CDATA[VariableBunker
+Shopkategorie: Silos
+Preis: 60.000 €
+Täglicher Unterhalt: 60 €
+
+Ein einstellbares Durchfahr-Bunkersilo mit einfachen Betonwänden.
+
+Abmessungen:
+- Innenbreite: 6–20 Meter
+- Länge: 20–80 Meter
+- Wandhöhe: 2–6 Meter
+
+Die gewählten Abmessungen werden auf Wände, Kollisionen, Silobereich, Platzierungsflächen und Interaktionstrigger angewendet. Häckselgut, Gras und Heu können zu Silage vergoren werden.
+
+Quellcode, Hilfe und Fehlermeldungen: https://github.com/BLU3COW/FS25_VariableBunker]]></de>
+        <fr><![CDATA[VariableBunker
+Catégorie : Silos
+Prix : 60 000 €
+Entretien quotidien : 60 €
+
+Un silo couloir traversant configurable avec de simples murs en béton.
+
+Dimensions :
+- Largeur intérieure : 6 à 20 mètres
+- Longueur : 20 à 80 mètres
+- Hauteur des murs : 2 à 6 mètres
+
+Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la zone du silo, aux zones de placement et au déclencheur d'interaction. La paille hachée, l'herbe et le foin peuvent être fermentés en ensilage.
+
+Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25_VariableBunker]]></fr>
+    </description>
+
+    <iconFilename>dds/icon_VariableBunker.dds</iconFilename>
+    <multiplayer supported="true" />
+    <l10n filenamePrefix="l10n/l10n" />
+
+    <extraSourceFiles>
+        <sourceFile filename="lua/VariableBunker.lua" />
+        <sourceFile filename="lua/VariableBunkerRegister.lua" />
+    </extraSourceFiles>
+
+    <placeableTypes>
+        <type name="VariableBunker" parent="simplePlaceable" filename="$dataS/scripts/placeables/Placeable.lua">
+            <specialization name="FS25_VariableBunker" />
+            <specialization name="bunkerSilo" />
+        </type>
+    </placeableTypes>
+
+    <storeItems>
+        <storeItem xmlFilename="xml/VariableBunker.xml" />
+    </storeItems>
+</modDesc>

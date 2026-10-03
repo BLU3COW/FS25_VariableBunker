@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<placeable type="VariableBunker" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../shared/xml/schema/placeable.xsd">
+    <storeData>
+        <name>VariableBunker</name>
+        <image>dds/store_VariableBunker.dds</image>
+        <price>60000</price>
+        <functions>
+            <function>$l10n_function_VariableBunker</function>
+        </functions>
+        <dailyUpkeep>60</dailyUpkeep>
+        <lifetime>1000</lifetime>
+        <rotation>0</rotation>
+        <brand>NONE</brand>
+        <species>PLACEABLE</species>
+        <category>silos</category>
+        <brush>
+            <type>placeable</type>
+            <category>buildings</category>
+            <tab>silos</tab>
+        </brush>
+        <canBeSold>true</canBeSold>
+        <showInStore>true</showInStore>
+        <storeIconRendering>
+            <settings cameraXRot="-25" advancedBoundingBox="true" />
+        </storeIconRendering>
+    </storeData>
+
+    <base>
+        <filename>i3d/VariableBunker.i3d</filename>
+        <boughtWithFarmland>true</boughtWithFarmland>
+        <canBeRenamed>true</canBeRenamed>
+    </base>
+
+    <placement useRandomYRotation="false" useManualYRotation="true" placementPositionSnapSize="0.5" placementRotationSnapAngle="90">
+        <testAreas>
+            <testArea startNode="testAreaStart" endNode="testAreaEnd" />
+        </testAreas>
+        <sounds>
+            <place template="medImp" />
+        </sounds>
+    </placement>
+
+    <clearAreas>
+        <clearArea startNode="clearAreaStart" widthNode="clearAreaWidth" heightNode="clearAreaHeight" />
+    </clearAreas>
+
+    <leveling requireLeveling="true" maxSmoothDistance="3" maxSlope="75" maxEdgeAngle="30">
+        <levelAreas>
+            <levelArea startNode="levelAreaStart" widthNode="levelAreaWidth" heightNode="levelAreaHeight" groundType="concrete" />
+        </levelAreas>
+    </leveling>
+
+    <indoorAreas />
+
+    <tipOcclusionUpdateAreas>
+        <tipOcclusionUpdateArea startNode="tipOcclusionStart" endNode="tipOcclusionEnd" />
+    </tipOcclusionUpdateAreas>
+
+    <ai>
+        <updateAreas>
+            <updateArea startNode="tipOcclusionStart" endNode="tipOcclusionEnd" />
+        </updateAreas>
+    </ai>
+
+    <VariableBunker leftWallNode="leftWall" rightWallNode="rightWall"
+                    leftCollisionNode="leftWallCollision" rightCollisionNode="rightWallCollision"
+                    interactionTriggerNode="siloTrigger"
+                    siloAreaStartNode="siloAreaStart" siloAreaWidthNode="siloAreaWidth" siloAreaHeightNode="siloAreaHeight"
+                    innerAreaStartNode="innerAreaStart" innerAreaWidthNode="innerAreaWidth" innerAreaHeightNode="innerAreaHeight"
+                    clearAreaStartNode="clearAreaStart" clearAreaWidthNode="clearAreaWidth" clearAreaHeightNode="clearAreaHeight"
+                    levelAreaStartNode="levelAreaStart" levelAreaWidthNode="levelAreaWidth" levelAreaHeightNode="levelAreaHeight"
+                    testAreaStartNode="testAreaStart" testAreaEndNode="testAreaEnd"
+                    tipOcclusionStartNode="tipOcclusionStart" tipOcclusionEndNode="tipOcclusionEnd">
+        <VariableBunkerWidthConfigurations title="$l10n_configuration_VariableBunkerWidth">
+            <VariableBunkerWidthConfiguration name="6 m" meters="6" saveId="6m" />
+            <VariableBunkerWidthConfiguration name="7 m" meters="7" saveId="7m" />
+            <VariableBunkerWidthConfiguration name="8 m" meters="8" saveId="8m" />
+            <VariableBunkerWidthConfiguration name="9 m" meters="9" saveId="9m" />
+            <VariableBunkerWidthConfiguration name="10 m" meters="10" isDefault="true" saveId="10m" />
+            <VariableBunkerWidthConfiguration name="11 m" meters="11" saveId="11m" />
+            <VariableBunkerWidthConfiguration name="12 m" meters="12" saveId="12m" />
+            <VariableBunkerWidthConfiguration name="13 m" meters="13" saveId="13m" />
+            <VariableBunkerWidthConfiguration name="14 m" meters="14" saveId="14m" />
+            <VariableBunkerWidthConfiguration name="15 m" meters="15" saveId="15m" />
+            <VariableBunkerWidthConfiguration name="16 m" meters="16" saveId="16m" />
+            <VariableBunkerWidthConfiguration name="17 m" meters="17" saveId="17m" />
+            <VariableBunkerWidthConfiguration name="18 m" meters="18" saveId="18m" />
+            <VariableBunkerWidthConfiguration name="19 m" meters="19" saveId="19m" />
+            <VariableBunkerWidthConfiguration name="20 m" meters="20" saveId="20m" />
+        </VariableBunkerWidthConfigurations>
+
+        <VariableBunkerLengthConfigurations title="$l10n_configuration_VariableBunkerLength">
+            <VariableBunkerLengthConfiguration name="20 m" meters="20" saveId="20m" />
+            <VariableBunkerLengthConfiguration name="25 m" meters="25" saveId="25m" />
+            <VariableBunkerLengthConfiguration name="30 m" meters="30" saveId="30m" />
+            <VariableBunkerLengthConfiguration name="35 m" meters="35" saveId="35m" />
+            <VariableBunkerLengthConfiguration name="40 m" meters="40" isDefault="true" saveId="40m" />
+            <VariableBunkerLengthConfiguration name="45 m" meters="45" saveId="45m" />
+            <VariableBunkerLengthConfiguration name="50 m" meters="50" saveId="50m" />
+            <VariableBunkerLengthConfiguration name="60 m" meters="60" saveId="60m" />
+            <VariableBunkerLengthConfiguration name="70 m" meters="70" saveId="70m" />
+            <VariableBunkerLengthConfiguration name="80 m" meters="80" saveId="80m" />
+        </VariableBunkerLengthConfigurations>
+
+        <VariableBunkerHeightConfigurations title="$l10n_configuration_VariableBunkerHeight">
+            <VariableBunkerHeightConfiguration name="2 m" meters="2" saveId="2m" />
+            <VariableBunkerHeightConfiguration name="3 m" meters="3" saveId="3m" />
+            <VariableBunkerHeightConfiguration name="4 m" meters="4" isDefault="true" saveId="4m" />
+            <VariableBunkerHeightConfiguration name="5 m" meters="5" saveId="5m" />
+            <VariableBunkerHeightConfiguration name="6 m" meters="6" saveId="6m" />
+        </VariableBunkerHeightConfigurations>
+    </VariableBunker>
+
+    <bunkerSilo isExtendable="false" acceptedFillTypes="chaff grass_windrow dryGrass_windrow" inputFillType="chaff" outputFillType="silage" distanceToCompactedFillLevel="100" openingLength="5">
+        <area startNode="siloAreaStart" widthNode="siloAreaWidth" heightNode="siloAreaHeight" />
+        <innerArea startNode="innerAreaStart" widthNode="innerAreaWidth" heightNode="innerAreaHeight" />
+        <interactionTrigger node="siloTrigger" />
+        <wallLeft node="leftWall" collision="leftWallCollision" />
+        <wallRight node="rightWall" collision="rightWallCollision" />
+    </bunkerSilo>
+
+    <i3dMappings>
+        <i3dMapping id="leftWall" node="0>0|0" />
+        <i3dMapping id="rightWall" node="0>0|1" />
+        <i3dMapping id="leftWallCollision" node="0>1|0" />
+        <i3dMapping id="rightWallCollision" node="0>1|1" />
+        <i3dMapping id="clearAreaStart" node="0>2|0" />
+        <i3dMapping id="clearAreaWidth" node="0>2|0|0" />
+        <i3dMapping id="clearAreaHeight" node="0>2|0|1" />
+        <i3dMapping id="levelAreaStart" node="0>3|0" />
+        <i3dMapping id="levelAreaWidth" node="0>3|0|0" />
+        <i3dMapping id="levelAreaHeight" node="0>3|0|1" />
+        <i3dMapping id="testAreaStart" node="0>4|0" />
+        <i3dMapping id="testAreaEnd" node="0>4|0|0" />
+        <i3dMapping id="tipOcclusionStart" node="0>5|0" />
+        <i3dMapping id="tipOcclusionEnd" node="0>5|0|0" />
+        <i3dMapping id="siloAreaStart" node="0>6|0|0" />
+        <i3dMapping id="siloAreaWidth" node="0>6|0|1" />
+        <i3dMapping id="siloAreaHeight" node="0>6|0|2" />
+        <i3dMapping id="siloTrigger" node="0>6|0|3" />
+        <i3dMapping id="innerAreaStart" node="0>6|1|0" />
+        <i3dMapping id="innerAreaWidth" node="0>6|1|1" />
+        <i3dMapping id="innerAreaHeight" node="0>6|1|2" />
+    </i3dMappings>
+</placeable>

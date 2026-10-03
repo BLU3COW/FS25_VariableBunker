@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+        <text name="function_VariableBunker" text="Configurable bunker silo for fermenting chaff, grass and hay into silage." />
+        <text name="configuration_VariableBunkerWidth" text="Interior width" />
+        <text name="configuration_VariableBunkerLength" text="Length" />
+        <text name="configuration_VariableBunkerHeight" text="Wall height" />
+    </texts>
+</l10n>

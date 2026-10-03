@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+        <text name="function_VariableBunker" text="Silo couloir configurable pour fermenter la paille hachée, l'herbe et le foin en ensilage." />
+        <text name="configuration_VariableBunkerWidth" text="Largeur intérieure" />
+        <text name="configuration_VariableBunkerLength" text="Longueur" />
+        <text name="configuration_VariableBunkerHeight" text="Hauteur des murs" />
+    </texts>
+</l10n>
