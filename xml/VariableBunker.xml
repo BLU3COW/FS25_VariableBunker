@@ -87,6 +87,22 @@
             <VariableBunkerWidthConfiguration name="18 m" meters="18" saveId="18m" />
             <VariableBunkerWidthConfiguration name="19 m" meters="19" saveId="19m" />
             <VariableBunkerWidthConfiguration name="20 m" meters="20" saveId="20m" />
+            <VariableBunkerWidthConfiguration name="25 m" meters="25" saveId="25m" />
+            <VariableBunkerWidthConfiguration name="30 m" meters="30" saveId="30m" />
+            <VariableBunkerWidthConfiguration name="35 m" meters="35" saveId="35m" />
+            <VariableBunkerWidthConfiguration name="40 m" meters="40" saveId="40m" />
+            <VariableBunkerWidthConfiguration name="45 m" meters="45" saveId="45m" />
+            <VariableBunkerWidthConfiguration name="50 m" meters="50" saveId="50m" />
+            <VariableBunkerWidthConfiguration name="55 m" meters="55" saveId="55m" />
+            <VariableBunkerWidthConfiguration name="60 m" meters="60" saveId="60m" />
+            <VariableBunkerWidthConfiguration name="65 m" meters="65" saveId="65m" />
+            <VariableBunkerWidthConfiguration name="70 m" meters="70" saveId="70m" />
+            <VariableBunkerWidthConfiguration name="75 m" meters="75" saveId="75m" />
+            <VariableBunkerWidthConfiguration name="80 m" meters="80" saveId="80m" />
+            <VariableBunkerWidthConfiguration name="85 m" meters="85" saveId="85m" />
+            <VariableBunkerWidthConfiguration name="90 m" meters="90" saveId="90m" />
+            <VariableBunkerWidthConfiguration name="95 m" meters="95" saveId="95m" />
+            <VariableBunkerWidthConfiguration name="100 m" meters="100" saveId="100m" />
         </VariableBunkerWidthConfigurations>
 
         <VariableBunkerLengthConfigurations title="$l10n_configuration_VariableBunkerLength">
@@ -100,6 +116,18 @@
             <VariableBunkerLengthConfiguration name="60 m" meters="60" saveId="60m" />
             <VariableBunkerLengthConfiguration name="70 m" meters="70" saveId="70m" />
             <VariableBunkerLengthConfiguration name="80 m" meters="80" saveId="80m" />
+            <VariableBunkerLengthConfiguration name="90 m" meters="90" saveId="90m" />
+            <VariableBunkerLengthConfiguration name="100 m" meters="100" saveId="100m" />
+            <VariableBunkerLengthConfiguration name="110 m" meters="110" saveId="110m" />
+            <VariableBunkerLengthConfiguration name="120 m" meters="120" saveId="120m" />
+            <VariableBunkerLengthConfiguration name="130 m" meters="130" saveId="130m" />
+            <VariableBunkerLengthConfiguration name="140 m" meters="140" saveId="140m" />
+            <VariableBunkerLengthConfiguration name="150 m" meters="150" saveId="150m" />
+            <VariableBunkerLengthConfiguration name="160 m" meters="160" saveId="160m" />
+            <VariableBunkerLengthConfiguration name="170 m" meters="170" saveId="170m" />
+            <VariableBunkerLengthConfiguration name="180 m" meters="180" saveId="180m" />
+            <VariableBunkerLengthConfiguration name="190 m" meters="190" saveId="190m" />
+            <VariableBunkerLengthConfiguration name="200 m" meters="200" saveId="200m" />
         </VariableBunkerLengthConfigurations>
 
         <VariableBunkerHeightConfigurations title="$l10n_configuration_VariableBunkerHeight">
