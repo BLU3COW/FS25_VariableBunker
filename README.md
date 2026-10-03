@@ -11,6 +11,8 @@ VariableBunker is a configurable drive-through bunker silo for Farming Simulator
 
 The purchase price is independent of the selected size. The silo accepts chaff, grass windrows and dry grass windrows and ferments them into silage. Both ends remain open, matching the base-game drive-through bunker silos.
 
+The construction menu includes an optional AutoDrive course. When enabled and AutoDrive is active, placing the bunker creates parallel drive lanes, cross-connections and one destination marker per lane. The course adapts to the configured width and length; it remains disabled by default.
+
 ## Development
 
 The mod is built and validated only through `C:\FS25\main\Source\Build\Build-VariableBunker.ps1`. The build checks the configuration ranges, I3D mappings, runtime scaling logic, ZIP paths and the GIANTS TestRunner result before deployment.

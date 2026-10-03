@@ -22,6 +22,8 @@ Dimensions:
 
 The selected dimensions are applied to the walls, collisions, bunker area, placement areas and interaction trigger. Chaff, grass and hay can be fermented into silage.
 
+An optional AutoDrive course can be generated during placement. Its lanes and waypoints automatically adapt to the selected width and length. AutoDrive is required to use this option.
+
 Source code, help and issue reports: https://github.com/BLU3COW/FS25_VariableBunker]]></en>
         <de><![CDATA[VariableBunker
 Shopkategorie: Silos
@@ -36,6 +38,8 @@ Abmessungen:
 - Wandhöhe: 2–6 Meter
 
 Die gewählten Abmessungen werden auf Wände, Kollisionen, Silobereich, Platzierungsflächen und Interaktionstrigger angewendet. Häckselgut, Gras und Heu können zu Silage vergoren werden.
+
+Beim Platzieren kann optional ein AutoDrive-Kurs erzeugt werden. Fahrspuren und Wegpunkte passen sich automatisch an die gewählte Breite und Länge an. Für diese Option wird AutoDrive benötigt.
 
 Quellcode, Hilfe und Fehlermeldungen: https://github.com/BLU3COW/FS25_VariableBunker]]></de>
         <fr><![CDATA[VariableBunker
@@ -52,6 +56,8 @@ Dimensions :
 
 Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la zone du silo, aux zones de placement et au déclencheur d'interaction. La paille hachée, l'herbe et le foin peuvent être fermentés en ensilage.
 
+Un parcours AutoDrive peut être généré en option lors du placement. Ses voies et points de passage s'adaptent automatiquement à la largeur et à la longueur sélectionnées. AutoDrive est requis pour utiliser cette option.
+
 Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25_VariableBunker]]></fr>
     </description>
 
@@ -61,6 +67,7 @@ Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25
 
     <extraSourceFiles>
         <sourceFile filename="lua/VariableBunker.lua" />
+        <sourceFile filename="lua/VariableBunkerAutoDrive.lua" />
         <sourceFile filename="lua/VariableBunkerRegister.lua" />
     </extraSourceFiles>
 

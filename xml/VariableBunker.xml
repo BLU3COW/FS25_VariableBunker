@@ -109,6 +109,11 @@
             <VariableBunkerHeightConfiguration name="5 m" meters="5" saveId="5m" />
             <VariableBunkerHeightConfiguration name="6 m" meters="6" saveId="6m" />
         </VariableBunkerHeightConfigurations>
+
+        <VariableBunkerAutoDriveConfigurations title="$l10n_configuration_VariableBunkerAutoDrive">
+            <VariableBunkerAutoDriveConfiguration name="$l10n_option_VariableBunkerAutoDriveOff" isDefault="true" saveId="off" />
+            <VariableBunkerAutoDriveConfiguration name="$l10n_option_VariableBunkerAutoDriveOn" saveId="on" />
+        </VariableBunkerAutoDriveConfigurations>
     </VariableBunker>
 
     <bunkerSilo isExtendable="false" acceptedFillTypes="chaff grass_windrow dryGrass_windrow" inputFillType="chaff" outputFillType="silage" distanceToCompactedFillLevel="100" openingLength="5">

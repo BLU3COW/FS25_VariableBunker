@@ -6,6 +6,7 @@ local modDirectory = g_currentModDirectory or ""
 Bunker.CONFIG_WIDTH = "VariableBunkerWidth"
 Bunker.CONFIG_LENGTH = "VariableBunkerLength"
 Bunker.CONFIG_HEIGHT = "VariableBunkerHeight"
+Bunker.CONFIG_AUTODRIVE = "VariableBunkerAutoDrive"
 
 VariableBunkerDimensionConfigurationItem = {}
 local VariableBunkerDimensionConfigurationItem_mt =
@@ -48,20 +49,21 @@ local function registerConfigurationTypes()
         return
     end
 
-    local function addConfigType(configName, titleKey)
+    local function addConfigType(configName, titleKey, itemClass)
         if g_placeableConfigurationManager:getConfigurationDescByName(configName) == nil then
             g_placeableConfigurationManager:addConfigurationType(
                 configName,
                 g_i18n:getText(titleKey),
                 "VariableBunker",
-                VariableBunkerDimensionConfigurationItem
+                itemClass
             )
         end
     end
 
-    addConfigType(Bunker.CONFIG_WIDTH, "configuration_VariableBunkerWidth")
-    addConfigType(Bunker.CONFIG_LENGTH, "configuration_VariableBunkerLength")
-    addConfigType(Bunker.CONFIG_HEIGHT, "configuration_VariableBunkerHeight")
+    addConfigType(Bunker.CONFIG_WIDTH, "configuration_VariableBunkerWidth", VariableBunkerDimensionConfigurationItem)
+    addConfigType(Bunker.CONFIG_LENGTH, "configuration_VariableBunkerLength", VariableBunkerDimensionConfigurationItem)
+    addConfigType(Bunker.CONFIG_HEIGHT, "configuration_VariableBunkerHeight", VariableBunkerDimensionConfigurationItem)
+    addConfigType(Bunker.CONFIG_AUTODRIVE, "configuration_VariableBunkerAutoDrive", PlaceableConfigurationItem)
 end
 
 local function init()

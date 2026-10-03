@@ -5,5 +5,8 @@
         <text name="configuration_VariableBunkerWidth" text="Interior width" />
         <text name="configuration_VariableBunkerLength" text="Length" />
         <text name="configuration_VariableBunkerHeight" text="Wall height" />
+        <text name="configuration_VariableBunkerAutoDrive" text="AutoDrive course" />
+        <text name="option_VariableBunkerAutoDriveOff" text="Off" />
+        <text name="option_VariableBunkerAutoDriveOn" text="Generate automatically" />
     </texts>
 </l10n>

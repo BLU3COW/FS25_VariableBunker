@@ -89,6 +89,7 @@ end
 
 function Bunker.registerEventListeners(placeableType)
     SpecializationUtil.registerEventListener(placeableType, "onLoad", Bunker)
+    SpecializationUtil.registerEventListener(placeableType, "onFinalizePlacement", Bunker)
 end
 
 function Bunker.registerFunctions(placeableType)
@@ -101,6 +102,16 @@ function Bunker.registerFunctions(placeableType)
         placeableType,
         "VariableBunkerApplyDimensions",
         Bunker.VariableBunkerApplyDimensions
+    )
+    SpecializationUtil.registerFunction(
+        placeableType,
+        "VariableBunkerHasAutoDriveCourse",
+        Bunker.VariableBunkerHasAutoDriveCourse
+    )
+    SpecializationUtil.registerFunction(
+        placeableType,
+        "VariableBunkerCreateAutoDriveCourse",
+        Bunker.VariableBunkerCreateAutoDriveCourse
     )
 end
 
