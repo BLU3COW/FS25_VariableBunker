@@ -11,7 +11,7 @@
   </Files>
   <Materials>
     <Material name="concrete" materialId="5" customShaderId="4">
-      <CustomParameter name="uvScale" value="0.5 0.5 0.5 0.5"/>
+      <CustomParameter name="uvScale" value="0.25 0.25 0.25 0.25"/>
       <CustomParameter name="colorTint" value="-0.06 -0.06 -0.06"/>
       <Custommap name="mBlendedDiffuse" fileId="1"/>
       <Custommap name="mBlendedNormal" fileId="2"/>
