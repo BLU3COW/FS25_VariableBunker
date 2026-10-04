@@ -39,6 +39,10 @@ local NODE_ATTRIBUTES = {
     "leftWallSlopeNode",
     "rightWallSlopeNode",
     "rearWallSlopeNode",
+    "leftCornerBaseNode",
+    "rightCornerBaseNode",
+    "leftCornerSlopeNode",
+    "rightCornerSlopeNode",
     "leftCollisionNode",
     "rightCollisionNode",
     "rearCollisionNode",
@@ -49,6 +53,10 @@ local NODE_ATTRIBUTES = {
     "leftSlopeCollisionNode",
     "rightSlopeCollisionNode",
     "rearSlopeCollisionNode",
+    "leftCornerBaseCollisionNode",
+    "rightCornerBaseCollisionNode",
+    "leftCornerSlopeCollisionNode",
+    "rightCornerSlopeCollisionNode",
     "interactionTriggerNode",
     "siloAreaStartNode",
     "siloAreaWidthNode",
@@ -260,8 +268,9 @@ function Bunker:VariableBunkerApplyDimensions()
     local slopeRun = slopeHeight * WALL_SLOPE_PER_METER
     local outerWidth = width + WALL_THICKNESS * 2
     local baseOuterWidth = outerWidth + slopeRun * 2
-    local rearWallExtension = hasRearWall and WALL_THICKNESS + slopeRun or 0
-    local rearOuterExtension = rearWallExtension + floorBackExtension
+    local rearWallExtension = hasRearWall and WALL_THICKNESS or 0
+    local rearFootExtension = hasRearWall and WALL_THICKNESS + slopeRun or 0
+    local rearOuterExtension = rearFootExtension + floorBackExtension
     local sideOuterCenter = rearWallExtension * 0.5
     local footprintStart = -length * 0.5 - floorFrontExtension
     local footprintLength = length + rearOuterExtension + floorFrontExtension
@@ -272,6 +281,8 @@ function Bunker:VariableBunkerApplyDimensions()
     local sideSlopeOffset = width * 0.5 + WALL_THICKNESS
     local rearBaseOffset = length * 0.5 + WALL_THICKNESS + slopeRun * 0.5
     local rearSlopeOffset = length * 0.5 + WALL_THICKNESS
+    local rearCoreOuterEdge = length * 0.5 + WALL_THICKNESS
+    local cornerBaseOffset = outerWidth * 0.5 + slopeRun * 0.5
     local floorCenterY = FLOOR_TOP_OFFSET - FLOOR_THICKNESS * 0.5
     local triggerHeight = height + 2
 
@@ -303,15 +314,27 @@ function Bunker:VariableBunkerApplyDimensions()
     setTranslation(spec.rightWallBaseNode, sideBaseOffset, WALL_BASE_HEIGHT * 0.5, sideOuterCenter)
     setScale(spec.rightWallBaseNode, slopeRun, WALL_BASE_HEIGHT, length + rearWallExtension)
     setTranslation(spec.rearWallBaseNode, 0, WALL_BASE_HEIGHT * 0.5, rearBaseOffset)
-    setScale(spec.rearWallBaseNode, baseOuterWidth, WALL_BASE_HEIGHT, slopeRun)
+    setScale(spec.rearWallBaseNode, outerWidth, WALL_BASE_HEIGHT, slopeRun)
     setVisibility(spec.rearWallBaseNode, hasRearWall)
     setTranslation(spec.leftWallSlopeNode, -sideSlopeOffset, WALL_BASE_HEIGHT, sideOuterCenter)
     setScale(spec.leftWallSlopeNode, slopeRun, slopeHeight, length + rearWallExtension)
     setTranslation(spec.rightWallSlopeNode, sideSlopeOffset, WALL_BASE_HEIGHT, sideOuterCenter)
     setScale(spec.rightWallSlopeNode, slopeRun, slopeHeight, length + rearWallExtension)
     setTranslation(spec.rearWallSlopeNode, 0, WALL_BASE_HEIGHT, rearSlopeOffset)
-    setScale(spec.rearWallSlopeNode, slopeRun, slopeHeight, baseOuterWidth)
+    setScale(spec.rearWallSlopeNode, slopeRun, slopeHeight, outerWidth)
     setVisibility(spec.rearWallSlopeNode, hasRearWall)
+    setTranslation(spec.leftCornerBaseNode, -cornerBaseOffset, WALL_BASE_HEIGHT * 0.5, rearBaseOffset)
+    setScale(spec.leftCornerBaseNode, slopeRun, WALL_BASE_HEIGHT, slopeRun)
+    setVisibility(spec.leftCornerBaseNode, hasRearWall)
+    setTranslation(spec.rightCornerBaseNode, cornerBaseOffset, WALL_BASE_HEIGHT * 0.5, rearBaseOffset)
+    setScale(spec.rightCornerBaseNode, slopeRun, WALL_BASE_HEIGHT, slopeRun)
+    setVisibility(spec.rightCornerBaseNode, hasRearWall)
+    setTranslation(spec.leftCornerSlopeNode, -outerWidth * 0.5, WALL_BASE_HEIGHT, rearCoreOuterEdge)
+    setScale(spec.leftCornerSlopeNode, slopeRun, slopeHeight, slopeRun)
+    setVisibility(spec.leftCornerSlopeNode, hasRearWall)
+    setTranslation(spec.rightCornerSlopeNode, outerWidth * 0.5, WALL_BASE_HEIGHT, rearCoreOuterEdge)
+    setScale(spec.rightCornerSlopeNode, slopeRun, slopeHeight, slopeRun)
+    setVisibility(spec.rightCornerSlopeNode, hasRearWall)
     setPhysicsNodeTransform(spec.leftCollisionNode, -wallOffset, height * 0.5, 0, WALL_THICKNESS, height, length)
     setPhysicsNodeTransform(spec.rightCollisionNode, wallOffset, height * 0.5, 0, WALL_THICKNESS, height, length)
     setPhysicsNodeTransform(spec.rearCollisionNode, 0, height * 0.5, rearWallOffset, outerWidth, height, WALL_THICKNESS)
@@ -349,7 +372,7 @@ function Bunker:VariableBunkerApplyDimensions()
         0,
         WALL_BASE_HEIGHT * 0.5,
         rearBaseOffset,
-        baseOuterWidth,
+        outerWidth,
         WALL_BASE_HEIGHT,
         slopeRun
     )
@@ -379,9 +402,49 @@ function Bunker:VariableBunkerApplyDimensions()
         rearSlopeOffset,
         slopeRun,
         slopeHeight,
-        baseOuterWidth
+        outerWidth
     )
     setPhysicsNodeEnabled(spec.rearSlopeCollisionNode, hasRearWall)
+    setPhysicsNodeTransform(
+        spec.leftCornerBaseCollisionNode,
+        -cornerBaseOffset,
+        WALL_BASE_HEIGHT * 0.5,
+        rearBaseOffset,
+        slopeRun,
+        WALL_BASE_HEIGHT,
+        slopeRun
+    )
+    setPhysicsNodeEnabled(spec.leftCornerBaseCollisionNode, hasRearWall)
+    setPhysicsNodeTransform(
+        spec.rightCornerBaseCollisionNode,
+        cornerBaseOffset,
+        WALL_BASE_HEIGHT * 0.5,
+        rearBaseOffset,
+        slopeRun,
+        WALL_BASE_HEIGHT,
+        slopeRun
+    )
+    setPhysicsNodeEnabled(spec.rightCornerBaseCollisionNode, hasRearWall)
+    setPhysicsNodeTransform(
+        spec.leftCornerSlopeCollisionNode,
+        -outerWidth * 0.5,
+        WALL_BASE_HEIGHT,
+        rearCoreOuterEdge,
+        slopeRun,
+        slopeHeight,
+        slopeRun
+    )
+    setPhysicsNodeEnabled(spec.leftCornerSlopeCollisionNode, hasRearWall)
+    setPhysicsNodeTransform(
+        spec.rightCornerSlopeCollisionNode,
+        outerWidth * 0.5,
+        WALL_BASE_HEIGHT,
+        rearCoreOuterEdge,
+        slopeRun,
+        slopeHeight,
+        slopeRun
+    )
+    setPhysicsNodeEnabled(spec.rightCornerSlopeCollisionNode, hasRearWall)
     setPhysicsNodeTransform(
         spec.interactionTriggerNode,
         0,

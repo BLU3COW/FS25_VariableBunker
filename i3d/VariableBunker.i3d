@@ -7,19 +7,15 @@
     <File fileId="1" filename="$data/maps/textures/shared/concreteGeneric_diffuse.png"/>
     <File fileId="2" filename="$data/maps/textures/shared/concreteGeneric_normal.png"/>
     <File fileId="3" filename="$data/maps/textures/shared/concreteGeneric_specular.png"/>
-    <File fileId="4" filename="$data/maps/textures/shared/dirtAtlas_mask.png"/>
-    <File fileId="5" filename="$data/maps/textures/shared/mapDirt_diffuse.png"/>
-    <File fileId="6" filename="$data/maps/textures/shared/mapMoss_diffuse.png"/>
-    <File fileId="7" filename="$data/shaders/buildingShader.xml"/>
+    <File fileId="4" filename="$data/shaders/vertexPaintShader.xml"/>
   </Files>
   <Materials>
-    <Material name="concrete" materialId="5" customShaderId="7">
-      <CustomParameter name="dirtMossMix" value="1 1"/>
-      <CustomParameter name="dirtMossSmoothness" value="0.12 0.12"/>
-      <CustomParameter name="dirtMossTint" value="0 0 0.8"/>
-      <Custommap name="mDirtDiffuse" fileId="5"/>
-      <Custommap name="mMaskMap" fileId="4"/>
-      <Custommap name="mMossDiffuse" fileId="6"/>
+    <Material name="concrete" materialId="5" customShaderId="4">
+      <CustomParameter name="uvScale" value="0.5 0.5 0.5 0.5"/>
+      <CustomParameter name="colorTint" value="-0.06 -0.06 -0.06"/>
+      <Custommap name="mBlendedDiffuse" fileId="1"/>
+      <Custommap name="mBlendedNormal" fileId="2"/>
+      <Custommap name="mBlendedSpecular" fileId="3"/>
       <Texture fileId="1"/>
       <Normalmap fileId="2"/>
       <Glossmap fileId="3"/>
@@ -35,24 +31,32 @@
         <Shape name="rightWall" translation="5.2 2 0" scale="0.4 4 40" shapeId="1" clipDistance="500" nodeId="13" castsShadows="true" receiveShadows="true" materialIds="5"/>
         <Shape name="rearWall" translation="0 2 20.2" scale="10.8 4 0.4" shapeId="1" clipDistance="500" nodeId="41" castsShadows="true" receiveShadows="true" materialIds="5"/>
         <Shape name="floorPlate" translation="0 -0.08 0.5125" scale="12.05 0.2 41.025" shapeId="1" visibility="false" clipDistance="500" nodeId="43" castsShadows="true" receiveShadows="true" materialIds="5"/>
-        <Shape name="leftWallBase" translation="-5.7125 0.75 0.5125" scale="0.625 1.5 41.025" shapeId="1" clipDistance="500" nodeId="44" castsShadows="true" receiveShadows="true" materialIds="5"/>
-        <Shape name="rightWallBase" translation="5.7125 0.75 0.5125" scale="0.625 1.5 41.025" shapeId="1" clipDistance="500" nodeId="45" castsShadows="true" receiveShadows="true" materialIds="5"/>
-        <Shape name="rearWallBase" translation="0 0.75 20.7125" scale="12.05 1.5 0.625" shapeId="1" clipDistance="500" nodeId="46" castsShadows="true" receiveShadows="true" materialIds="5"/>
-        <Shape name="leftWallSlope" translation="-5.4 1.5 0.5125" rotation="0 180 0" scale="0.625 2.5 41.025" shapeId="2" clipDistance="500" nodeId="47" castsShadows="true" receiveShadows="true" materialIds="5"/>
-        <Shape name="rightWallSlope" translation="5.4 1.5 0.5125" scale="0.625 2.5 41.025" shapeId="2" clipDistance="500" nodeId="48" castsShadows="true" receiveShadows="true" materialIds="5"/>
-        <Shape name="rearWallSlope" translation="0 1.5 20.4" rotation="0 -90 0" scale="0.625 2.5 12.05" shapeId="2" clipDistance="500" nodeId="49" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="leftWallBase" translation="-5.7125 0.75 0.2" scale="0.625 1.5 40.4" shapeId="1" clipDistance="500" nodeId="44" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rightWallBase" translation="5.7125 0.75 0.2" scale="0.625 1.5 40.4" shapeId="1" clipDistance="500" nodeId="45" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rearWallBase" translation="0 0.75 20.7125" scale="10.8 1.5 0.625" shapeId="1" clipDistance="500" nodeId="46" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="leftWallSlope" translation="-5.4 1.5 0.2" rotation="0 180 0" scale="0.625 2.5 40.4" shapeId="2" clipDistance="500" nodeId="47" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rightWallSlope" translation="5.4 1.5 0.2" scale="0.625 2.5 40.4" shapeId="2" clipDistance="500" nodeId="48" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rearWallSlope" translation="0 1.5 20.4" rotation="0 -90 0" scale="0.625 2.5 10.8" shapeId="2" clipDistance="500" nodeId="49" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="leftCornerBase" translation="-5.7125 0.75 20.7125" scale="0.625 1.5 0.625" shapeId="1" clipDistance="500" nodeId="57" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rightCornerBase" translation="5.7125 0.75 20.7125" scale="0.625 1.5 0.625" shapeId="1" clipDistance="500" nodeId="58" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="leftCornerSlope" translation="-5.4 1.5 20.4" rotation="0 -90 0" scale="0.625 2.5 0.625" shapeId="3" clipDistance="500" nodeId="59" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rightCornerSlope" translation="5.4 1.5 20.4" scale="0.625 2.5 0.625" shapeId="3" clipDistance="500" nodeId="60" castsShadows="true" receiveShadows="true" materialIds="5"/>
       </TransformGroup>
       <TransformGroup name="collisions" nodeId="14">
         <Shape name="leftWallCollision" translation="-5.2 2 0" scale="0.4 4 40" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="15" nonRenderable="true" materialIds="6"/>
         <Shape name="rightWallCollision" translation="5.2 2 0" scale="0.4 4 40" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="16" nonRenderable="true" materialIds="6"/>
         <Shape name="rearWallCollision" translation="0 2 20.2" scale="10.8 4 0.4" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="42" nonRenderable="true" materialIds="6"/>
         <Shape name="floorPlateCollision" translation="0 -0.08 0.5125" scale="12.05 0.2 41.025" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="50" nonRenderable="true" materialIds="6"/>
-        <Shape name="leftWallBaseCollision" translation="-5.7125 0.75 0.5125" scale="0.625 1.5 41.025" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="51" nonRenderable="true" materialIds="6"/>
-        <Shape name="rightWallBaseCollision" translation="5.7125 0.75 0.5125" scale="0.625 1.5 41.025" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="52" nonRenderable="true" materialIds="6"/>
-        <Shape name="rearWallBaseCollision" translation="0 0.75 20.7125" scale="12.05 1.5 0.625" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="53" nonRenderable="true" materialIds="6"/>
-        <Shape name="leftWallSlopeCollision" translation="-5.4 1.5 0.5125" rotation="0 180 0" scale="0.625 2.5 41.025" shapeId="2" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="54" nonRenderable="true" materialIds="6"/>
-        <Shape name="rightWallSlopeCollision" translation="5.4 1.5 0.5125" scale="0.625 2.5 41.025" shapeId="2" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="55" nonRenderable="true" materialIds="6"/>
-        <Shape name="rearWallSlopeCollision" translation="0 1.5 20.4" rotation="0 -90 0" scale="0.625 2.5 12.05" shapeId="2" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="56" nonRenderable="true" materialIds="6"/>
+        <Shape name="leftWallBaseCollision" translation="-5.7125 0.75 0.2" scale="0.625 1.5 40.4" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="51" nonRenderable="true" materialIds="6"/>
+        <Shape name="rightWallBaseCollision" translation="5.7125 0.75 0.2" scale="0.625 1.5 40.4" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="52" nonRenderable="true" materialIds="6"/>
+        <Shape name="rearWallBaseCollision" translation="0 0.75 20.7125" scale="10.8 1.5 0.625" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="53" nonRenderable="true" materialIds="6"/>
+        <Shape name="leftWallSlopeCollision" translation="-5.4 1.5 0.2" rotation="0 180 0" scale="0.625 2.5 40.4" shapeId="2" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="54" nonRenderable="true" materialIds="6"/>
+        <Shape name="rightWallSlopeCollision" translation="5.4 1.5 0.2" scale="0.625 2.5 40.4" shapeId="2" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="55" nonRenderable="true" materialIds="6"/>
+        <Shape name="rearWallSlopeCollision" translation="0 1.5 20.4" rotation="0 -90 0" scale="0.625 2.5 10.8" shapeId="2" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="56" nonRenderable="true" materialIds="6"/>
+        <Shape name="leftCornerBaseCollision" translation="-5.7125 0.75 20.7125" scale="0.625 1.5 0.625" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="61" nonRenderable="true" materialIds="6"/>
+        <Shape name="rightCornerBaseCollision" translation="5.7125 0.75 20.7125" scale="0.625 1.5 0.625" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="62" nonRenderable="true" materialIds="6"/>
+        <Shape name="leftCornerSlopeCollision" translation="-5.4 1.5 20.4" rotation="0 -90 0" scale="0.625 2.5 0.625" shapeId="3" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="63" nonRenderable="true" materialIds="6"/>
+        <Shape name="rightCornerSlopeCollision" translation="5.4 1.5 20.4" scale="0.625 2.5 0.625" shapeId="3" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="64" nonRenderable="true" materialIds="6"/>
       </TransformGroup>
       <TransformGroup name="clearAreas" nodeId="17">
         <TransformGroup name="clearAreaStart" translation="-5.4 0 -20" nodeId="18">
