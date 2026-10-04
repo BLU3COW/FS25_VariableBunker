@@ -1,6 +1,6 @@
 # FS25_VariableBunker
 
-VariableBunker is a configurable three-sided bunker silo for Farming Simulator 25. Its simple concrete side and rear walls and all functional areas adapt to the selected dimensions in the construction menu.
+VariableBunker is a configurable bunker or drive-through silo for Farming Simulator 25. Its simple concrete walls and all functional areas adapt to the selected dimensions in the construction menu.
 
 ## Configurations
 
@@ -11,9 +11,9 @@ VariableBunker is a configurable three-sided bunker silo for Farming Simulator 2
 
 The purchase price is independent of the selected size. The silo accepts chaff, grass windrows and dry grass windrows and ferments them into silage. The front remains open while a full-width concrete wall closes the rear. All walls remain vertical on the inside; above a 0.5 m vertical base, their outside face slopes inward at a constant angle so taller walls receive a wider base.
 
-The concrete floor slab is optional and offers two sizes: flush with the open front or extended 30 m beyond it. It spans the complete outside width including the height-dependent wall bases. The extended slab provides a smooth blade transition and makes the required AutoDrive approach area visible during placement. The slab is disabled by default. All visible concrete uses the original GIANTS bunker diffuse, gloss, dirt and moss material through game-data references.
+The silo design is selectable: the bunker silo has a rear wall, while the drive-through silo is open at both ends. The straight outside wall base is 1.5 m high; the sloped side and rear sections form an overlapping mitred corner without exposed end faces. The concrete floor slab is optional. It can end flush with the silo, or extend 30 m beyond the bunker entrance. For a drive-through silo, the extended slab reaches 30 m beyond the rear and 15 m beyond the front. It spans the complete outside width including the height-dependent wall bases. All visible concrete uses the original GIANTS `concreteGeneric` diffuse, normal and specular maps through `$data` game-data references with denser UV tiling.
 
-When AutoDrive is active in the current savegame, the construction menu includes an optional AutoDrive course. Without AutoDrive the complete course option remains hidden and the bunker works independently. When enabled, placing the bunker creates one parallel drive lane per approximately 5 m of interior width, cross-connections and one destination marker per lane. Following the reference course, every lane ends 3.2 m before the rear wall and extends 27 m beyond the open front. The course adapts to the configured width and length and reaches 20 lanes at 100 m width; it remains disabled by default. Detection does not depend on a specific AutoDrive version, and both the current placement API and its older event API are supported.
+When AutoDrive is active in the current savegame, the construction menu includes an optional AutoDrive course. Without AutoDrive the complete course option remains hidden and the silo works independently. When enabled, the bunker design reproduces the BGA reference topology with destinations 3.2 m before the rear wall and the detailed connection clusters 4 m and 26 m beyond the open front. The drive-through design reproduces the large-silo reference with one-way lanes extending 10 m and 24 m beyond its open ends. Both graphs adapt to the configured width and length and reach 20 lanes at 100 m width. Courses are created only for a newly placed silo with the option enabled; saved global AutoDrive nodes are never duplicated during savegame loading.
 
 ## Development
 

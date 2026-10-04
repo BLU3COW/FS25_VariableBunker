@@ -7,6 +7,7 @@ local AUTODRIVE_MOD_NAME = "FS25_AutoDrive"
 Bunker.CONFIG_WIDTH = "VariableBunkerWidth"
 Bunker.CONFIG_LENGTH = "VariableBunkerLength"
 Bunker.CONFIG_HEIGHT = "VariableBunkerHeight"
+Bunker.CONFIG_TYPE = "VariableBunkerType"
 Bunker.CONFIG_FLOOR = "VariableBunkerFloor"
 Bunker.CONFIG_AUTODRIVE = "VariableBunkerAutoDrive"
 
@@ -102,6 +103,7 @@ local function registerConfigurationTypes()
     addConfigType(Bunker.CONFIG_WIDTH, "configuration_VariableBunkerWidth", VariableBunkerDimensionConfigurationItem)
     addConfigType(Bunker.CONFIG_LENGTH, "configuration_VariableBunkerLength", VariableBunkerDimensionConfigurationItem)
     addConfigType(Bunker.CONFIG_HEIGHT, "configuration_VariableBunkerHeight", VariableBunkerDimensionConfigurationItem)
+    addConfigType(Bunker.CONFIG_TYPE, "configuration_VariableBunkerType", PlaceableConfigurationItem)
     addConfigType(Bunker.CONFIG_FLOOR, "configuration_VariableBunkerFloor", PlaceableConfigurationItem)
     addConfigType(
         Bunker.CONFIG_AUTODRIVE,

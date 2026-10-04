@@ -146,6 +146,11 @@
             <VariableBunkerHeightConfiguration name="8 m" meters="8" saveId="8m" />
         </VariableBunkerHeightConfigurations>
 
+        <VariableBunkerTypeConfigurations title="$l10n_configuration_VariableBunkerType">
+            <VariableBunkerTypeConfiguration name="$l10n_option_VariableBunkerTypeBunker" isDefault="true" saveId="bunker" />
+            <VariableBunkerTypeConfiguration name="$l10n_option_VariableBunkerTypeDriveThrough" saveId="driveThrough" />
+        </VariableBunkerTypeConfigurations>
+
         <VariableBunkerFloorConfigurations title="$l10n_configuration_VariableBunkerFloor">
             <VariableBunkerFloorConfiguration name="$l10n_option_VariableBunkerFloorOff" isDefault="true" saveId="off" />
             <VariableBunkerFloorConfiguration name="$l10n_option_VariableBunkerFloorFlush" saveId="flush" />

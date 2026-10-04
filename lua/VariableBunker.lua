@@ -5,22 +5,27 @@ local BASE_KEY = "placeable.VariableBunker"
 local ROOT_KEY_WIDTH = Bunker.CONFIG_WIDTH or "VariableBunkerWidth"
 local ROOT_KEY_LENGTH = Bunker.CONFIG_LENGTH or "VariableBunkerLength"
 local ROOT_KEY_HEIGHT = Bunker.CONFIG_HEIGHT or "VariableBunkerHeight"
+local ROOT_KEY_TYPE = Bunker.CONFIG_TYPE or "VariableBunkerType"
 local ROOT_KEY_FLOOR = Bunker.CONFIG_FLOOR or "VariableBunkerFloor"
 local DEFAULT_WIDTH = 10
 local DEFAULT_LENGTH = 40
 local DEFAULT_HEIGHT = 4
 local WALL_THICKNESS = 0.4
-local WALL_BASE_HEIGHT = 0.5
+local WALL_BASE_HEIGHT = 1.5
 local WALL_SLOPE_PER_METER = 0.25
 local INNER_MARGIN = 0.25
 local LEVEL_MARGIN = 1
 local TRIGGER_MARGIN = 1
 local FLOOR_FRONT_EXTENSION = 30
+local DRIVE_THROUGH_FLOOR_BACK_EXTENSION = 30
+local DRIVE_THROUGH_FLOOR_FRONT_EXTENSION = 15
 local FLOOR_THICKNESS = 0.2
 local FLOOR_TOP_OFFSET = 0.02
 local FLOOR_CONFIGURATION_NONE = 1
 local FLOOR_CONFIGURATION_FLUSH = 2
 local FLOOR_CONFIGURATION_EXTENDED = 3
+local TYPE_CONFIGURATION_BUNKER = 1
+local TYPE_CONFIGURATION_DRIVE_THROUGH = 2
 local SCALE_EPSILON = 0.0001
 
 local NODE_ATTRIBUTES = {
@@ -153,6 +158,16 @@ function Bunker.registerFunctions(placeableType)
     )
     SpecializationUtil.registerFunction(
         placeableType,
+        "VariableBunkerGetTypeConfiguration",
+        Bunker.VariableBunkerGetTypeConfiguration
+    )
+    SpecializationUtil.registerFunction(
+        placeableType,
+        "VariableBunkerHasRearWall",
+        Bunker.VariableBunkerHasRearWall
+    )
+    SpecializationUtil.registerFunction(
+        placeableType,
         "VariableBunkerHasAutoDriveCourse",
         Bunker.VariableBunkerHasAutoDriveCourse
     )
@@ -166,6 +181,7 @@ end
 function Bunker:onLoad(savegame)
     self.spec_VariableBunker = {}
     local spec = self.spec_VariableBunker
+    spec.loadedFromSavegame = savegame ~= nil
 
     for _, attributeName in ipairs(NODE_ATTRIBUTES) do
         spec[attributeName] =
@@ -198,6 +214,21 @@ function Bunker:VariableBunkerGetFloorPlateConfiguration()
     return configId or FLOOR_CONFIGURATION_NONE
 end
 
+function Bunker:VariableBunkerGetTypeConfiguration()
+    local configId = self.configurations ~= nil and self.configurations[ROOT_KEY_TYPE] or nil
+    if configId == nil and g_storeManager ~= nil then
+        local storeItem = g_storeManager:getItemByXMLFilename(self.configFileName)
+        if storeItem ~= nil and storeItem.defaultConfigurationIds ~= nil then
+            configId = storeItem.defaultConfigurationIds[ROOT_KEY_TYPE]
+        end
+    end
+    return configId or TYPE_CONFIGURATION_BUNKER
+end
+
+function Bunker:VariableBunkerHasRearWall()
+    return self:VariableBunkerGetTypeConfiguration() ~= TYPE_CONFIGURATION_DRIVE_THROUGH
+end
+
 function Bunker:VariableBunkerHasFloorPlate()
     local configuration = self:VariableBunkerGetFloorPlateConfiguration()
     return configuration == FLOOR_CONFIGURATION_FLUSH or configuration == FLOOR_CONFIGURATION_EXTENDED
@@ -212,16 +243,26 @@ function Bunker:VariableBunkerApplyDimensions()
     local length = math.clamp(tonumber(lengthItem ~= nil and lengthItem.meters) or DEFAULT_LENGTH, 20, 200)
     local height = math.clamp(tonumber(heightItem ~= nil and heightItem.meters) or DEFAULT_HEIGHT, 2, 8)
     local floorConfiguration = self:VariableBunkerGetFloorPlateConfiguration()
+    local hasRearWall = self:VariableBunkerHasRearWall()
     local hasFloorPlate = floorConfiguration == FLOOR_CONFIGURATION_FLUSH
         or floorConfiguration == FLOOR_CONFIGURATION_EXTENDED
-    local floorFrontExtension = floorConfiguration == FLOOR_CONFIGURATION_EXTENDED and FLOOR_FRONT_EXTENSION or 0
+    local floorFrontExtension = 0
+    local floorBackExtension = 0
+    if floorConfiguration == FLOOR_CONFIGURATION_EXTENDED then
+        if hasRearWall then
+            floorFrontExtension = FLOOR_FRONT_EXTENSION
+        else
+            floorFrontExtension = DRIVE_THROUGH_FLOOR_FRONT_EXTENSION
+            floorBackExtension = DRIVE_THROUGH_FLOOR_BACK_EXTENSION
+        end
+    end
     local slopeHeight = height - WALL_BASE_HEIGHT
     local slopeRun = slopeHeight * WALL_SLOPE_PER_METER
     local outerWidth = width + WALL_THICKNESS * 2
     local baseOuterWidth = outerWidth + slopeRun * 2
-    local rearOuterExtension = WALL_THICKNESS + slopeRun
-    local sideOuterLength = length + WALL_THICKNESS
-    local sideOuterCenter = WALL_THICKNESS * 0.5
+    local rearWallExtension = hasRearWall and WALL_THICKNESS + slopeRun or 0
+    local rearOuterExtension = rearWallExtension + floorBackExtension
+    local sideOuterCenter = rearWallExtension * 0.5
     local footprintStart = -length * 0.5 - floorFrontExtension
     local footprintLength = length + rearOuterExtension + floorFrontExtension
     local innerWidth = math.max(width - INNER_MARGIN * 2, 0.5)
@@ -240,6 +281,7 @@ function Bunker:VariableBunkerApplyDimensions()
     spec.floorPlateEnabled = hasFloorPlate
     spec.floorPlateFrontExtension = floorFrontExtension
     spec.wallSlopeRun = slopeRun
+    spec.hasRearWall = hasRearWall
 
     setTranslation(spec.leftWallNode, -wallOffset, height * 0.5, 0)
     setScale(spec.leftWallNode, WALL_THICKNESS, height, length)
@@ -247,32 +289,41 @@ function Bunker:VariableBunkerApplyDimensions()
     setScale(spec.rightWallNode, WALL_THICKNESS, height, length)
     setTranslation(spec.rearWallNode, 0, height * 0.5, rearWallOffset)
     setScale(spec.rearWallNode, outerWidth, height, WALL_THICKNESS)
-    setTranslation(spec.floorPlateNode, 0, floorCenterY, -floorFrontExtension * 0.5)
-    setScale(spec.floorPlateNode, baseOuterWidth, FLOOR_THICKNESS, length + floorFrontExtension)
+    setVisibility(spec.rearWallNode, hasRearWall)
+    setTranslation(spec.floorPlateNode, 0, floorCenterY, (rearOuterExtension - floorFrontExtension) * 0.5)
+    setScale(
+        spec.floorPlateNode,
+        baseOuterWidth,
+        FLOOR_THICKNESS,
+        length + rearOuterExtension + floorFrontExtension
+    )
     setVisibility(spec.floorPlateNode, hasFloorPlate)
     setTranslation(spec.leftWallBaseNode, -sideBaseOffset, WALL_BASE_HEIGHT * 0.5, sideOuterCenter)
-    setScale(spec.leftWallBaseNode, slopeRun, WALL_BASE_HEIGHT, sideOuterLength)
+    setScale(spec.leftWallBaseNode, slopeRun, WALL_BASE_HEIGHT, length + rearWallExtension)
     setTranslation(spec.rightWallBaseNode, sideBaseOffset, WALL_BASE_HEIGHT * 0.5, sideOuterCenter)
-    setScale(spec.rightWallBaseNode, slopeRun, WALL_BASE_HEIGHT, sideOuterLength)
+    setScale(spec.rightWallBaseNode, slopeRun, WALL_BASE_HEIGHT, length + rearWallExtension)
     setTranslation(spec.rearWallBaseNode, 0, WALL_BASE_HEIGHT * 0.5, rearBaseOffset)
-    setScale(spec.rearWallBaseNode, outerWidth, WALL_BASE_HEIGHT, slopeRun)
+    setScale(spec.rearWallBaseNode, baseOuterWidth, WALL_BASE_HEIGHT, slopeRun)
+    setVisibility(spec.rearWallBaseNode, hasRearWall)
     setTranslation(spec.leftWallSlopeNode, -sideSlopeOffset, WALL_BASE_HEIGHT, sideOuterCenter)
-    setScale(spec.leftWallSlopeNode, slopeRun, slopeHeight, sideOuterLength)
+    setScale(spec.leftWallSlopeNode, slopeRun, slopeHeight, length + rearWallExtension)
     setTranslation(spec.rightWallSlopeNode, sideSlopeOffset, WALL_BASE_HEIGHT, sideOuterCenter)
-    setScale(spec.rightWallSlopeNode, slopeRun, slopeHeight, sideOuterLength)
+    setScale(spec.rightWallSlopeNode, slopeRun, slopeHeight, length + rearWallExtension)
     setTranslation(spec.rearWallSlopeNode, 0, WALL_BASE_HEIGHT, rearSlopeOffset)
-    setScale(spec.rearWallSlopeNode, slopeRun, slopeHeight, outerWidth)
+    setScale(spec.rearWallSlopeNode, slopeRun, slopeHeight, baseOuterWidth)
+    setVisibility(spec.rearWallSlopeNode, hasRearWall)
     setPhysicsNodeTransform(spec.leftCollisionNode, -wallOffset, height * 0.5, 0, WALL_THICKNESS, height, length)
     setPhysicsNodeTransform(spec.rightCollisionNode, wallOffset, height * 0.5, 0, WALL_THICKNESS, height, length)
     setPhysicsNodeTransform(spec.rearCollisionNode, 0, height * 0.5, rearWallOffset, outerWidth, height, WALL_THICKNESS)
+    setPhysicsNodeEnabled(spec.rearCollisionNode, hasRearWall)
     setPhysicsNodeTransform(
         spec.floorCollisionNode,
         0,
         floorCenterY,
-        -floorFrontExtension * 0.5,
+        (rearOuterExtension - floorFrontExtension) * 0.5,
         baseOuterWidth,
         FLOOR_THICKNESS,
-        length + floorFrontExtension
+        length + rearOuterExtension + floorFrontExtension
     )
     setPhysicsNodeEnabled(spec.floorCollisionNode, hasFloorPlate)
     setPhysicsNodeTransform(
@@ -282,7 +333,7 @@ function Bunker:VariableBunkerApplyDimensions()
         sideOuterCenter,
         slopeRun,
         WALL_BASE_HEIGHT,
-        sideOuterLength
+        length + rearWallExtension
     )
     setPhysicsNodeTransform(
         spec.rightBaseCollisionNode,
@@ -291,17 +342,18 @@ function Bunker:VariableBunkerApplyDimensions()
         sideOuterCenter,
         slopeRun,
         WALL_BASE_HEIGHT,
-        sideOuterLength
+        length + rearWallExtension
     )
     setPhysicsNodeTransform(
         spec.rearBaseCollisionNode,
         0,
         WALL_BASE_HEIGHT * 0.5,
         rearBaseOffset,
-        outerWidth,
+        baseOuterWidth,
         WALL_BASE_HEIGHT,
         slopeRun
     )
+    setPhysicsNodeEnabled(spec.rearBaseCollisionNode, hasRearWall)
     setPhysicsNodeTransform(
         spec.leftSlopeCollisionNode,
         -sideSlopeOffset,
@@ -309,7 +361,7 @@ function Bunker:VariableBunkerApplyDimensions()
         sideOuterCenter,
         slopeRun,
         slopeHeight,
-        sideOuterLength
+        length + rearWallExtension
     )
     setPhysicsNodeTransform(
         spec.rightSlopeCollisionNode,
@@ -318,7 +370,7 @@ function Bunker:VariableBunkerApplyDimensions()
         sideOuterCenter,
         slopeRun,
         slopeHeight,
-        sideOuterLength
+        length + rearWallExtension
     )
     setPhysicsNodeTransform(
         spec.rearSlopeCollisionNode,
@@ -327,8 +379,9 @@ function Bunker:VariableBunkerApplyDimensions()
         rearSlopeOffset,
         slopeRun,
         slopeHeight,
-        outerWidth
+        baseOuterWidth
     )
+    setPhysicsNodeEnabled(spec.rearSlopeCollisionNode, hasRearWall)
     setPhysicsNodeTransform(
         spec.interactionTriggerNode,
         0,

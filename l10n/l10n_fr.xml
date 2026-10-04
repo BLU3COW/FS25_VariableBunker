@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
     <texts>
-        <text name="function_VariableBunker" text="Silo couloir configurable pour fermenter la paille hachée, l'herbe et le foin en ensilage." />
+        <text name="function_VariableBunker" text="Silo bunker ou traversant configurable pour fermenter la paille hachée, l'herbe et le foin en ensilage." />
         <text name="configuration_VariableBunkerWidth" text="Largeur intérieure" />
         <text name="configuration_VariableBunkerLength" text="Longueur" />
         <text name="configuration_VariableBunkerHeight" text="Hauteur des murs" />
+        <text name="configuration_VariableBunkerType" text="Type de silo" />
+        <text name="option_VariableBunkerTypeBunker" text="Silo bunker avec mur arrière" />
+        <text name="option_VariableBunkerTypeDriveThrough" text="Silo traversant ouvert aux deux extrémités" />
         <text name="configuration_VariableBunkerFloor" text="Dalle en béton" />
         <text name="option_VariableBunkerFloorOff" text="Sans dalle" />
         <text name="option_VariableBunkerFloorFlush" text="Jusqu'au bord avant" />
-        <text name="option_VariableBunkerFloorExtended" text="Avec aire de 30 m" />
+        <text name="option_VariableBunkerFloorExtended" text="Avec aire étendue" />
         <text name="configuration_VariableBunkerAutoDrive" text="Parcours AutoDrive" />
         <text name="option_VariableBunkerAutoDriveOff" text="Désactivé" />
         <text name="option_VariableBunkerAutoDriveOn" text="Générer automatiquement" />

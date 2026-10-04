@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
     <texts>
-        <text name="function_VariableBunker" text="Einstellbares Bunkersilo zum Vergären von Häckselgut, Gras und Heu zu Silage." />
+        <text name="function_VariableBunker" text="Einstellbares Bunker- oder Fahrsilo zum Vergären von Häckselgut, Gras und Heu zu Silage." />
         <text name="configuration_VariableBunkerWidth" text="Innenbreite" />
         <text name="configuration_VariableBunkerLength" text="Länge" />
         <text name="configuration_VariableBunkerHeight" text="Wandhöhe" />
+        <text name="configuration_VariableBunkerType" text="Silobauart" />
+        <text name="option_VariableBunkerTypeBunker" text="Bunkersilo mit Rückwand" />
+        <text name="option_VariableBunkerTypeDriveThrough" text="Fahrsilo beidseitig offen" />
         <text name="configuration_VariableBunkerFloor" text="Beton-Bodenplatte" />
         <text name="option_VariableBunkerFloorOff" text="Ohne Bodenplatte" />
         <text name="option_VariableBunkerFloorFlush" text="Bis zur Vorderkante" />
-        <text name="option_VariableBunkerFloorExtended" text="Mit 30-m-Vorplatz" />
+        <text name="option_VariableBunkerFloorExtended" text="Mit erweitertem Vorplatz" />
         <text name="configuration_VariableBunkerAutoDrive" text="AutoDrive-Kurs" />
         <text name="option_VariableBunkerAutoDriveOff" text="Aus" />
         <text name="option_VariableBunkerAutoDriveOn" text="Automatisch erzeugen" />
