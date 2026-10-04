@@ -248,20 +248,20 @@ function Bunker:VariableBunkerApplyDimensions()
     setTranslation(spec.rearWallNode, 0, height * 0.5, rearWallOffset)
     setScale(spec.rearWallNode, outerWidth, height, WALL_THICKNESS)
     setTranslation(spec.floorPlateNode, 0, floorCenterY, -floorFrontExtension * 0.5)
-    setScale(spec.floorPlateNode, width, FLOOR_THICKNESS, length + floorFrontExtension)
+    setScale(spec.floorPlateNode, baseOuterWidth, FLOOR_THICKNESS, length + floorFrontExtension)
     setVisibility(spec.floorPlateNode, hasFloorPlate)
     setTranslation(spec.leftWallBaseNode, -sideBaseOffset, WALL_BASE_HEIGHT * 0.5, sideOuterCenter)
     setScale(spec.leftWallBaseNode, slopeRun, WALL_BASE_HEIGHT, sideOuterLength)
     setTranslation(spec.rightWallBaseNode, sideBaseOffset, WALL_BASE_HEIGHT * 0.5, sideOuterCenter)
     setScale(spec.rightWallBaseNode, slopeRun, WALL_BASE_HEIGHT, sideOuterLength)
     setTranslation(spec.rearWallBaseNode, 0, WALL_BASE_HEIGHT * 0.5, rearBaseOffset)
-    setScale(spec.rearWallBaseNode, baseOuterWidth, WALL_BASE_HEIGHT, slopeRun)
+    setScale(spec.rearWallBaseNode, outerWidth, WALL_BASE_HEIGHT, slopeRun)
     setTranslation(spec.leftWallSlopeNode, -sideSlopeOffset, WALL_BASE_HEIGHT, sideOuterCenter)
     setScale(spec.leftWallSlopeNode, slopeRun, slopeHeight, sideOuterLength)
     setTranslation(spec.rightWallSlopeNode, sideSlopeOffset, WALL_BASE_HEIGHT, sideOuterCenter)
     setScale(spec.rightWallSlopeNode, slopeRun, slopeHeight, sideOuterLength)
     setTranslation(spec.rearWallSlopeNode, 0, WALL_BASE_HEIGHT, rearSlopeOffset)
-    setScale(spec.rearWallSlopeNode, slopeRun, slopeHeight, baseOuterWidth)
+    setScale(spec.rearWallSlopeNode, slopeRun, slopeHeight, outerWidth)
     setPhysicsNodeTransform(spec.leftCollisionNode, -wallOffset, height * 0.5, 0, WALL_THICKNESS, height, length)
     setPhysicsNodeTransform(spec.rightCollisionNode, wallOffset, height * 0.5, 0, WALL_THICKNESS, height, length)
     setPhysicsNodeTransform(spec.rearCollisionNode, 0, height * 0.5, rearWallOffset, outerWidth, height, WALL_THICKNESS)
@@ -270,7 +270,7 @@ function Bunker:VariableBunkerApplyDimensions()
         0,
         floorCenterY,
         -floorFrontExtension * 0.5,
-        width,
+        baseOuterWidth,
         FLOOR_THICKNESS,
         length + floorFrontExtension
     )
@@ -298,7 +298,7 @@ function Bunker:VariableBunkerApplyDimensions()
         0,
         WALL_BASE_HEIGHT * 0.5,
         rearBaseOffset,
-        baseOuterWidth,
+        outerWidth,
         WALL_BASE_HEIGHT,
         slopeRun
     )
@@ -327,7 +327,7 @@ function Bunker:VariableBunkerApplyDimensions()
         rearSlopeOffset,
         slopeRun,
         slopeHeight,
-        baseOuterWidth
+        outerWidth
     )
     setPhysicsNodeTransform(
         spec.interactionTriggerNode,

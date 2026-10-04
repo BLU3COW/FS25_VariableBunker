@@ -20,7 +20,7 @@ Dimensions:
 - Length: 20–200 meters
 - Wall height: 2–8 meters
 
-The selected dimensions are applied to the walls, collisions, bunker area, placement areas and interaction trigger. The wall insides remain vertical while their outer faces slope above a 0.5 meter base. The optional concrete floor slab can end at the open front or extend 30 meters beyond it. Chaff, grass and hay can be fermented into silage.
+The selected dimensions are applied to the walls, collisions, bunker area, placement areas and interaction trigger. The wall insides remain vertical while their outer faces slope above a 0.5 meter base. The optional concrete floor slab spans the complete outside width and can end at the open front or extend 30 meters beyond it. Original GIANTS bunker textures give all visible concrete a detailed surface. Chaff, grass and hay can be fermented into silage.
 
 An optional AutoDrive course can be generated during placement. Its lanes and waypoints automatically adapt to the selected width and length. AutoDrive is required to use this option.
 
@@ -37,7 +37,7 @@ Abmessungen:
 - Länge: 20–200 Meter
 - Wandhöhe: 2–8 Meter
 
-Die gewählten Abmessungen werden auf Wände, Kollisionen, Silobereich, Platzierungsflächen und Interaktionstrigger angewendet. Die Wandinnenseiten bleiben senkrecht, während die Außenseiten oberhalb eines 0,5 Meter hohen Sockels schräg verlaufen. Die optionale Beton-Bodenplatte endet wahlweise an der offenen Front oder reicht 30 Meter darüber hinaus. Häckselgut, Gras und Heu können zu Silage vergoren werden.
+Die gewählten Abmessungen werden auf Wände, Kollisionen, Silobereich, Platzierungsflächen und Interaktionstrigger angewendet. Die Wandinnenseiten bleiben senkrecht, während die Außenseiten oberhalb eines 0,5 Meter hohen Sockels schräg verlaufen. Die optionale Beton-Bodenplatte reicht über die gesamte Außenbreite und endet wahlweise an der offenen Front oder 30 Meter davor. Originale GIANTS-Bunkertexturen geben allen sichtbaren Betonflächen eine detaillierte Oberfläche. Häckselgut, Gras und Heu können zu Silage vergoren werden.
 
 Beim Platzieren kann optional ein AutoDrive-Kurs erzeugt werden. Fahrspuren und Wegpunkte passen sich automatisch an die gewählte Breite und Länge an. Für diese Option wird AutoDrive benötigt.
 
@@ -54,7 +54,7 @@ Dimensions :
 - Longueur : 20 à 200 mètres
 - Hauteur des murs : 2 à 8 mètres
 
-Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la zone du silo, aux zones de placement et au déclencheur d'interaction. L'intérieur des murs reste vertical tandis que leur face extérieure est inclinée au-dessus d'un socle de 0,5 mètre. La dalle en béton optionnelle peut s'arrêter à la façade ouverte ou la dépasser de 30 mètres. La paille hachée, l'herbe et le foin peuvent être fermentés en ensilage.
+Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la zone du silo, aux zones de placement et au déclencheur d'interaction. L'intérieur des murs reste vertical tandis que leur face extérieure est inclinée au-dessus d'un socle de 0,5 mètre. La dalle en béton optionnelle couvre toute la largeur extérieure et peut s'arrêter à la façade ouverte ou la dépasser de 30 mètres. Les textures de bunker GIANTS donnent à toutes les surfaces en béton un aspect détaillé. La paille hachée, l'herbe et le foin peuvent être fermentés en ensilage.
 
 Un parcours AutoDrive peut être généré en option lors du placement. Ses voies et points de passage s'adaptent automatiquement à la largeur et à la longueur sélectionnées. AutoDrive est requis pour utiliser cette option.
 
