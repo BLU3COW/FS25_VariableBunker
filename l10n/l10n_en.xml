@@ -7,7 +7,8 @@
         <text name="configuration_VariableBunkerHeight" text="Wall height" />
         <text name="configuration_VariableBunkerFloor" text="Concrete floor slab" />
         <text name="option_VariableBunkerFloorOff" text="Without floor slab" />
-        <text name="option_VariableBunkerFloorOn" text="With 30 m apron" />
+        <text name="option_VariableBunkerFloorFlush" text="Up to the front edge" />
+        <text name="option_VariableBunkerFloorExtended" text="With 30 m apron" />
         <text name="configuration_VariableBunkerAutoDrive" text="AutoDrive course" />
         <text name="option_VariableBunkerAutoDriveOff" text="Off" />
         <text name="option_VariableBunkerAutoDriveOn" text="Generate automatically" />

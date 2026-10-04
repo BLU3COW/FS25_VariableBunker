@@ -10,6 +10,16 @@ local NEAR_FRONT_CONNECTION_OFFSET = 4
 local FAR_FRONT_CONNECTION_OFFSET = 26
 local WAYPOINT_SPACING = 3
 
+local function getAutoDriveApi()
+    local environment = getfenv(0).FS25_AutoDrive
+    local autoDrive = AutoDrive or (environment ~= nil and environment.AutoDrive or nil)
+    local graphManager = ADGraphManager or (environment ~= nil and environment.ADGraphManager or nil)
+    local placeableData = AutoDrivePlaceableData or (environment ~= nil and environment.AutoDrivePlaceableData or nil)
+    local createPlaceableEvent = CreatePlaceableEvent
+        or (environment ~= nil and environment.CreatePlaceableEvent or nil)
+    return autoDrive, graphManager, placeableData, createPlaceableEvent
+end
+
 local function addUnique(values, value)
     for _, current in ipairs(values) do
         if current == value then
@@ -47,7 +57,7 @@ function Bunker:VariableBunkerHasAutoDriveCourse()
     return configId == ENABLED_CONFIGURATION
 end
 
-function Bunker:VariableBunkerCreateAutoDriveCourse()
+function Bunker:VariableBunkerCreateAutoDriveCourse(autoDrive, graphManager)
     local spec = self.spec_VariableBunker
     local width = spec ~= nil and spec.widthMeters or 10
     local length = spec ~= nil and spec.lengthMeters or 40
@@ -56,7 +66,7 @@ function Bunker:VariableBunkerCreateAutoDriveCourse()
     local front = -length * 0.5 - FRONT_APPROACH
     local rear = length * 0.5 - REAR_CLEARANCE
     local segmentCount = math.max(1, math.ceil((rear - front) / WAYPOINT_SPACING))
-    local baseId = ADGraphManager:getWayPointsCount()
+    local baseId = graphManager:getWayPointsCount()
     local wayPoints = {}
     local lanes = {}
     local zValues = {}
@@ -74,7 +84,7 @@ function Bunker:VariableBunkerCreateAutoDriveCourse()
             wayPoints[waypointIndex] = {
                 id = baseId + waypointIndex,
                 x = worldX,
-                y = AutoDrive:getTerrainHeightAtWorldPos(worldX, worldZ),
+                y = autoDrive:getTerrainHeightAtWorldPos(worldX, worldZ),
                 z = worldZ,
                 out = {},
                 incoming = {},
@@ -114,20 +124,26 @@ function Bunker:onFinalizePlacement()
     if not self.isServer or not self:VariableBunkerHasAutoDriveCourse() then
         return
     end
+    local autoDrive, graphManager, placeableData, createPlaceableEvent = getAutoDriveApi()
     if
-        AutoDrive == nil
-        or ADGraphManager == nil
-        or AutoDrivePlaceableData == nil
-        or AutoDrivePlaceableData.active ~= true
-        or CreatePlaceableEvent == nil
-        or CreatePlaceableEvent.sendEvent == nil
+        autoDrive == nil
+        or graphManager == nil
+        or placeableData == nil
+        or placeableData.active ~= true
+        or createPlaceableEvent == nil
+        or createPlaceableEvent.sendEvent == nil
     then
         Logging.warning("[VariableBunker] AutoDrive course requested, but AutoDrive is not active")
         return
     end
 
-    local wayPoints, mapMarkers = self:VariableBunkerCreateAutoDriveCourse()
+    local wayPoints, mapMarkers = self:VariableBunkerCreateAutoDriveCourse(autoDrive, graphManager)
     if #wayPoints > 0 and #mapMarkers > 0 then
-        CreatePlaceableEvent.sendEvent(wayPoints, mapMarkers)
+        createPlaceableEvent.sendEvent(wayPoints, mapMarkers)
+        Logging.info(
+            "[VariableBunker] Created AutoDrive course with %d waypoints and %d destinations",
+            #wayPoints,
+            #mapMarkers
+        )
     end
 end

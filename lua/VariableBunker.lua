@@ -18,7 +18,9 @@ local TRIGGER_MARGIN = 1
 local FLOOR_FRONT_EXTENSION = 30
 local FLOOR_THICKNESS = 0.2
 local FLOOR_TOP_OFFSET = 0.02
-local ENABLED_CONFIGURATION = 2
+local FLOOR_CONFIGURATION_NONE = 1
+local FLOOR_CONFIGURATION_FLUSH = 2
+local FLOOR_CONFIGURATION_EXTENDED = 3
 local SCALE_EPSILON = 0.0001
 
 local NODE_ATTRIBUTES = {
@@ -146,6 +148,11 @@ function Bunker.registerFunctions(placeableType)
     )
     SpecializationUtil.registerFunction(
         placeableType,
+        "VariableBunkerGetFloorPlateConfiguration",
+        Bunker.VariableBunkerGetFloorPlateConfiguration
+    )
+    SpecializationUtil.registerFunction(
+        placeableType,
         "VariableBunkerHasAutoDriveCourse",
         Bunker.VariableBunkerHasAutoDriveCourse
     )
@@ -179,7 +186,7 @@ function Bunker:VariableBunkerGetConfigurationItem(configName)
     return ConfigurationUtil.getConfigItemByConfigId(self.configFileName, configName, configId)
 end
 
-function Bunker:VariableBunkerHasFloorPlate()
+function Bunker:VariableBunkerGetFloorPlateConfiguration()
     local configName = Bunker.CONFIG_FLOOR or ROOT_KEY_FLOOR
     local configId = self.configurations ~= nil and self.configurations[configName] or nil
     if configId == nil and g_storeManager ~= nil then
@@ -188,7 +195,12 @@ function Bunker:VariableBunkerHasFloorPlate()
             configId = storeItem.defaultConfigurationIds[configName]
         end
     end
-    return configId == ENABLED_CONFIGURATION
+    return configId or FLOOR_CONFIGURATION_NONE
+end
+
+function Bunker:VariableBunkerHasFloorPlate()
+    local configuration = self:VariableBunkerGetFloorPlateConfiguration()
+    return configuration == FLOOR_CONFIGURATION_FLUSH or configuration == FLOOR_CONFIGURATION_EXTENDED
 end
 
 function Bunker:VariableBunkerApplyDimensions()
@@ -199,15 +211,17 @@ function Bunker:VariableBunkerApplyDimensions()
     local width = math.clamp(tonumber(widthItem ~= nil and widthItem.meters) or DEFAULT_WIDTH, 6, 100)
     local length = math.clamp(tonumber(lengthItem ~= nil and lengthItem.meters) or DEFAULT_LENGTH, 20, 200)
     local height = math.clamp(tonumber(heightItem ~= nil and heightItem.meters) or DEFAULT_HEIGHT, 2, 8)
-    local hasFloorPlate = self:VariableBunkerHasFloorPlate()
-    local floorFrontExtension = hasFloorPlate and FLOOR_FRONT_EXTENSION or 0
+    local floorConfiguration = self:VariableBunkerGetFloorPlateConfiguration()
+    local hasFloorPlate = floorConfiguration == FLOOR_CONFIGURATION_FLUSH
+        or floorConfiguration == FLOOR_CONFIGURATION_EXTENDED
+    local floorFrontExtension = floorConfiguration == FLOOR_CONFIGURATION_EXTENDED and FLOOR_FRONT_EXTENSION or 0
     local slopeHeight = height - WALL_BASE_HEIGHT
     local slopeRun = slopeHeight * WALL_SLOPE_PER_METER
     local outerWidth = width + WALL_THICKNESS * 2
     local baseOuterWidth = outerWidth + slopeRun * 2
     local rearOuterExtension = WALL_THICKNESS + slopeRun
-    local sideOuterLength = length + rearOuterExtension
-    local sideOuterCenter = rearOuterExtension * 0.5
+    local sideOuterLength = length + WALL_THICKNESS
+    local sideOuterCenter = WALL_THICKNESS * 0.5
     local footprintStart = -length * 0.5 - floorFrontExtension
     local footprintLength = length + rearOuterExtension + floorFrontExtension
     local innerWidth = math.max(width - INNER_MARGIN * 2, 0.5)
@@ -224,6 +238,7 @@ function Bunker:VariableBunkerApplyDimensions()
     spec.lengthMeters = length
     spec.heightMeters = height
     spec.floorPlateEnabled = hasFloorPlate
+    spec.floorPlateFrontExtension = floorFrontExtension
     spec.wallSlopeRun = slopeRun
 
     setTranslation(spec.leftWallNode, -wallOffset, height * 0.5, 0)
@@ -232,8 +247,8 @@ function Bunker:VariableBunkerApplyDimensions()
     setScale(spec.rightWallNode, WALL_THICKNESS, height, length)
     setTranslation(spec.rearWallNode, 0, height * 0.5, rearWallOffset)
     setScale(spec.rearWallNode, outerWidth, height, WALL_THICKNESS)
-    setTranslation(spec.floorPlateNode, 0, floorCenterY, -FLOOR_FRONT_EXTENSION * 0.5)
-    setScale(spec.floorPlateNode, width, FLOOR_THICKNESS, length + FLOOR_FRONT_EXTENSION)
+    setTranslation(spec.floorPlateNode, 0, floorCenterY, -floorFrontExtension * 0.5)
+    setScale(spec.floorPlateNode, width, FLOOR_THICKNESS, length + floorFrontExtension)
     setVisibility(spec.floorPlateNode, hasFloorPlate)
     setTranslation(spec.leftWallBaseNode, -sideBaseOffset, WALL_BASE_HEIGHT * 0.5, sideOuterCenter)
     setScale(spec.leftWallBaseNode, slopeRun, WALL_BASE_HEIGHT, sideOuterLength)
@@ -254,10 +269,10 @@ function Bunker:VariableBunkerApplyDimensions()
         spec.floorCollisionNode,
         0,
         floorCenterY,
-        -FLOOR_FRONT_EXTENSION * 0.5,
+        -floorFrontExtension * 0.5,
         width,
         FLOOR_THICKNESS,
-        length + FLOOR_FRONT_EXTENSION
+        length + floorFrontExtension
     )
     setPhysicsNodeEnabled(spec.floorCollisionNode, hasFloorPlate)
     setPhysicsNodeTransform(

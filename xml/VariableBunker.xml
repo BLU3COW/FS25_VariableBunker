@@ -148,7 +148,8 @@
 
         <VariableBunkerFloorConfigurations title="$l10n_configuration_VariableBunkerFloor">
             <VariableBunkerFloorConfiguration name="$l10n_option_VariableBunkerFloorOff" isDefault="true" saveId="off" />
-            <VariableBunkerFloorConfiguration name="$l10n_option_VariableBunkerFloorOn" saveId="on" />
+            <VariableBunkerFloorConfiguration name="$l10n_option_VariableBunkerFloorFlush" saveId="flush" />
+            <VariableBunkerFloorConfiguration name="$l10n_option_VariableBunkerFloorExtended" saveId="on" />
         </VariableBunkerFloorConfigurations>
 
         <VariableBunkerAutoDriveConfigurations title="$l10n_configuration_VariableBunkerAutoDrive">
