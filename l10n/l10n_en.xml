@@ -5,6 +5,9 @@
         <text name="configuration_VariableBunkerWidth" text="Interior width" />
         <text name="configuration_VariableBunkerLength" text="Length" />
         <text name="configuration_VariableBunkerHeight" text="Wall height" />
+        <text name="configuration_VariableBunkerFloor" text="Concrete floor slab" />
+        <text name="option_VariableBunkerFloorOff" text="Without floor slab" />
+        <text name="option_VariableBunkerFloorOn" text="With 30 m apron" />
         <text name="configuration_VariableBunkerAutoDrive" text="AutoDrive course" />
         <text name="option_VariableBunkerAutoDriveOff" text="Off" />
         <text name="option_VariableBunkerAutoDriveOn" text="Generate automatically" />

@@ -6,10 +6,12 @@ VariableBunker is a configurable three-sided bunker silo for Farming Simulator 2
 
 - Interior width: 6–20 m in 1 m steps, then 25–100 m in 5 m steps
 - Length: 20–50 m in 5 m steps, then 60–200 m in 10 m steps
-- Wall height: 2–6 m in 1 m steps
+- Wall height: 2–8 m in 1 m steps
 - Default: 10 × 40 × 4 m
 
-The purchase price is independent of the selected size. The silo accepts chaff, grass windrows and dry grass windrows and ferments them into silage. The front remains open while a full-width concrete wall closes the rear.
+The purchase price is independent of the selected size. The silo accepts chaff, grass windrows and dry grass windrows and ferments them into silage. The front remains open while a full-width concrete wall closes the rear. All walls remain vertical on the inside; above a 0.5 m vertical base, their outside face slopes inward at a constant angle so taller walls receive a wider base.
+
+An optional concrete floor slab covers the complete silo and extends 30 m beyond its open front. It provides a smooth blade transition and makes the required AutoDrive approach area visible during placement. The slab is disabled by default.
 
 The construction menu includes an optional AutoDrive course. When enabled and AutoDrive is active, placing the bunker creates one parallel drive lane per approximately 5 m of interior width, cross-connections and one destination marker per lane. Following the reference course, every lane ends 3.2 m before the rear wall and extends 27 m beyond the open front. The course adapts to the configured width and length and reaches 20 lanes at 100 m width; it remains disabled by default.
 

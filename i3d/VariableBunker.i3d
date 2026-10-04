@@ -15,11 +15,25 @@
         <Shape name="leftWall" translation="-5.2 2 0" scale="0.4 4 40" shapeId="1" clipDistance="500" nodeId="12" castsShadows="true" receiveShadows="true" materialIds="5"/>
         <Shape name="rightWall" translation="5.2 2 0" scale="0.4 4 40" shapeId="1" clipDistance="500" nodeId="13" castsShadows="true" receiveShadows="true" materialIds="5"/>
         <Shape name="rearWall" translation="0 2 20.2" scale="10.8 4 0.4" shapeId="1" clipDistance="500" nodeId="41" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="floorPlate" translation="0 -0.08 -15" scale="10 0.2 70" shapeId="1" visibility="false" clipDistance="500" nodeId="43" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="leftWallBase" translation="-5.8375 0.25 0.6375" scale="0.875 0.5 41.275" shapeId="1" clipDistance="500" nodeId="44" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rightWallBase" translation="5.8375 0.25 0.6375" scale="0.875 0.5 41.275" shapeId="1" clipDistance="500" nodeId="45" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rearWallBase" translation="0 0.25 20.8375" scale="12.55 0.5 0.875" shapeId="1" clipDistance="500" nodeId="46" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="leftWallSlope" translation="-5.4 0.5 0.6375" rotation="0 180 0" scale="0.875 3.5 41.275" shapeId="2" clipDistance="500" nodeId="47" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rightWallSlope" translation="5.4 0.5 0.6375" scale="0.875 3.5 41.275" shapeId="2" clipDistance="500" nodeId="48" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rearWallSlope" translation="0 0.5 20.4" rotation="0 -90 0" scale="0.875 3.5 12.55" shapeId="2" clipDistance="500" nodeId="49" castsShadows="true" receiveShadows="true" materialIds="5"/>
       </TransformGroup>
       <TransformGroup name="collisions" nodeId="14">
         <Shape name="leftWallCollision" translation="-5.2 2 0" scale="0.4 4 40" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="15" nonRenderable="true" materialIds="6"/>
         <Shape name="rightWallCollision" translation="5.2 2 0" scale="0.4 4 40" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="16" nonRenderable="true" materialIds="6"/>
         <Shape name="rearWallCollision" translation="0 2 20.2" scale="10.8 4 0.4" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="42" nonRenderable="true" materialIds="6"/>
+        <Shape name="floorPlateCollision" translation="0 -0.08 -15" scale="10 0.2 70" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="50" nonRenderable="true" materialIds="6"/>
+        <Shape name="leftWallBaseCollision" translation="-5.8375 0.25 0.6375" scale="0.875 0.5 41.275" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="51" nonRenderable="true" materialIds="6"/>
+        <Shape name="rightWallBaseCollision" translation="5.8375 0.25 0.6375" scale="0.875 0.5 41.275" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="52" nonRenderable="true" materialIds="6"/>
+        <Shape name="rearWallBaseCollision" translation="0 0.25 20.8375" scale="12.55 0.5 0.875" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="53" nonRenderable="true" materialIds="6"/>
+        <Shape name="leftWallSlopeCollision" translation="-5.4 0.5 0.6375" rotation="0 180 0" scale="0.875 3.5 41.275" shapeId="2" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="54" nonRenderable="true" materialIds="6"/>
+        <Shape name="rightWallSlopeCollision" translation="5.4 0.5 0.6375" scale="0.875 3.5 41.275" shapeId="2" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="55" nonRenderable="true" materialIds="6"/>
+        <Shape name="rearWallSlopeCollision" translation="0 0.5 20.4" rotation="0 -90 0" scale="0.875 3.5 12.55" shapeId="2" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="56" nonRenderable="true" materialIds="6"/>
       </TransformGroup>
       <TransformGroup name="clearAreas" nodeId="17">
         <TransformGroup name="clearAreaStart" translation="-5.4 0 -20" nodeId="18">

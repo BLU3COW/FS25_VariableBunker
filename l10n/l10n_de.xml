@@ -5,6 +5,9 @@
         <text name="configuration_VariableBunkerWidth" text="Innenbreite" />
         <text name="configuration_VariableBunkerLength" text="Länge" />
         <text name="configuration_VariableBunkerHeight" text="Wandhöhe" />
+        <text name="configuration_VariableBunkerFloor" text="Beton-Bodenplatte" />
+        <text name="option_VariableBunkerFloorOff" text="Ohne Bodenplatte" />
+        <text name="option_VariableBunkerFloorOn" text="Mit 30-m-Vorplatz" />
         <text name="configuration_VariableBunkerAutoDrive" text="AutoDrive-Kurs" />
         <text name="option_VariableBunkerAutoDriveOff" text="Aus" />
         <text name="option_VariableBunkerAutoDriveOn" text="Automatisch erzeugen" />

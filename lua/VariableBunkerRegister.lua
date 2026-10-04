@@ -6,6 +6,7 @@ local modDirectory = g_currentModDirectory or ""
 Bunker.CONFIG_WIDTH = "VariableBunkerWidth"
 Bunker.CONFIG_LENGTH = "VariableBunkerLength"
 Bunker.CONFIG_HEIGHT = "VariableBunkerHeight"
+Bunker.CONFIG_FLOOR = "VariableBunkerFloor"
 Bunker.CONFIG_AUTODRIVE = "VariableBunkerAutoDrive"
 
 VariableBunkerDimensionConfigurationItem = {}
@@ -63,6 +64,7 @@ local function registerConfigurationTypes()
     addConfigType(Bunker.CONFIG_WIDTH, "configuration_VariableBunkerWidth", VariableBunkerDimensionConfigurationItem)
     addConfigType(Bunker.CONFIG_LENGTH, "configuration_VariableBunkerLength", VariableBunkerDimensionConfigurationItem)
     addConfigType(Bunker.CONFIG_HEIGHT, "configuration_VariableBunkerHeight", VariableBunkerDimensionConfigurationItem)
+    addConfigType(Bunker.CONFIG_FLOOR, "configuration_VariableBunkerFloor", PlaceableConfigurationItem)
     addConfigType(Bunker.CONFIG_AUTODRIVE, "configuration_VariableBunkerAutoDrive", PlaceableConfigurationItem)
 end
 
