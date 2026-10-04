@@ -17,8 +17,10 @@ local SCALE_EPSILON = 0.0001
 local NODE_ATTRIBUTES = {
     "leftWallNode",
     "rightWallNode",
+    "rearWallNode",
     "leftCollisionNode",
     "rightCollisionNode",
+    "rearCollisionNode",
     "interactionTriggerNode",
     "siloAreaStartNode",
     "siloAreaWidthNode",
@@ -147,8 +149,10 @@ function Bunker:VariableBunkerApplyDimensions()
     local length = math.clamp(tonumber(lengthItem ~= nil and lengthItem.meters) or DEFAULT_LENGTH, 20, 200)
     local height = math.clamp(tonumber(heightItem ~= nil and heightItem.meters) or DEFAULT_HEIGHT, 2, 6)
     local outerWidth = width + WALL_THICKNESS * 2
+    local outerLength = length + WALL_THICKNESS
     local innerWidth = math.max(width - INNER_MARGIN * 2, 0.5)
     local wallOffset = width * 0.5 + WALL_THICKNESS * 0.5
+    local rearWallOffset = length * 0.5 + WALL_THICKNESS * 0.5
     local triggerHeight = height + 2
 
     spec.widthMeters = width
@@ -159,8 +163,11 @@ function Bunker:VariableBunkerApplyDimensions()
     setScale(spec.leftWallNode, WALL_THICKNESS, height, length)
     setTranslation(spec.rightWallNode, wallOffset, height * 0.5, 0)
     setScale(spec.rightWallNode, WALL_THICKNESS, height, length)
+    setTranslation(spec.rearWallNode, 0, height * 0.5, rearWallOffset)
+    setScale(spec.rearWallNode, outerWidth, height, WALL_THICKNESS)
     setPhysicsNodeTransform(spec.leftCollisionNode, -wallOffset, height * 0.5, 0, WALL_THICKNESS, height, length)
     setPhysicsNodeTransform(spec.rightCollisionNode, wallOffset, height * 0.5, 0, WALL_THICKNESS, height, length)
+    setPhysicsNodeTransform(spec.rearCollisionNode, 0, height * 0.5, rearWallOffset, outerWidth, height, WALL_THICKNESS)
     setPhysicsNodeTransform(
         spec.interactionTriggerNode,
         0,
@@ -179,15 +186,15 @@ function Bunker:VariableBunkerApplyDimensions()
     setNodeTranslation(spec.innerAreaHeightNode, innerWidth * 0.5, 0, -length * 0.5 + INNER_MARGIN)
 
     setNodeTranslation(spec.clearAreaStartNode, -outerWidth * 0.5, 0, -length * 0.5)
-    setNodeTranslation(spec.clearAreaWidthNode, 0, 0, length)
+    setNodeTranslation(spec.clearAreaWidthNode, 0, 0, outerLength)
     setNodeTranslation(spec.clearAreaHeightNode, outerWidth, 0, 0)
     setNodeTranslation(spec.levelAreaStartNode, -outerWidth * 0.5 - LEVEL_MARGIN, 0, -length * 0.5 - LEVEL_MARGIN)
-    setNodeTranslation(spec.levelAreaWidthNode, 0, 0, length + LEVEL_MARGIN * 2)
+    setNodeTranslation(spec.levelAreaWidthNode, 0, 0, outerLength + LEVEL_MARGIN * 2)
     setNodeTranslation(spec.levelAreaHeightNode, outerWidth + LEVEL_MARGIN * 2, 0, 0)
     setNodeTranslation(spec.testAreaStartNode, -outerWidth * 0.5, 0, -length * 0.5)
-    setNodeTranslation(spec.testAreaEndNode, outerWidth, height, length)
+    setNodeTranslation(spec.testAreaEndNode, outerWidth, height, outerLength)
     setNodeTranslation(spec.tipOcclusionStartNode, -outerWidth * 0.5, 0, -length * 0.5)
-    setNodeTranslation(spec.tipOcclusionEndNode, outerWidth, 0, length)
+    setNodeTranslation(spec.tipOcclusionEndNode, outerWidth, 0, outerLength)
 
     local placementSpec = self.spec_placement
     if placementSpec ~= nil and self.loadTestArea ~= nil then

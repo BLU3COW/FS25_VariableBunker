@@ -1,6 +1,6 @@
 # FS25_VariableBunker
 
-VariableBunker is a configurable drive-through bunker silo for Farming Simulator 25. Its simple concrete walls and all functional areas adapt to the selected dimensions in the construction menu.
+VariableBunker is a configurable three-sided bunker silo for Farming Simulator 25. Its simple concrete side and rear walls and all functional areas adapt to the selected dimensions in the construction menu.
 
 ## Configurations
 
@@ -9,9 +9,9 @@ VariableBunker is a configurable drive-through bunker silo for Farming Simulator
 - Wall height: 2–6 m in 1 m steps
 - Default: 10 × 40 × 4 m
 
-The purchase price is independent of the selected size. The silo accepts chaff, grass windrows and dry grass windrows and ferments them into silage. Both ends remain open, matching the base-game drive-through bunker silos.
+The purchase price is independent of the selected size. The silo accepts chaff, grass windrows and dry grass windrows and ferments them into silage. The front remains open while a full-width concrete wall closes the rear.
 
-The construction menu includes an optional AutoDrive course. When enabled and AutoDrive is active, placing the bunker creates one parallel drive lane per approximately 5 m of interior width, cross-connections and one destination marker per lane. The course adapts to the configured width and length, reaching 20 lanes at 100 m width; it remains disabled by default.
+The construction menu includes an optional AutoDrive course. When enabled and AutoDrive is active, placing the bunker creates one parallel drive lane per approximately 5 m of interior width, cross-connections and one destination marker per lane. The course adapts to the configured width and length, reaches 20 lanes at 100 m width and stops safely before the rear wall; it remains disabled by default.
 
 ## Development
 

@@ -14,31 +14,33 @@
       <TransformGroup name="walls" nodeId="11">
         <Shape name="leftWall" translation="-5.2 2 0" scale="0.4 4 40" shapeId="1" clipDistance="500" nodeId="12" castsShadows="true" receiveShadows="true" materialIds="5"/>
         <Shape name="rightWall" translation="5.2 2 0" scale="0.4 4 40" shapeId="1" clipDistance="500" nodeId="13" castsShadows="true" receiveShadows="true" materialIds="5"/>
+        <Shape name="rearWall" translation="0 2 20.2" scale="10.8 4 0.4" shapeId="1" clipDistance="500" nodeId="41" castsShadows="true" receiveShadows="true" materialIds="5"/>
       </TransformGroup>
       <TransformGroup name="collisions" nodeId="14">
         <Shape name="leftWallCollision" translation="-5.2 2 0" scale="0.4 4 40" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="15" nonRenderable="true" materialIds="6"/>
         <Shape name="rightWallCollision" translation="5.2 2 0" scale="0.4 4 40" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="16" nonRenderable="true" materialIds="6"/>
+        <Shape name="rearWallCollision" translation="0 2 20.2" scale="10.8 4 0.4" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="42" nonRenderable="true" materialIds="6"/>
       </TransformGroup>
       <TransformGroup name="clearAreas" nodeId="17">
         <TransformGroup name="clearAreaStart" translation="-5.4 0 -20" nodeId="18">
-          <TransformGroup name="clearAreaWidth" translation="0 0 40" nodeId="19"/>
+          <TransformGroup name="clearAreaWidth" translation="0 0 40.4" nodeId="19"/>
           <TransformGroup name="clearAreaHeight" translation="10.8 0 0" nodeId="20"/>
         </TransformGroup>
       </TransformGroup>
       <TransformGroup name="levelAreas" nodeId="21">
         <TransformGroup name="levelAreaStart" translation="-6.4 0 -21" nodeId="22">
-          <TransformGroup name="levelAreaWidth" translation="0 0 42" nodeId="23"/>
+          <TransformGroup name="levelAreaWidth" translation="0 0 42.4" nodeId="23"/>
           <TransformGroup name="levelAreaHeight" translation="12.8 0 0" nodeId="24"/>
         </TransformGroup>
       </TransformGroup>
       <TransformGroup name="testAreas" nodeId="25">
         <TransformGroup name="testAreaStart" translation="-5.4 0 -20" nodeId="26">
-          <TransformGroup name="testAreaEnd" translation="10.8 4 40" nodeId="27"/>
+          <TransformGroup name="testAreaEnd" translation="10.8 4 40.4" nodeId="27"/>
         </TransformGroup>
       </TransformGroup>
       <TransformGroup name="tipOcclusionUpdateAreas" nodeId="28">
         <TransformGroup name="tipOcclusionStart" translation="-5.4 0 -20" nodeId="29">
-          <TransformGroup name="tipOcclusionEnd" translation="10.8 0 40" nodeId="30"/>
+          <TransformGroup name="tipOcclusionEnd" translation="10.8 0 40.4" nodeId="30"/>
         </TransformGroup>
       </TransformGroup>
       <TransformGroup name="bunkerSilo" nodeId="31">

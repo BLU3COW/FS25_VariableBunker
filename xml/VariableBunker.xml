@@ -62,8 +62,8 @@
         </updateAreas>
     </ai>
 
-    <VariableBunker leftWallNode="leftWall" rightWallNode="rightWall"
-                    leftCollisionNode="leftWallCollision" rightCollisionNode="rightWallCollision"
+    <VariableBunker leftWallNode="leftWall" rightWallNode="rightWall" rearWallNode="rearWall"
+                    leftCollisionNode="leftWallCollision" rightCollisionNode="rightWallCollision" rearCollisionNode="rearWallCollision"
                     interactionTriggerNode="siloTrigger"
                     siloAreaStartNode="siloAreaStart" siloAreaWidthNode="siloAreaWidth" siloAreaHeightNode="siloAreaHeight"
                     innerAreaStartNode="innerAreaStart" innerAreaWidthNode="innerAreaWidth" innerAreaHeightNode="innerAreaHeight"
@@ -155,8 +155,10 @@
     <i3dMappings>
         <i3dMapping id="leftWall" node="0>0|0" />
         <i3dMapping id="rightWall" node="0>0|1" />
+        <i3dMapping id="rearWall" node="0>0|2" />
         <i3dMapping id="leftWallCollision" node="0>1|0" />
         <i3dMapping id="rightWallCollision" node="0>1|1" />
+        <i3dMapping id="rearWallCollision" node="0>1|2" />
         <i3dMapping id="clearAreaStart" node="0>2|0" />
         <i3dMapping id="clearAreaWidth" node="0>2|0|0" />
         <i3dMapping id="clearAreaHeight" node="0>2|0|1" />
