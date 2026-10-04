@@ -2,6 +2,7 @@ VariableBunker = VariableBunker or {}
 
 local Bunker = VariableBunker
 local modDirectory = g_currentModDirectory or ""
+local AUTODRIVE_MOD_NAME = "FS25_AutoDrive"
 
 Bunker.CONFIG_WIDTH = "VariableBunkerWidth"
 Bunker.CONFIG_LENGTH = "VariableBunkerLength"
@@ -45,6 +46,43 @@ function VariableBunkerDimensionConfigurationItem.registerXMLPaths(schema, rootP
     schema:register(XMLValueType.FLOAT, configPath .. "#meters", "Configured bunker dimension in meters", 0)
 end
 
+local function getIsAutoDriveLoaded()
+    return g_modIsLoaded ~= nil and g_modIsLoaded[AUTODRIVE_MOD_NAME] == true
+end
+
+local VariableBunkerAutoDriveConfigurationItem = {}
+local VariableBunkerAutoDriveConfigurationItem_mt =
+    Class(VariableBunkerAutoDriveConfigurationItem, PlaceableConfigurationItem)
+
+function VariableBunkerAutoDriveConfigurationItem.new(configName, customMt)
+    return VariableBunkerAutoDriveConfigurationItem:superClass()
+        .new(configName, customMt or VariableBunkerAutoDriveConfigurationItem_mt)
+end
+
+function VariableBunkerAutoDriveConfigurationItem:loadFromXML(
+    xmlFile,
+    baseKey,
+    configKey,
+    baseDirectory,
+    customEnvironment
+)
+    if
+        not VariableBunkerAutoDriveConfigurationItem:superClass()
+            .loadFromXML(self, xmlFile, baseKey, configKey, baseDirectory, customEnvironment)
+    then
+        return false
+    end
+
+    if not getIsAutoDriveLoaded() then
+        self.isSelectable = false
+    end
+    return true
+end
+
+function VariableBunkerAutoDriveConfigurationItem.registerXMLPaths(schema, rootPath, configPath)
+    VariableBunkerAutoDriveConfigurationItem:superClass().registerXMLPaths(schema, rootPath, configPath)
+end
+
 local function registerConfigurationTypes()
     if g_placeableConfigurationManager == nil then
         return
@@ -65,7 +103,11 @@ local function registerConfigurationTypes()
     addConfigType(Bunker.CONFIG_LENGTH, "configuration_VariableBunkerLength", VariableBunkerDimensionConfigurationItem)
     addConfigType(Bunker.CONFIG_HEIGHT, "configuration_VariableBunkerHeight", VariableBunkerDimensionConfigurationItem)
     addConfigType(Bunker.CONFIG_FLOOR, "configuration_VariableBunkerFloor", PlaceableConfigurationItem)
-    addConfigType(Bunker.CONFIG_AUTODRIVE, "configuration_VariableBunkerAutoDrive", PlaceableConfigurationItem)
+    addConfigType(
+        Bunker.CONFIG_AUTODRIVE,
+        "configuration_VariableBunkerAutoDrive",
+        VariableBunkerAutoDriveConfigurationItem
+    )
 end
 
 local function init()

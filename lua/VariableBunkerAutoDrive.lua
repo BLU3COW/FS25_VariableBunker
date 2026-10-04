@@ -15,7 +15,9 @@ local function getAutoDriveApi()
     local autoDrive = AutoDrive or (environment ~= nil and environment.AutoDrive or nil)
     local graphManager = ADGraphManager or (environment ~= nil and environment.ADGraphManager or nil)
     local placeableData = AutoDrivePlaceableData or (environment ~= nil and environment.AutoDrivePlaceableData or nil)
-    return autoDrive, graphManager, placeableData
+    local createPlaceableEvent = CreatePlaceableEvent
+        or (environment ~= nil and environment.CreatePlaceableEvent or nil)
+    return autoDrive, graphManager, placeableData, createPlaceableEvent
 end
 
 local function addUnique(values, value)
@@ -122,13 +124,14 @@ function Bunker:onFinalizePlacement()
     if not self.isServer or not self:VariableBunkerHasAutoDriveCourse() then
         return
     end
-    local autoDrive, graphManager, placeableData = getAutoDriveApi()
+    local autoDrive, graphManager, placeableData, createPlaceableEvent = getAutoDriveApi()
+    local canCreateViaPlaceableData = placeableData ~= nil and placeableData.createPlaceable ~= nil
+    local canCreateViaEvent = createPlaceableEvent ~= nil and createPlaceableEvent.sendEvent ~= nil
     if
         autoDrive == nil
         or graphManager == nil
-        or placeableData == nil
-        or placeableData.active ~= true
-        or placeableData.createPlaceable == nil
+        or (placeableData ~= nil and placeableData.active == false)
+        or (not canCreateViaPlaceableData and not canCreateViaEvent)
     then
         Logging.warning("[VariableBunker] AutoDrive course requested, but FS25_AutoDrive is not loaded or active")
         return
@@ -136,7 +139,11 @@ function Bunker:onFinalizePlacement()
 
     local wayPoints, mapMarkers = self:VariableBunkerCreateAutoDriveCourse(autoDrive, graphManager)
     if #wayPoints > 0 and #mapMarkers > 0 then
-        placeableData:createPlaceable(wayPoints, mapMarkers)
+        if canCreateViaPlaceableData then
+            placeableData:createPlaceable(wayPoints, mapMarkers)
+        else
+            createPlaceableEvent.sendEvent(wayPoints, mapMarkers)
+        end
         Logging.info(
             "[VariableBunker] Created AutoDrive course with %d waypoints and %d destinations",
             #wayPoints,
