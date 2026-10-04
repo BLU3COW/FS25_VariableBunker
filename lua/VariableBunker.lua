@@ -94,17 +94,8 @@ local function setPhysicsNodeTransform(node, tx, ty, tz, sx, sy, sz)
         return
     end
 
-    local wasAddedToPhysics = getIsAddedToPhysics(node)
-    if wasAddedToPhysics then
-        removeFromPhysics(node)
-    end
-
     setTranslation(node, tx, ty, tz)
     setScale(node, sx, sy, sz)
-
-    if wasAddedToPhysics then
-        addToPhysics(node)
-    end
 end
 
 local function setNodeTranslation(node, x, y, z)
@@ -118,12 +109,7 @@ local function setPhysicsNodeEnabled(node, enabled)
         return
     end
 
-    local isAddedToPhysics = getIsAddedToPhysics(node)
-    if enabled and not isAddedToPhysics then
-        addToPhysics(node)
-    elseif not enabled and isAddedToPhysics then
-        removeFromPhysics(node)
-    end
+    setRigidBodyType(node, enabled and RigidBodyType.STATIC or RigidBodyType.NONE)
 end
 
 function Bunker.prerequisitesPresent(specializations)
@@ -153,6 +139,11 @@ function Bunker.registerFunctions(placeableType)
         placeableType,
         "VariableBunkerApplyDimensions",
         Bunker.VariableBunkerApplyDimensions
+    )
+    SpecializationUtil.registerFunction(
+        placeableType,
+        "VariableBunkerUpdateCollisionStates",
+        Bunker.VariableBunkerUpdateCollisionStates
     )
     SpecializationUtil.registerFunction(
         placeableType,
@@ -237,6 +228,39 @@ function Bunker:VariableBunkerHasRearWall()
     return self:VariableBunkerGetTypeConfiguration() ~= TYPE_CONFIGURATION_DRIVE_THROUGH
 end
 
+function Bunker:VariableBunkerUpdateCollisionStates()
+    local spec = self.spec_VariableBunker
+    if spec == nil then
+        return
+    end
+
+    for _, node in ipairs({
+        spec.leftCollisionNode,
+        spec.rightCollisionNode,
+        spec.leftBaseCollisionNode,
+        spec.rightBaseCollisionNode,
+        spec.leftSlopeCollisionNode,
+        spec.rightSlopeCollisionNode,
+    }) do
+        setPhysicsNodeEnabled(node, true)
+    end
+
+    for _, node in ipairs({
+        spec.rearCollisionNode,
+        spec.rearBaseCollisionNode,
+        spec.rearSlopeCollisionNode,
+        spec.leftCornerBaseCollisionNode,
+        spec.rightCornerBaseCollisionNode,
+        spec.leftCornerSlopeCollisionNode,
+        spec.rightCornerSlopeCollisionNode,
+    }) do
+        setPhysicsNodeEnabled(node, spec.hasRearWall == true)
+    end
+
+    setPhysicsNodeEnabled(spec.floorCollisionNode, spec.floorPlateEnabled == true)
+    setPhysicsNodeEnabled(spec.interactionTriggerNode, true)
+end
+
 function Bunker:VariableBunkerHasFloorPlate()
     local configuration = self:VariableBunkerGetFloorPlateConfiguration()
     return configuration == FLOOR_CONFIGURATION_FLUSH or configuration == FLOOR_CONFIGURATION_EXTENDED
@@ -244,6 +268,7 @@ end
 
 function Bunker:VariableBunkerApplyDimensions()
     local spec = self.spec_VariableBunker
+    self:removeFromPhysics()
     local widthItem = self:VariableBunkerGetConfigurationItem(ROOT_KEY_WIDTH)
     local lengthItem = self:VariableBunkerGetConfigurationItem(ROOT_KEY_LENGTH)
     local heightItem = self:VariableBunkerGetConfigurationItem(ROOT_KEY_HEIGHT)
@@ -482,5 +507,10 @@ function Bunker:VariableBunkerApplyDimensions()
                 table.insert(placementSpec.testAreas, testArea)
             end
         end)
+    end
+
+    self:VariableBunkerUpdateCollisionStates()
+    if self.isPreplaced then
+        self:addToPhysics()
     end
 end

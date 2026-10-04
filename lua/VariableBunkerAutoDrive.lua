@@ -206,6 +206,7 @@ end
 
 function Bunker:onFinalizePlacement()
     local spec = self.spec_VariableBunker
+    self:VariableBunkerUpdateCollisionStates()
     if
         not self.isServer
         or (spec ~= nil and spec.loadedFromSavegame)
