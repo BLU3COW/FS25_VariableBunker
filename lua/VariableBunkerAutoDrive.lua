@@ -4,9 +4,10 @@ local Bunker = VariableBunker
 local CONFIG_NAME = "VariableBunkerAutoDrive"
 local ENABLED_CONFIGURATION = 2
 local LANE_WIDTH = 5
-local FRONT_APPROACH = 10
-local REAR_CLEARANCE = 5
-local FRONT_CONNECTION_OFFSET = 5
+local FRONT_APPROACH = 27
+local REAR_CLEARANCE = 3.2
+local NEAR_FRONT_CONNECTION_OFFSET = 4
+local FAR_FRONT_CONNECTION_OFFSET = 26
 local WAYPOINT_SPACING = 3
 
 local function addUnique(values, value)
@@ -89,11 +90,11 @@ function Bunker:VariableBunkerCreateAutoDriveCourse()
         end
     end
 
-    local centerIndex = findClosestIndex(zValues, 0)
-    local frontIndex = findClosestIndex(zValues, -length * 0.5 - FRONT_CONNECTION_OFFSET)
+    local nearFrontIndex = findClosestIndex(zValues, -length * 0.5 - NEAR_FRONT_CONNECTION_OFFSET)
+    local farFrontIndex = findClosestIndex(zValues, -length * 0.5 - FAR_FRONT_CONNECTION_OFFSET)
     for lane = 1, laneCount - 1 do
-        connectWaypoints(wayPoints, lanes[lane][centerIndex], lanes[lane + 1][centerIndex])
-        connectWaypoints(wayPoints, lanes[lane][frontIndex], lanes[lane + 1][frontIndex])
+        connectWaypoints(wayPoints, lanes[lane][nearFrontIndex], lanes[lane + 1][nearFrontIndex])
+        connectWaypoints(wayPoints, lanes[lane][farFrontIndex], lanes[lane + 1][farFrontIndex])
     end
 
     local existingMarkers = ADGraphManager:getMapMarkers()
@@ -101,7 +102,7 @@ function Bunker:VariableBunkerCreateAutoDriveCourse()
     local mapMarkers = {}
     for lane = 1, laneCount do
         mapMarkers[lane] = {
-            id = wayPoints[lanes[lane][1]].id,
+            id = wayPoints[lanes[lane][#lanes[lane]]].id,
             name = string.format("%d_VariableBunker %d", markerOffset + lane, lane),
         }
     end
