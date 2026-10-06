@@ -57,6 +57,9 @@ local NODE_ATTRIBUTES = {
     "rightCornerBaseCollisionNode",
     "leftCornerSlopeCollisionNode",
     "rightCornerSlopeCollisionNode",
+    "leftTipCollisionNode",
+    "rightTipCollisionNode",
+    "rearTipCollisionNode",
     "interactionTriggerNode",
     "siloAreaStartNode",
     "siloAreaWidthNode",
@@ -101,6 +104,12 @@ end
 local function setNodeTranslation(node, x, y, z)
     if node ~= nil then
         setTranslation(node, x, y, z)
+    end
+end
+
+local function setTipCollisionHeight(node, height)
+    if node ~= nil then
+        setUserAttribute(node, "collisionHeight", UserAttributeType.FLOAT, height)
     end
 end
 
@@ -237,6 +246,8 @@ function Bunker:VariableBunkerUpdateCollisionStates()
         spec.rightBaseCollisionNode,
         spec.leftSlopeCollisionNode,
         spec.rightSlopeCollisionNode,
+        spec.leftTipCollisionNode,
+        spec.rightTipCollisionNode,
     }) do
         setPhysicsNodeEnabled(node, true)
     end
@@ -249,6 +260,7 @@ function Bunker:VariableBunkerUpdateCollisionStates()
         spec.rightCornerBaseCollisionNode,
         spec.leftCornerSlopeCollisionNode,
         spec.rightCornerSlopeCollisionNode,
+        spec.rearTipCollisionNode,
     }) do
         setPhysicsNodeEnabled(node, spec.hasRearWall == true)
     end
@@ -333,11 +345,11 @@ function Bunker:VariableBunkerApplyDimensions()
     setScale(spec.rearWallBaseNode, outerWidth, WALL_BASE_HEIGHT, slopeRun)
     setVisibility(spec.rearWallBaseNode, hasRearWall)
     setTranslation(spec.leftWallSlopeNode, -sideSlopeOffset, WALL_BASE_HEIGHT, sideOuterCenter)
-    setScale(spec.leftWallSlopeNode, slopeRun, slopeHeight, length + rearWallExtension)
+    setScale(spec.leftWallSlopeNode, slopeHeight, slopeHeight, length + rearWallExtension)
     setTranslation(spec.rightWallSlopeNode, sideSlopeOffset, WALL_BASE_HEIGHT, sideOuterCenter)
-    setScale(spec.rightWallSlopeNode, slopeRun, slopeHeight, length + rearWallExtension)
+    setScale(spec.rightWallSlopeNode, slopeHeight, slopeHeight, length + rearWallExtension)
     setTranslation(spec.rearWallSlopeNode, 0, WALL_BASE_HEIGHT, rearSlopeOffset)
-    setScale(spec.rearWallSlopeNode, slopeRun, slopeHeight, outerWidth)
+    setScale(spec.rearWallSlopeNode, slopeHeight, slopeHeight, outerWidth)
     setVisibility(spec.rearWallSlopeNode, hasRearWall)
     setTranslation(spec.leftCornerBaseNode, -cornerBaseOffset, WALL_BASE_HEIGHT * 0.5, rearBaseOffset)
     setScale(spec.leftCornerBaseNode, slopeRun, WALL_BASE_HEIGHT, slopeRun)
@@ -346,10 +358,10 @@ function Bunker:VariableBunkerApplyDimensions()
     setScale(spec.rightCornerBaseNode, slopeRun, WALL_BASE_HEIGHT, slopeRun)
     setVisibility(spec.rightCornerBaseNode, hasRearWall)
     setTranslation(spec.leftCornerSlopeNode, -outerWidth * 0.5, WALL_BASE_HEIGHT, rearCoreOuterEdge)
-    setScale(spec.leftCornerSlopeNode, slopeRun, slopeHeight, slopeRun)
+    setScale(spec.leftCornerSlopeNode, slopeHeight, slopeHeight, slopeHeight)
     setVisibility(spec.leftCornerSlopeNode, hasRearWall)
     setTranslation(spec.rightCornerSlopeNode, outerWidth * 0.5, WALL_BASE_HEIGHT, rearCoreOuterEdge)
-    setScale(spec.rightCornerSlopeNode, slopeRun, slopeHeight, slopeRun)
+    setScale(spec.rightCornerSlopeNode, slopeHeight, slopeHeight, slopeHeight)
     setVisibility(spec.rightCornerSlopeNode, hasRearWall)
     setPhysicsNodeTransform(spec.leftCollisionNode, -wallOffset, height * 0.5, 0, WALL_THICKNESS, height, length)
     setPhysicsNodeTransform(spec.rightCollisionNode, wallOffset, height * 0.5, 0, WALL_THICKNESS, height, length)
@@ -398,7 +410,7 @@ function Bunker:VariableBunkerApplyDimensions()
         -sideSlopeOffset,
         WALL_BASE_HEIGHT,
         sideOuterCenter,
-        slopeRun,
+        slopeHeight,
         slopeHeight,
         length + rearWallExtension
     )
@@ -407,7 +419,7 @@ function Bunker:VariableBunkerApplyDimensions()
         sideSlopeOffset,
         WALL_BASE_HEIGHT,
         sideOuterCenter,
-        slopeRun,
+        slopeHeight,
         slopeHeight,
         length + rearWallExtension
     )
@@ -416,7 +428,7 @@ function Bunker:VariableBunkerApplyDimensions()
         0,
         WALL_BASE_HEIGHT,
         rearSlopeOffset,
-        slopeRun,
+        slopeHeight,
         slopeHeight,
         outerWidth
     )
@@ -446,9 +458,9 @@ function Bunker:VariableBunkerApplyDimensions()
         -outerWidth * 0.5,
         WALL_BASE_HEIGHT,
         rearCoreOuterEdge,
-        slopeRun,
         slopeHeight,
-        slopeRun
+        slopeHeight,
+        slopeHeight
     )
     setPhysicsNodeEnabled(spec.leftCornerSlopeCollisionNode, hasRearWall)
     setPhysicsNodeTransform(
@@ -456,11 +468,44 @@ function Bunker:VariableBunkerApplyDimensions()
         outerWidth * 0.5,
         WALL_BASE_HEIGHT,
         rearCoreOuterEdge,
-        slopeRun,
         slopeHeight,
-        slopeRun
+        slopeHeight,
+        slopeHeight
     )
     setPhysicsNodeEnabled(spec.rightCornerSlopeCollisionNode, hasRearWall)
+    local tipThickness = WALL_THICKNESS + slopeRun
+    local sideTipOffset = width * 0.5 + tipThickness * 0.5
+    setPhysicsNodeTransform(
+        spec.leftTipCollisionNode,
+        -sideTipOffset,
+        height * 0.5,
+        sideOuterCenter,
+        tipThickness,
+        height,
+        length + rearWallExtension
+    )
+    setPhysicsNodeTransform(
+        spec.rightTipCollisionNode,
+        sideTipOffset,
+        height * 0.5,
+        sideOuterCenter,
+        tipThickness,
+        height,
+        length + rearWallExtension
+    )
+    setPhysicsNodeTransform(
+        spec.rearTipCollisionNode,
+        0,
+        height * 0.5,
+        length * 0.5 + tipThickness * 0.5,
+        baseOuterWidth,
+        height,
+        tipThickness
+    )
+    setPhysicsNodeEnabled(spec.rearTipCollisionNode, hasRearWall)
+    setTipCollisionHeight(spec.leftTipCollisionNode, height)
+    setTipCollisionHeight(spec.rightTipCollisionNode, height)
+    setTipCollisionHeight(spec.rearTipCollisionNode, height)
     setPhysicsNodeTransform(
         spec.interactionTriggerNode,
         0,
@@ -496,6 +541,28 @@ function Bunker:VariableBunkerApplyDimensions()
             local testArea = {}
             if self:loadTestArea(self.xmlFile, key, testArea) then
                 table.insert(placementSpec.testAreas, testArea)
+            end
+        end)
+    end
+
+    local tipOcclusionSpec = self.spec_tipOcclusionAreas
+    if tipOcclusionSpec ~= nil and self.loadTipOcclusionArea ~= nil then
+        tipOcclusionSpec.areas = {}
+        self.xmlFile:iterate("placeable.tipOcclusionUpdateAreas.tipOcclusionUpdateArea", function(_, key)
+            local area = {}
+            if self:loadTipOcclusionArea(self.xmlFile, key, area) then
+                table.insert(tipOcclusionSpec.areas, area)
+            end
+        end)
+    end
+
+    local aiSpec = self.spec_ai
+    if aiSpec ~= nil and self.loadAIUpdateArea ~= nil then
+        aiSpec.areas = {}
+        self.xmlFile:iterate("placeable.ai.updateAreas.updateArea", function(_, key)
+            local area = {}
+            if self:loadAIUpdateArea(self.xmlFile, key, area) then
+                table.insert(aiSpec.areas, area)
             end
         end)
     end
