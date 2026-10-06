@@ -13,14 +13,14 @@ Category: Silos
 Price: $60,000
 Daily upkeep: $60
 
-A configurable bunker or drive-through silo with concrete walls. Choose a rear wall or two open ends.
+A configurable concrete silo in two designs: Bunker silo with a rear wall, or Drive-through silo with both ends open.
 
 Dimensions:
 - Interior width: 6–100 meters
 - Length: 20–200 meters
 - Wall height: 2–8 meters
 
-The selected dimensions are applied to the walls, collisions, bunker area, placement areas and interaction trigger. The wall insides remain vertical while their outer faces slope above a 1.5 meter base. The optional concrete floor slab spans the complete outside width. On the bunker silo it can extend 30 meters beyond the entrance; on the drive-through silo it can extend 30 meters behind and 15 meters in front. Original GIANTS concrete textures give all visible surfaces a detailed finish. Chaff, grass and hay can be fermented into silage.
+The selected dimensions are applied to the walls, collisions, silo area, placement areas and interaction trigger. The wall insides remain vertical while their outer faces slope above a 1.5 meter base. The optional concrete floor slab spans the complete outside width. On the Bunker silo it can extend 30 meters beyond the entrance; on the Drive-through silo it can extend 30 meters behind and 15 meters in front. Original GIANTS concrete textures give all visible surfaces a detailed finish. Chaff, grass and hay can be fermented into silage.
 
 An optional AutoDrive course can be generated during placement. Its lanes and waypoints automatically adapt to the selected width and length. AutoDrive is required to use this option.
 
@@ -30,7 +30,7 @@ Shopkategorie: Silos
 Preis: 60.000 €
 Täglicher Unterhalt: 60 €
 
-Ein einstellbares Bunker- oder Fahrsilo aus Beton. Wahlweise mit Rückwand oder mit zwei offenen Stirnseiten.
+Ein einstellbares Silo aus Beton in zwei Bauarten: Bunkersilo mit Rückwand oder Fahrsilo mit zwei offenen Stirnseiten.
 
 Abmessungen:
 - Innenbreite: 6–100 Meter
@@ -47,14 +47,14 @@ Catégorie : Silos
 Prix : 60 000 €
 Entretien quotidien : 60 €
 
-Un silo bunker ou traversant configurable en béton. Choisissez un mur arrière ou deux extrémités ouvertes.
+Un silo configurable en béton en deux versions : Silo bunker avec mur arrière ou Silo traversant ouvert aux deux extrémités.
 
 Dimensions :
 - Largeur intérieure : 6 à 100 mètres
 - Longueur : 20 à 200 mètres
 - Hauteur des murs : 2 à 8 mètres
 
-Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la zone du silo, aux zones de placement et au déclencheur d'interaction. L'intérieur des murs reste vertical tandis que leur face extérieure est inclinée au-dessus d'un socle de 1,5 mètre. La dalle optionnelle couvre toute la largeur extérieure. Pour le silo bunker, elle peut dépasser l'entrée de 30 mètres ; pour le silo traversant, elle dépasse de 30 mètres à l'arrière et de 15 mètres à l'avant. Les textures de béton GIANTS donnent un aspect détaillé à toutes les surfaces visibles.
+Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la zone du silo, aux zones de placement et au déclencheur d'interaction. L'intérieur des murs reste vertical tandis que leur face extérieure est inclinée au-dessus d'un socle de 1,5 mètre. La dalle optionnelle couvre toute la largeur extérieure. Pour le Silo bunker, elle peut dépasser l'entrée de 30 mètres ; pour le Silo traversant, elle dépasse de 30 mètres à l'arrière et de 15 mètres à l'avant. Les textures de béton GIANTS donnent un aspect détaillé à toutes les surfaces visibles. La paille hachée, l'herbe et le foin peuvent être fermentés en ensilage.
 
 Un parcours AutoDrive peut être généré en option lors du placement. Ses voies et points de passage s'adaptent automatiquement à la largeur et à la longueur sélectionnées. AutoDrive est requis pour utiliser cette option.
 
