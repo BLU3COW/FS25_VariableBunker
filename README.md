@@ -3,9 +3,9 @@
 
 
 
-<div align="center"><img width="400" alt="variablebunker-logo" src="https://github.com/BLU3COW/FS25_VariableBunker/blob/main/.github/assets/logos/variablebunker.png" /></div>
+<div align="center"><img width="400" alt="variablebunker-logo" src=".github/assets/logos/variablebunker.png" /></div>
 
-# <div align="center"><img width="860" height="80" alt="variablebunker-title" src="https://github.com/BLU3COW/FS25_VariableBunker/blob/main/.github/assets/badges/variablebunker-title.svg" /></div>
+# <div align="center"><img width="860" height="80" alt="variablebunker-title" src=".github/assets/badges/variablebunker-title.svg" /></div>
 
 <div align="center">
 
@@ -82,7 +82,7 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 
 
 
-## <div align="center"><img width="210" height="40" alt="designs" src="https://github.com/BLU3COW/FS25_VariableBunker/blob/main/.github/assets/badges/designs.svg" /></div>
+## <div align="center"><img width="210" height="40" alt="designs" src=".github/assets/badges/designs.svg" /></div>
 <div align="center">
 
 | Design | Rear wall | Open ends | AutoDrive course | Default |
@@ -107,7 +107,7 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 
 
 
-## <div align="center"><img width="260" height="40" alt="dimensions" src="https://github.com/BLU3COW/FS25_VariableBunker/blob/main/.github/assets/badges/dimensions.svg" /></div>
+## <div align="center"><img width="260" height="40" alt="dimensions" src=".github/assets/badges/dimensions.svg" /></div>
 
 <div align="center">
 
@@ -135,7 +135,7 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 
 
 
-## <div align="center"><img width="210" height="40" alt="options" src="https://github.com/BLU3COW/FS25_VariableBunker/blob/main/.github/assets/badges/options.svg" /></div>
+## <div align="center"><img width="210" height="40" alt="options" src=".github/assets/badges/options.svg" /></div>
 
 <div align="center">
 
@@ -162,7 +162,7 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 
 
 
-## <div align="center"><img width="150" height="40" alt="autodrive" src="https://github.com/BLU3COW/FS25_VariableBunker/blob/main/.github/assets/badges/autodrive.svg" /></div>
+## <div align="center"><img width="150" height="40" alt="autodrive" src=".github/assets/badges/autodrive.svg" /></div>
 
 <div align="center">
 
@@ -195,7 +195,7 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 
 
 
-## <div align="center"><img width="460" height="40" alt="planned-updates" src="https://github.com/BLU3COW/FS25_VariableBunker/blob/main/.github/assets/badges/planned-updates.svg" /></div>
+## <div align="center"><img width="460" height="40" alt="planned-updates" src=".github/assets/badges/planned-updates.svg" /></div>
 
 <div align="center">There is no fixed roadmap yet. Suggestions, ideas, and feedback are always welcome via Issues or Discussions.</div>
 
@@ -211,7 +211,7 @@ Es gibt noch keinen festen Fahrplan. Vorschläge, Ideen und Feedback sind über 
 
 
 
-## <div align="center"><img width="160" height="40" alt="blu3cow" src="https://github.com/BLU3COW/FS25_VariableBunker/blob/main/.github/assets/badges/blu3cow.svg" /></div>
+## <div align="center"><img width="160" height="40" alt="blu3cow" src=".github/assets/badges/blu3cow.svg" /></div>
 
 <div align="center">So far, many mods and customizations have been created primarily for personal use. Now, some of these projects will gradually be shared with the community. <strong>BLU3COW</strong> isn’t just about script mods. It also includes prefabs, objects, models, and practical customizations for <strong>Farming Simulator</strong>.
 <br>
@@ -236,7 +236,7 @@ Da sich viele Projekte noch in der Entwicklung befinden, sind Feedback, Ideen un
 
 
 
-## <div align="center"><img width="610" height="40" alt="support-the-project" src="https://github.com/BLU3COW/FS25_VariableBunker/blob/main/.github/assets/badges/support-the-project.svg" /></div>
+## <div align="center"><img width="610" height="40" alt="support-the-project" src=".github/assets/badges/support-the-project.svg" /></div>
 
 <div align="center">If you like VariableBunker and find it helpful in the game, you’re welcome to support its continued development via PayPal or with a virtual “Buy Me a Beer.” Every contribution helps us continue to develop new features, improvements, and mods.
 <br>
@@ -264,7 +264,7 @@ Du kannst das Projekt auch aktiv unterstützen, indem du Wünsche, Ideen, Verbes
 </div>
 <br>
 
-## <div align="center"><img width="250" height="40" alt="screenshots" src="https://github.com/BLU3COW/FS25_VariableBunker/blob/main/.github/assets/badges/screenshots.svg" /></div>
+## <div align="center"><img width="250" height="40" alt="screenshots" src=".github/assets/badges/screenshots.svg" /></div>
 
 <div align="center">
 
