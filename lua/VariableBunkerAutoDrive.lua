@@ -9,6 +9,8 @@ local REAR_CLEARANCE = 3.2
 local NEAR_FRONT_CONNECTION_OFFSET = 4
 local FAR_FRONT_CONNECTION_OFFSET = 26
 local FAR_RETURN_OFFSET = 0.5
+local FAR_CENTER_SIDE_OFFSET = 0.25
+local TARGET_APPROACH_SPACING = 1
 local WAYPOINT_SPACING = 3
 local DRIVE_THROUGH_LANE_SPACING = 3.5
 local DRIVE_THROUGH_ENTRY_OFFSET = 5
@@ -39,6 +41,10 @@ local function connectDirected(wayPoints, firstIndex, secondIndex)
     local second = wayPoints[secondIndex]
     addUnique(first.out, second.id)
     addUnique(second.incoming, first.id)
+end
+
+local function connectReverse(wayPoints, firstIndex, secondIndex)
+    addUnique(wayPoints[firstIndex].out, wayPoints[secondIndex].id)
 end
 
 local function connectBidirectional(wayPoints, firstIndex, secondIndex)
@@ -101,7 +107,8 @@ local function createBunkerCourse(placeable, autoDrive, graphManager, width, len
     local farReturn = farCluster - FAR_RETURN_OFFSET
     local farTerminal = -length * 0.5 - FRONT_APPROACH
     local zValues = {}
-    appendSegmentValues(zValues, rear, nearMain, WAYPOINT_SPACING)
+    appendSegmentValues(zValues, rear, rear - TARGET_APPROACH_SPACING, TARGET_APPROACH_SPACING)
+    appendSegmentValues(zValues, rear - TARGET_APPROACH_SPACING, nearMain, WAYPOINT_SPACING)
     appendSegmentValues(zValues, nearMain, farMain, WAYPOINT_SPACING)
 
     local baseId = graphManager:getWayPointsCount()
@@ -134,7 +141,8 @@ local function createBunkerCourse(placeable, autoDrive, graphManager, width, len
             end
         end
 
-        local farCenter = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX + 0.25, farCluster)
+        local farCenter =
+            addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX - FAR_CENTER_SIDE_OFFSET, farCluster)
         local farEnd = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX, farTerminal)
         local returnNode = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX, farReturn)
         local farInnerLeft = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX - 1, farCluster)
@@ -149,7 +157,7 @@ local function createBunkerCourse(placeable, autoDrive, graphManager, width, len
         connectDirected(wayPoints, farMainIndex, farCenter)
         connectDirected(wayPoints, farCenter, farEnd)
         connectDirected(wayPoints, farCenter, returnNode)
-        connectDirected(wayPoints, returnNode, farMainIndex)
+        connectReverse(wayPoints, returnNode, farMainIndex)
         connectDirected(wayPoints, farMainIndex, farInnerLeft)
         connectDirected(wayPoints, farMainIndex, farInnerRight)
         connectBidirectional(wayPoints, farInnerLeft, farInnerRight)
