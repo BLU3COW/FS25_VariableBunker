@@ -112,7 +112,7 @@ local function setPhysicsNodeEnabled(node, enabled)
     setRigidBodyType(node, enabled and RigidBodyType.STATIC or RigidBodyType.NONE)
 end
 
-function Bunker.prerequisitesPresent(specializations)
+function Bunker.prerequisitesPresent(_specializations)
     return true
 end
 
@@ -160,11 +160,7 @@ function Bunker.registerFunctions(placeableType)
         "VariableBunkerGetTypeConfiguration",
         Bunker.VariableBunkerGetTypeConfiguration
     )
-    SpecializationUtil.registerFunction(
-        placeableType,
-        "VariableBunkerHasRearWall",
-        Bunker.VariableBunkerHasRearWall
-    )
+    SpecializationUtil.registerFunction(placeableType, "VariableBunkerHasRearWall", Bunker.VariableBunkerHasRearWall)
     SpecializationUtil.registerFunction(
         placeableType,
         "VariableBunkerHasAutoDriveCourse",
@@ -327,12 +323,7 @@ function Bunker:VariableBunkerApplyDimensions()
     setScale(spec.rearWallNode, outerWidth, height, WALL_THICKNESS)
     setVisibility(spec.rearWallNode, hasRearWall)
     setTranslation(spec.floorPlateNode, 0, floorCenterY, (rearOuterExtension - floorFrontExtension) * 0.5)
-    setScale(
-        spec.floorPlateNode,
-        baseOuterWidth,
-        FLOOR_THICKNESS,
-        length + rearOuterExtension + floorFrontExtension
-    )
+    setScale(spec.floorPlateNode, baseOuterWidth, FLOOR_THICKNESS, length + rearOuterExtension + floorFrontExtension)
     setVisibility(spec.floorPlateNode, hasFloorPlate)
     setTranslation(spec.leftWallBaseNode, -sideBaseOffset, WALL_BASE_HEIGHT * 0.5, sideOuterCenter)
     setScale(spec.leftWallBaseNode, slopeRun, WALL_BASE_HEIGHT, length + rearWallExtension)
