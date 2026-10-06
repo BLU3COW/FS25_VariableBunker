@@ -40,7 +40,7 @@ body:
       label: Area | Bereich
       description: Which area does this request affect? | Welchen Bereich betrifft diese Anfrage?
       options:
-        - Silo design (Bunker / Drive-through) | Bauart (Fahrsilo / Durchfahrsilo)
+        - Silo design (Bunker / Drive-through) | Bauart (Bunkersilo / Fahrsilo)
         - Dimensions (Width / Length / Wall height) | Abmessungen (Breite / Länge / Wandhöhe)
         - Concrete floor slab | Beton-Bodenplatte
         - AutoDrive course | AutoDrive-Kurs

@@ -46,8 +46,8 @@ body:
       label: Area
       description: Which VariableBunker area is affected? | Welcher VariableBunker-Bereich ist betroffen?
       options:
-        - Silo design - Bunker silo | Fahrsilo mit Rückwand
-        - Silo design - Drive-through silo | Durchfahrsilo
+        - Silo design - Bunker silo | Bunkersilo mit Rückwand
+        - Silo design - Drive-through silo | Fahrsilo beidseitig offen
         - Dimensions (Width / Length / Wall height) | Abmessungen (Breite / Länge / Wandhöhe)
         - Concrete floor slab | Beton-Bodenplatte
         - Walls / collisions | Wände / Kollisionen
@@ -95,7 +95,7 @@ body:
     attributes:
       label: Configuration | Konfiguration
       description: Silo design, width, length, wall height, floor slab, and AutoDrive course. | Bauart, Breite, Länge, Wandhöhe, Bodenplatte und AutoDrive-Kurs.
-      placeholder: "Example: Bunker silo, 20 m x 60 m x 4 m, extended apron, AutoDrive on | Beispiel: Fahrsilo, 20 m x 60 m x 4 m, mit Vorplatz, AutoDrive an"
+      placeholder: "Example: Bunker silo, 20 m x 60 m x 4 m, extended apron, AutoDrive on | Beispiel: Bunkersilo, 20 m x 60 m x 4 m, mit Vorplatz, AutoDrive an"
     validations:
       required: false
 

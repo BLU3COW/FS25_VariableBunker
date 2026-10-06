@@ -59,7 +59,7 @@ An optional concrete floor slab and an automatically generated <strong>AutoDrive
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
 <br>
-<div align="center">Mit <strong>VariableBunker</strong> bekommst du ein einziges Silo, das sich deinem Hof anpasst und nicht umgekehrt. Wähle zwischen einem <strong>Fahrsilo</strong> mit Rückwand und einem <strong>Durchfahrsilo</strong>, das an beiden Enden offen ist, und stelle Innenbreite, Länge und Wandhöhe im Baumodus frei ein. Wände, Kollisionen, Silobereich und alle Platzierungsflächen folgen den gewählten Abmessungen, während der Kaufpreis gleich bleibt.
+<div align="center">Mit <strong>VariableBunker</strong> bekommst du ein einziges Silo, das sich deinem Hof anpasst und nicht umgekehrt. Wähle zwischen einem <strong>Bunkersilo</strong> mit Rückwand und einem <strong>Fahrsilo</strong>, das an beiden Enden offen ist, und stelle Innenbreite, Länge und Wandhöhe im Baumodus frei ein. Wände, Kollisionen, Silobereich und alle Platzierungsflächen folgen den gewählten Abmessungen, während der Kaufpreis gleich bleibt.
 <br><br>
 Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive</strong>-Kurs runden das Silo ab. Weitere Verbesserungen sind bereits in Überlegung. Du möchtest das Projekt mitgestalten? Dann bring dich gerne ein und teile deine Wünsche, Vorschläge oder Ideen zur Verbesserung.</div>
 </details>
@@ -99,7 +99,7 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
 <br>
-<div align="center">Die Bauart wählst du bei der Konfiguration von VariableBunker im Baumodus, bevor du es platzierst. Das <strong>Fahrsilo</strong> ist an drei Seiten durch Beton-Seitenwände und eine Rückwand über die volle Breite geschlossen. Das <strong>Durchfahrsilo</strong> behält nur die Seitenwände und kann deshalb von beiden Enden befüllt und geleert werden. Beide Bauarten nehmen Häckselgut, Gras und Heu an und vergären es zu Silage.</div>
+<div align="center">Die Bauart wählst du bei der Konfiguration von VariableBunker im Baumodus, bevor du es platzierst. Das <strong>Bunkersilo</strong> ist an drei Seiten durch Beton-Seitenwände und eine Rückwand über die volle Breite geschlossen. Das <strong>Fahrsilo</strong> behält nur die Seitenwände und kann deshalb von beiden Enden befüllt und geleert werden. Beide Bauarten nehmen Häckselgut, Gras und Heu an und vergären es zu Silage.</div>
 </details>
 </div>
 <br>
@@ -154,7 +154,7 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Die <strong>Beton-Bodenplatte</strong> deckt die gesamte Außenbreite einschließlich der Wandfüße ab. Sie endet wahlweise bündig mit dem Silo oder hat einen Vorplatz: 30 m vor einem Fahrsilo, bzw. 30 m hinter und 15 m vor einem Durchfahrsilo. Die Option <strong>AutoDrive-Kurs</strong> wird nur angezeigt, wenn AutoDrive im Spielstand aktiv ist.</div>
+<div align="center">Die <strong>Beton-Bodenplatte</strong> deckt die gesamte Außenbreite einschließlich der Wandfüße ab. Sie endet wahlweise bündig mit dem Silo oder hat einen Vorplatz: 30 m vor einem Bunkersilo, bzw. 30 m hinter und 15 m vor einem Fahrsilo. Die Option <strong>AutoDrive-Kurs</strong> wird nur angezeigt, wenn AutoDrive im Spielstand aktiv ist.</div>
 </details>
 </div>
 <br>
@@ -181,7 +181,7 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Ist die Option aktiviert, wird der Kurs einmalig beim Platzieren eines neuen Silos erzeugt und passt sich an die gewählte Breite und Länge an. Die Aufteilung folgt den AutoDrive-Referenzkursen für das BGA-Fahrsilo und das große Fahrsilo. Beim Laden eines Spielstands entstehen nie doppelte Knoten, und ohne AutoDrive funktioniert das Silo vollständig eigenständig.</div>
+<div align="center">Ist die Option aktiviert, wird der Kurs einmalig beim Platzieren eines neuen Silos erzeugt und passt sich an die gewählte Breite und Länge an. Die Aufteilung folgt den AutoDrive-Referenzkursen für das BGA-Bunkersilo und das große Fahrsilo des Basisspiels. Beim Laden eines Spielstands entstehen nie doppelte Knoten, und ohne AutoDrive funktioniert das Silo vollständig eigenständig.</div>
 </details>
 </div>
 <br>
