@@ -6,8 +6,8 @@
         <text name="configuration_VariableBunkerLength" text="Length" />
         <text name="configuration_VariableBunkerHeight" text="Wall height" />
         <text name="configuration_VariableBunkerType" text="Silo design" />
-        <text name="option_VariableBunkerTypeBunker" text="Bunker silo with rear wall" />
-        <text name="option_VariableBunkerTypeDriveThrough" text="Drive-through silo, both ends open" />
+        <text name="option_VariableBunkerTypeBunker" text="Bunker silo" />
+        <text name="option_VariableBunkerTypeDriveThrough" text="Drive-through silo" />
         <text name="configuration_VariableBunkerFloor" text="Concrete floor slab" />
         <text name="option_VariableBunkerFloorOff" text="Without floor slab" />
         <text name="option_VariableBunkerFloorFlush" text="Up to the front edge" />

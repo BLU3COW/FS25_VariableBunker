@@ -6,8 +6,8 @@
         <text name="configuration_VariableBunkerLength" text="Länge" />
         <text name="configuration_VariableBunkerHeight" text="Wandhöhe" />
         <text name="configuration_VariableBunkerType" text="Silobauart" />
-        <text name="option_VariableBunkerTypeBunker" text="Bunkersilo mit Rückwand" />
-        <text name="option_VariableBunkerTypeDriveThrough" text="Fahrsilo beidseitig offen" />
+        <text name="option_VariableBunkerTypeBunker" text="Bunkersilo" />
+        <text name="option_VariableBunkerTypeDriveThrough" text="Fahrsilo" />
         <text name="configuration_VariableBunkerFloor" text="Beton-Bodenplatte" />
         <text name="option_VariableBunkerFloorOff" text="Ohne Bodenplatte" />
         <text name="option_VariableBunkerFloorFlush" text="Bis zur Vorderkante" />

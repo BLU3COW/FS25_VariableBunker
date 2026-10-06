@@ -6,8 +6,8 @@
         <text name="configuration_VariableBunkerLength" text="Longueur" />
         <text name="configuration_VariableBunkerHeight" text="Hauteur des murs" />
         <text name="configuration_VariableBunkerType" text="Type de silo" />
-        <text name="option_VariableBunkerTypeBunker" text="Silo bunker avec mur arrière" />
-        <text name="option_VariableBunkerTypeDriveThrough" text="Silo traversant ouvert aux deux extrémités" />
+        <text name="option_VariableBunkerTypeBunker" text="Silo bunker" />
+        <text name="option_VariableBunkerTypeDriveThrough" text="Silo traversant" />
         <text name="configuration_VariableBunkerFloor" text="Dalle en béton" />
         <text name="option_VariableBunkerFloorOff" text="Sans dalle" />
         <text name="option_VariableBunkerFloorFlush" text="Jusqu'au bord avant" />
