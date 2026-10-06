@@ -1,0 +1,123 @@
+name: Bug report / Fehler melden
+description: Report a reproducible problem | Ein reproduzierbares Problem melden
+title: "[Bug | Fehler]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+
+        Thanks for reporting a problem with VariableBunker. | Danke für deine Fehlermeldung zu VariableBunker.
+
+  - type: input
+    id: mod_version
+    attributes:
+      label: VariableBunker - Version
+      description: Which version of the mod are you using? | Welche Version des Mods verwendest du?
+      placeholder: "Example: | Beispiel: 1.0.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: game_version
+    attributes:
+      label: Farming Simulator 25 - Version
+      description: Which FS25 game version is installed? |Welche FS25 Spielversion ist installiert?
+      placeholder: "Example: | Beispiel: 1.14.0.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      description: Where does the issue happen? | Wo tritt das Problem auf?
+      options:
+        - Windows - Steam
+        - Windows - Epic Games Store
+        - Windows - Microsoft Store / Game Pass
+        - Dedicated Server
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which VariableBunker area is affected? | Welcher VariableBunker-Bereich ist betroffen?
+      options:
+        - Silo design - Bunker silo | Fahrsilo mit Rückwand
+        - Silo design - Drive-through silo | Durchfahrsilo
+        - Dimensions (Width / Length / Wall height) | Abmessungen (Breite / Länge / Wandhöhe)
+        - Concrete floor slab | Beton-Bodenplatte
+        - Walls / collisions | Wände / Kollisionen
+        - Filling / compacting / silage | Befüllen / Verdichten / Silage
+        - AutoDrive course | AutoDrive-Kurs
+        - Placement / construction | Platzierung / Baumodus
+        - Multiplayer / synchronization
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_behavior
+    attributes:
+      label: What happened? | Was ist passiert?
+      description: Describe the actual behavior, error message, or broken result. | Beschreiben Sie das tatsächliche Verhalten, die Fehlermeldung oder das fehlerhafte Ergebnis.
+      placeholder: "When I drive into the VariableBunker with ..., the vehicle ..." | „Wenn ich mit … in die VariableBunker fahre, dann … das Fahrzeug …"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: What should happen? | Was sollte passieren?
+      description: Describe the expected behavior. | Beschreiben Sie das erwartete Verhalten.
+      placeholder: "The silo should accept / compact / ferment ..." | „Das Silo sollte annehmen / verdichten / vergären ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps to reproduce | Schritte zur Reproduktion
+      description: Please list the exact steps needed to reproduce the issue. | Bitte geben Sie die genauen Schritte an, die erforderlich sind, um das Problem zu reproduzieren.
+      placeholder: |
+        1. Start FS25 with ... | Starten Sie FS25 mit …
+        2. Place/buy the VariableBunker with configuration ... | VariableBunker mit Konfiguration ... kaufen/platzieren ...
+        3. Fill / compact the silo or start the AutoDrive course ... | Silo befüllen / verdichten oder AutoDrive-Kurs starten ...
+        4. See error ... | Siehe Fehler …
+    validations:
+      required: true
+
+  - type: textarea
+    id: configuration
+    attributes:
+      label: Configuration | Konfiguration
+      description: Silo design, width, length, wall height, floor slab, and AutoDrive course. | Bauart, Breite, Länge, Wandhöhe, Bodenplatte und AutoDrive-Kurs.
+      placeholder: "Example: Bunker silo, 20 m x 60 m x 4 m, extended apron, AutoDrive on | Beispiel: Fahrsilo, 20 m x 60 m x 4 m, mit Vorplatz, AutoDrive an"
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log.txt and Screenshots
+      description: Attach screenshots if useful and paste the relevant part of „log.txt". | Fügen Sie gegebenenfalls Screenshots bei und fügen Sie den relevanten Ausschnitt aus der Datei „log.txt" ein.
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have checked that I am using the latest available VariableBunker release. | Ich habe überprüft, ob ich die aktuellste verfügbare Version von VariableBunker verwende.
+          required: true
+        - label: I searched existing issues before opening this one. | Bevor ich dieses Ticket eröffnet habe, habe ich nach bereits bestehenden Tickets gesucht.
+          required: true
+        - label: I can reproduce this issue after restarting the game. | Ich kann dieses Problem nach einem Neustart des Spiels reproduzieren.
+          required: false
+        - label: I tried reproducing it without unrelated mods where possible. | Ich habe versucht, den Fehler nachzustellen, soweit möglich ohne Mods, die nichts damit zu tun haben.
+          required: false
