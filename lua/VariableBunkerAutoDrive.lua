@@ -8,9 +8,11 @@ local FRONT_APPROACH = 27
 local REAR_CLEARANCE = 3.2
 local NEAR_FRONT_CONNECTION_OFFSET = 4
 local FAR_FRONT_CONNECTION_OFFSET = 26
+local FAR_RETURN_OFFSET = 0.5
 local WAYPOINT_SPACING = 3
-local DRIVE_THROUGH_ENTRY_OFFSET = 10
-local DRIVE_THROUGH_EXIT_OFFSET = 24
+local DRIVE_THROUGH_LANE_SPACING = 3.5
+local DRIVE_THROUGH_ENTRY_OFFSET = 5
+local DRIVE_THROUGH_EXIT_OFFSET = 19
 local DRIVE_THROUGH_WAYPOINT_SPACING = 2
 
 local function getAutoDriveApi()
@@ -73,6 +75,10 @@ local function getLaneLayout(width)
     return laneCount, width / laneCount
 end
 
+local function getDriveThroughLaneCount(width)
+    return math.max(1, math.floor(width / DRIVE_THROUGH_LANE_SPACING + 0.0001))
+end
+
 local function createMapMarkers(graphManager, wayPoints, markerIndices, suffix)
     local markerOffset = #graphManager:getMapMarkers()
     local mapMarkers = {}
@@ -92,6 +98,7 @@ local function createBunkerCourse(placeable, autoDrive, graphManager, width, len
     local nearMain = nearCluster - 1
     local farCluster = -length * 0.5 - FAR_FRONT_CONNECTION_OFFSET
     local farMain = farCluster + 1
+    local farReturn = farCluster - FAR_RETURN_OFFSET
     local farTerminal = -length * 0.5 - FRONT_APPROACH
     local zValues = {}
     appendSegmentValues(zValues, rear, nearMain, WAYPOINT_SPACING)
@@ -129,7 +136,7 @@ local function createBunkerCourse(placeable, autoDrive, graphManager, width, len
 
         local farCenter = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX + 0.25, farCluster)
         local farEnd = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX, farTerminal)
-        local returnNode = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX, nearCluster)
+        local returnNode = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX, farReturn)
         local farInnerLeft = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX - 1, farCluster)
         local farInnerRight = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX + 1, farCluster)
         farOuterLeft[lane] = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX - 2, farCluster)
@@ -142,6 +149,7 @@ local function createBunkerCourse(placeable, autoDrive, graphManager, width, len
         connectDirected(wayPoints, farMainIndex, farCenter)
         connectDirected(wayPoints, farCenter, farEnd)
         connectDirected(wayPoints, farCenter, returnNode)
+        connectDirected(wayPoints, returnNode, farMainIndex)
         connectDirected(wayPoints, farMainIndex, farInnerLeft)
         connectDirected(wayPoints, farMainIndex, farInnerRight)
         connectBidirectional(wayPoints, farInnerLeft, farInnerRight)
@@ -163,7 +171,7 @@ local function createBunkerCourse(placeable, autoDrive, graphManager, width, len
 end
 
 local function createDriveThroughCourse(placeable, autoDrive, graphManager, width, length)
-    local laneCount, laneSpacing = getLaneLayout(width)
+    local laneCount = getDriveThroughLaneCount(width)
     local entry = length * 0.5 + DRIVE_THROUGH_ENTRY_OFFSET
     local exit = -length * 0.5 - DRIVE_THROUGH_EXIT_OFFSET
     local zValues = {}
@@ -173,7 +181,7 @@ local function createDriveThroughCourse(placeable, autoDrive, graphManager, widt
     local wayPoints = {}
     local markers = {}
     for lane = 1, laneCount do
-        local localX = -width * 0.5 + laneSpacing * (lane - 0.5)
+        local localX = (lane - (laneCount + 1) * 0.5) * DRIVE_THROUGH_LANE_SPACING
         local previousIndex = nil
         for _, localZ in ipairs(zValues) do
             local waypointIndex = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX, localZ)
