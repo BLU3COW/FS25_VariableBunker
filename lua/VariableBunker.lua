@@ -28,6 +28,92 @@ local TYPE_CONFIGURATION_BUNKER = 1
 local TYPE_CONFIGURATION_DRIVE_THROUGH = 2
 local SCALE_EPSILON = 0.0001
 
+Bunker.activeSilos = Bunker.activeSilos or {}
+
+function Bunker.getTipHeightLimit(x, z)
+    local limit
+    for placeable in pairs(Bunker.activeSilos) do
+        local spec = placeable.spec_VariableBunker
+        local rootNode = placeable.rootNode
+        if
+            spec ~= nil
+            and rootNode ~= nil
+            and spec.heightMeters ~= nil
+            and spec.widthMeters ~= nil
+            and spec.lengthMeters ~= nil
+        then
+            local localX, _, localZ = worldToLocal(rootNode, x, 0, z)
+            if math.abs(localX) <= spec.widthMeters * 0.5 and math.abs(localZ) <= spec.lengthMeters * 0.5 then
+                local _, top, _ = localToWorld(rootNode, 0, spec.heightMeters, 0)
+                limit = math.min(limit or top, top)
+            end
+        end
+    end
+    return limit
+end
+
+function Bunker.capTipLine(sx, sy, sz, ex, ey, ez)
+    local limit
+    for _, point in ipairs({ { sx, sz }, { ex, ez }, { (sx + ex) * 0.5, (sz + ez) * 0.5 } }) do
+        local pointLimit = Bunker.getTipHeightLimit(point[1], point[2])
+        if pointLimit ~= nil then
+            limit = math.min(limit or pointLimit, pointLimit)
+        end
+    end
+    if limit == nil then
+        return sy, ey, false
+    end
+    return math.min(sy, limit), math.min(ey, limit), true
+end
+
+local function tipToGroundWithinWalls(
+    vehicle,
+    superFunc,
+    delta,
+    fillTypeIndex,
+    sx,
+    sy,
+    sz,
+    ex,
+    ey,
+    ez,
+    innerRadius,
+    radius,
+    lineOffset,
+    limitToLineHeight,
+    ...
+)
+    if delta ~= nil and delta > 0 and sx ~= nil and ex ~= nil then
+        local capped
+        sy, ey, capped = Bunker.capTipLine(sx, sy, sz, ex, ey, ez)
+        if capped then
+            limitToLineHeight = true
+        end
+    end
+    return superFunc(
+        vehicle,
+        delta,
+        fillTypeIndex,
+        sx,
+        sy,
+        sz,
+        ex,
+        ey,
+        ez,
+        innerRadius,
+        radius,
+        lineOffset,
+        limitToLineHeight,
+        ...
+    )
+end
+
+if not Bunker.tipHeightHookInstalled and DensityMapHeightUtil ~= nil and Utils ~= nil then
+    DensityMapHeightUtil.tipToGroundAroundLine =
+        Utils.overwrittenFunction(DensityMapHeightUtil.tipToGroundAroundLine, tipToGroundWithinWalls)
+    Bunker.tipHeightHookInstalled = true
+end
+
 local NODE_ATTRIBUTES = {
     "leftWallNode",
     "rightWallNode",
@@ -136,6 +222,7 @@ end
 function Bunker.registerEventListeners(placeableType)
     SpecializationUtil.registerEventListener(placeableType, "onLoad", Bunker)
     SpecializationUtil.registerEventListener(placeableType, "onFinalizePlacement", Bunker)
+    SpecializationUtil.registerEventListener(placeableType, "onDelete", Bunker)
 end
 
 function Bunker.registerFunctions(placeableType)
@@ -193,6 +280,11 @@ function Bunker:onLoad(savegame)
     end
 
     self:VariableBunkerApplyDimensions()
+    Bunker.activeSilos[self] = true
+end
+
+function Bunker:onDelete()
+    Bunker.activeSilos[self] = nil
 end
 
 function Bunker:VariableBunkerGetConfigurationItem(configName)

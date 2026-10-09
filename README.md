@@ -120,14 +120,14 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 </div>
 <br>
 
-<div align="center">All dimensions are configured in construction mode before placing the silo. The wall insides stay vertical, while the outside rises vertically for 1.5 m and then slopes inward, so taller walls automatically receive a wider base. The purchase price and daily upkeep stay the same regardless of the chosen dimensions.<br><br><strong>Fill height:</strong> the map limits how high bulk material can pile up (base game maps: 4 m above the ground). Along the walls the material stays up to the wall height; towards the middle a heap can rise above a low wall, up to the map limit. Walls higher than the map limit add no extra volume.</div>
+<div align="center">All dimensions are configured in construction mode before placing the silo. The wall insides stay vertical, while the outside rises vertically for 1.5 m and then slopes inward, so taller walls automatically receive a wider base. The purchase price and daily upkeep stay the same regardless of the chosen dimensions.<br><br><strong>Fill height:</strong> bulk material piles up to the wall height at most, and never higher than the map allows (base game maps: 4 m above the ground). Walls higher than the map limit add no extra volume.</div>
 <br>
 <div align="center">
 
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Alle Abmessungen werden im Baumodus vor dem Platzieren eingestellt. Die Wandinnenseiten bleiben senkrecht, während die Außenseite 1,5 m senkrecht ansteigt und danach schräg nach innen verläuft, sodass höhere Wände automatisch einen breiteren Fuß bekommen. Kaufpreis und täglicher Unterhalt bleiben unabhängig von der gewählten Größe gleich.<br><br><strong>Füllhöhe:</strong> Die Karte legt fest, wie hoch Schüttgut liegen kann (Basisspiel-Karten: 4 m über dem Boden). An den Wänden bleibt das Material bis zur Wandhöhe; zur Mitte hin kann ein Haufen bei niedriger Wand darüber hinaus wachsen, bis zur Grenze der Karte. Wände höher als diese Grenze bringen kein zusätzliches Volumen.</div>
+<div align="center">Alle Abmessungen werden im Baumodus vor dem Platzieren eingestellt. Die Wandinnenseiten bleiben senkrecht, während die Außenseite 1,5 m senkrecht ansteigt und danach schräg nach innen verläuft, sodass höhere Wände automatisch einen breiteren Fuß bekommen. Kaufpreis und täglicher Unterhalt bleiben unabhängig von der gewählten Größe gleich.<br><br><strong>Füllhöhe:</strong> Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt (Basisspiel-Karten: 4 m über dem Boden). Wände höher als diese Grenze bringen kein zusätzliches Volumen.</div>
 </details>
 </div>
 <br>
