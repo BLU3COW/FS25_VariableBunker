@@ -223,6 +223,7 @@ function Bunker.registerEventListeners(placeableType)
     SpecializationUtil.registerEventListener(placeableType, "onLoad", Bunker)
     SpecializationUtil.registerEventListener(placeableType, "onFinalizePlacement", Bunker)
     SpecializationUtil.registerEventListener(placeableType, "onDelete", Bunker)
+    SpecializationUtil.registerEventListener(placeableType, "onSell", Bunker)
 end
 
 function Bunker.registerFunctions(placeableType)
@@ -266,6 +267,11 @@ function Bunker.registerFunctions(placeableType)
         placeableType,
         "VariableBunkerCreateAutoDriveCourse",
         Bunker.VariableBunkerCreateAutoDriveCourse
+    )
+    SpecializationUtil.registerFunction(
+        placeableType,
+        "VariableBunkerGetAutoDriveCourseBounds",
+        Bunker.VariableBunkerGetAutoDriveCourseBounds
     )
 end
 
@@ -418,6 +424,9 @@ function Bunker:VariableBunkerApplyDimensions()
     spec.floorPlateFrontExtension = floorFrontExtension
     spec.wallSlopeRun = slopeRun
     spec.hasRearWall = hasRearWall
+    spec.footprintHalfWidth = baseOuterWidth * 0.5
+    spec.footprintFrontZ = footprintStart
+    spec.footprintRearZ = length * 0.5 + rearOuterExtension
 
     setTranslation(spec.leftWallNode, -wallOffset, height * 0.5, 0)
     setScale(spec.leftWallNode, WALL_THICKNESS, height, length)

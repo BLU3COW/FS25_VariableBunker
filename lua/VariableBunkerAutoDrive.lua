@@ -18,6 +18,7 @@ local DRIVE_THROUGH_EXIT_OFFSET = 14
 local DRIVE_THROUGH_WAYPOINT_SPACING = 2
 local DRIVE_THROUGH_CONNECTION_OFFSET = 1
 local DRIVE_THROUGH_CONNECTION_SIDE_OFFSET = 1
+local SOLD_AREA_MARGIN = 0.5
 
 local function getAutoDriveApi()
     local environment = getfenv(0).FS25_AutoDrive
@@ -27,6 +28,11 @@ local function getAutoDriveApi()
     local createPlaceableEvent = CreatePlaceableEvent
         or (environment ~= nil and environment.CreatePlaceableEvent or nil)
     return autoDrive, graphManager, placeableData, createPlaceableEvent
+end
+
+local function getDeleteWayPointsEvent()
+    local environment = getfenv(0).FS25_AutoDrive
+    return AutoDriveDeleteWayPointsEvent or (environment ~= nil and environment.AutoDriveDeleteWayPointsEvent or nil)
 end
 
 local function addUnique(values, value)
@@ -240,6 +246,16 @@ function Bunker:VariableBunkerHasAutoDriveCourse()
     return configId == ENABLED_CONFIGURATION
 end
 
+function Bunker:VariableBunkerGetAutoDriveCourseBounds()
+    local spec = self.spec_VariableBunker
+    local length = spec ~= nil and spec.lengthMeters or 40
+    if spec ~= nil and spec.hasRearWall == false then
+        return -length * 0.5 - DRIVE_THROUGH_EXIT_OFFSET - DRIVE_THROUGH_CONNECTION_OFFSET,
+            length * 0.5 + DRIVE_THROUGH_ENTRY_OFFSET + DRIVE_THROUGH_CONNECTION_OFFSET
+    end
+    return -length * 0.5 - FRONT_APPROACH, length * 0.5 - REAR_CLEARANCE
+end
+
 function Bunker:VariableBunkerCreateAutoDriveCourse(autoDrive, graphManager)
     local spec = self.spec_VariableBunker
     local width = spec ~= nil and spec.widthMeters or 10
@@ -288,4 +304,55 @@ function Bunker:onFinalizePlacement()
             #mapMarkers
         )
     end
+end
+
+function Bunker:onSell()
+    local spec = self.spec_VariableBunker
+    if not self.isServer or self.rootNode == nil or spec == nil or spec.footprintHalfWidth == nil then
+        return
+    end
+
+    local _, graphManager = getAutoDriveApi()
+    if graphManager == nil or graphManager.getWayPoints == nil then
+        return
+    end
+
+    local minZ = spec.footprintFrontZ
+    local maxZ = spec.footprintRearZ
+    if self:VariableBunkerHasAutoDriveCourse() then
+        local courseMinZ, courseMaxZ = self:VariableBunkerGetAutoDriveCourseBounds()
+        minZ = math.min(minZ, courseMinZ)
+        maxZ = math.max(maxZ, courseMaxZ)
+    end
+    minZ = minZ - SOLD_AREA_MARGIN
+    maxZ = maxZ + SOLD_AREA_MARGIN
+    local halfWidth = spec.footprintHalfWidth + SOLD_AREA_MARGIN
+
+    local wayPointIds = {}
+    for _, wayPoint in pairs(graphManager:getWayPoints()) do
+        if wayPoint.id ~= nil and wayPoint.id > 0 and wayPoint.x ~= nil and wayPoint.z ~= nil then
+            local localX, _, localZ = worldToLocal(self.rootNode, wayPoint.x, wayPoint.y or 0, wayPoint.z)
+            if math.abs(localX) <= halfWidth and localZ >= minZ and localZ <= maxZ then
+                table.insert(wayPointIds, wayPoint.id)
+            end
+        end
+    end
+    if #wayPointIds == 0 then
+        return
+    end
+
+    table.sort(wayPointIds, function(first, second)
+        return first > second
+    end)
+    local deleteWayPointsEvent = getDeleteWayPointsEvent()
+    if deleteWayPointsEvent ~= nil and deleteWayPointsEvent.sendEvent ~= nil then
+        deleteWayPointsEvent.sendEvent(wayPointIds)
+    elseif graphManager.removeWayPoint ~= nil then
+        for _, wayPointId in ipairs(wayPointIds) do
+            graphManager:removeWayPoint(wayPointId)
+        end
+    else
+        return
+    end
+    Logging.info("[VariableBunker] Removed %d AutoDrive waypoints from the sold silo area", #wayPointIds)
 end
