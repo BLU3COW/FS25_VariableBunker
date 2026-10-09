@@ -13,9 +13,11 @@ local FAR_CENTER_SIDE_OFFSET = 0.25
 local TARGET_APPROACH_SPACING = 1
 local WAYPOINT_SPACING = 3
 local DRIVE_THROUGH_LANE_SPACING = 3.5
-local DRIVE_THROUGH_ENTRY_OFFSET = 5
-local DRIVE_THROUGH_EXIT_OFFSET = 19
+local DRIVE_THROUGH_ENTRY_OFFSET = 25
+local DRIVE_THROUGH_EXIT_OFFSET = 14
 local DRIVE_THROUGH_WAYPOINT_SPACING = 2
+local DRIVE_THROUGH_CONNECTION_OFFSET = 1
+local DRIVE_THROUGH_CONNECTION_SIDE_OFFSET = 1
 
 local function getAutoDriveApi()
     local environment = getfenv(0).FS25_AutoDrive
@@ -182,23 +184,51 @@ local function createDriveThroughCourse(placeable, autoDrive, graphManager, widt
     local laneCount = getDriveThroughLaneCount(width)
     local entry = length * 0.5 + DRIVE_THROUGH_ENTRY_OFFSET
     local exit = -length * 0.5 - DRIVE_THROUGH_EXIT_OFFSET
+    local entryCluster = entry + DRIVE_THROUGH_CONNECTION_OFFSET
+    local exitCluster = exit - DRIVE_THROUGH_CONNECTION_OFFSET
     local zValues = {}
     appendSegmentValues(zValues, entry, exit, DRIVE_THROUGH_WAYPOINT_SPACING)
 
     local baseId = graphManager:getWayPointsCount()
     local wayPoints = {}
     local markers = {}
+    local entryLeft = {}
+    local entryRight = {}
+    local exitLeft = {}
+    local exitRight = {}
     for lane = 1, laneCount do
         local localX = (lane - (laneCount + 1) * 0.5) * DRIVE_THROUGH_LANE_SPACING
+        local firstIndex = nil
         local previousIndex = nil
         for _, localZ in ipairs(zValues) do
             local waypointIndex = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, localX, localZ)
             if previousIndex ~= nil then
                 connectDirected(wayPoints, previousIndex, waypointIndex)
+            else
+                firstIndex = waypointIndex
             end
             previousIndex = waypointIndex
         end
         markers[lane] = previousIndex
+
+        local leftX = localX - DRIVE_THROUGH_CONNECTION_SIDE_OFFSET
+        local rightX = localX + DRIVE_THROUGH_CONNECTION_SIDE_OFFSET
+        entryLeft[lane] = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, leftX, entryCluster)
+        entryRight[lane] = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, rightX, entryCluster)
+        exitLeft[lane] = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, leftX, exitCluster)
+        exitRight[lane] = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, rightX, exitCluster)
+
+        connectBidirectional(wayPoints, entryLeft[lane], entryRight[lane])
+        connectDirected(wayPoints, entryLeft[lane], firstIndex)
+        connectDirected(wayPoints, entryRight[lane], firstIndex)
+        connectBidirectional(wayPoints, exitLeft[lane], exitRight[lane])
+        connectDirected(wayPoints, previousIndex, exitLeft[lane])
+        connectDirected(wayPoints, previousIndex, exitRight[lane])
+    end
+
+    for lane = 1, laneCount - 1 do
+        connectBidirectional(wayPoints, entryRight[lane], entryLeft[lane + 1])
+        connectBidirectional(wayPoints, exitRight[lane], exitLeft[lane + 1])
     end
 
     return wayPoints, createMapMarkers(graphManager, wayPoints, markers, "Fahrsilo")
