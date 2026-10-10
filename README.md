@@ -135,6 +135,77 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 
 
 
+## <div align="center"><img width="230" height="40" alt="capacity" src=".github/assets/badges/capacity.svg" /></div>
+
+<div align="center">
+
+**Bunker silo** (liters per wall height)
+
+| Interior width × length | 2 m | 3 m | 4 m | 5 m | 6 m | 7 m | 8 m |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 6 × 20 m | 230,000 | 330,000 | 420,000 | 510,000 | 590,000 | 660,000 | 730,000 |
+| 10 × 40 m | 780,000 | 1,100,000 | 1,500,000 | 1,900,000 | 2,200,000 | 2,500,000 | 2,800,000 |
+| 15 × 50 m | 1,500,000 | 2,200,000 | 2,900,000 | 3,500,000 | 4,200,000 | 4,800,000 | 5,400,000 |
+| 20 × 60 m | 2,400,000 | 3,500,000 | 4,600,000 | 5,700,000 | 6,800,000 | 7,800,000 | 8,800,000 |
+| 30 × 100 m | 5,900,000 | 8,800,000 | 12,000,000 | 15,000,000 | 17,000,000 | 20,000,000 | 23,000,000 |
+| 50 × 150 m | 15,000,000 | 22,000,000 | 30,000,000 | 37,000,000 | 44,000,000 | 51,000,000 | 58,000,000 |
+| 100 × 200 m | 40,000,000 | 59,000,000 | 79,000,000 | 99,000,000 | 118,000,000 | 137,000,000 | 156,000,000 |
+
+**Drive-through silo** (liters per wall height)
+
+| Interior width × length | 2 m | 3 m | 4 m | 5 m | 6 m | 7 m | 8 m |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 6 × 20 m | 210,000 | 300,000 | 370,000 | 420,000 | 460,000 | 490,000 | 500,000 |
+| 10 × 40 m | 750,000 | 1,100,000 | 1,400,000 | 1,700,000 | 2,000,000 | 2,200,000 | 2,400,000 |
+| 15 × 50 m | 1,400,000 | 2,100,000 | 2,700,000 | 3,300,000 | 3,900,000 | 4,400,000 | 4,900,000 |
+| 20 × 60 m | 2,300,000 | 3,400,000 | 4,400,000 | 5,400,000 | 6,300,000 | 7,200,000 | 8,100,000 |
+| 30 × 100 m | 5,900,000 | 8,700,000 | 11,000,000 | 14,000,000 | 17,000,000 | 19,000,000 | 22,000,000 |
+| 50 × 150 m | 15,000,000 | 22,000,000 | 29,000,000 | 36,000,000 | 43,000,000 | 50,000,000 | 56,000,000 |
+| 100 × 200 m | 40,000,000 | 59,000,000 | 78,000,000 | 97,000,000 | 116,000,000 | 134,000,000 | 152,000,000 |
+
+</div>
+<br>
+
+<div align="center">The values are approximate and assume a completely filled silo with a flat top at the wall height and a natural slope of 40° at each open end: one slope for the bunker silo, two for the drive-through silo. One cubic meter holds 1,000 liters. Grass and hay are converted to chaff liter for liter when tipped into the silo, so the tables apply to all accepted fill types.<br><br><strong>Map limit:</strong> the columns above 4 m only apply on maps that allow higher piles. Base game maps limit the fill height to 4 m, so there every wall from 4 m upward holds the amount from the 4 m column.</div>
+<br>
+<div align="center">
+
+<details>
+<summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
+  <br>
+
+**Bunkersilo** (Liter je Wandhöhe)
+
+| Innenbreite × Länge | 2 m | 3 m | 4 m | 5 m | 6 m | 7 m | 8 m |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 6 × 20 m | 230.000 | 330.000 | 420.000 | 510.000 | 590.000 | 660.000 | 730.000 |
+| 10 × 40 m | 780.000 | 1.100.000 | 1.500.000 | 1.900.000 | 2.200.000 | 2.500.000 | 2.800.000 |
+| 15 × 50 m | 1.500.000 | 2.200.000 | 2.900.000 | 3.500.000 | 4.200.000 | 4.800.000 | 5.400.000 |
+| 20 × 60 m | 2.400.000 | 3.500.000 | 4.600.000 | 5.700.000 | 6.800.000 | 7.800.000 | 8.800.000 |
+| 30 × 100 m | 5.900.000 | 8.800.000 | 12.000.000 | 15.000.000 | 17.000.000 | 20.000.000 | 23.000.000 |
+| 50 × 150 m | 15.000.000 | 22.000.000 | 30.000.000 | 37.000.000 | 44.000.000 | 51.000.000 | 58.000.000 |
+| 100 × 200 m | 40.000.000 | 59.000.000 | 79.000.000 | 99.000.000 | 118.000.000 | 137.000.000 | 156.000.000 |
+
+**Fahrsilo** (Liter je Wandhöhe)
+
+| Innenbreite × Länge | 2 m | 3 m | 4 m | 5 m | 6 m | 7 m | 8 m |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 6 × 20 m | 210.000 | 300.000 | 370.000 | 420.000 | 460.000 | 490.000 | 500.000 |
+| 10 × 40 m | 750.000 | 1.100.000 | 1.400.000 | 1.700.000 | 2.000.000 | 2.200.000 | 2.400.000 |
+| 15 × 50 m | 1.400.000 | 2.100.000 | 2.700.000 | 3.300.000 | 3.900.000 | 4.400.000 | 4.900.000 |
+| 20 × 60 m | 2.300.000 | 3.400.000 | 4.400.000 | 5.400.000 | 6.300.000 | 7.200.000 | 8.100.000 |
+| 30 × 100 m | 5.900.000 | 8.700.000 | 11.000.000 | 14.000.000 | 17.000.000 | 19.000.000 | 22.000.000 |
+| 50 × 150 m | 15.000.000 | 22.000.000 | 29.000.000 | 36.000.000 | 43.000.000 | 50.000.000 | 56.000.000 |
+| 100 × 200 m | 40.000.000 | 59.000.000 | 78.000.000 | 97.000.000 | 116.000.000 | 134.000.000 | 152.000.000 |
+
+<div align="center">Die Werte sind Näherungen für ein vollständig gefülltes Silo mit ebener Oberfläche auf Wandhöhe und einer natürlichen Böschung von 40° an jedem offenen Ende: eine beim Bunkersilo, zwei beim Fahrsilo. Ein Kubikmeter fasst 1.000 Liter. Gras und Heu werden beim Abkippen ins Silo Liter für Liter in Häckselgut umgewandelt, daher gelten die Tabellen für alle angenommenen Fruchtsorten.<br><br><strong>Kartengrenze:</strong> Die Spalten über 4 m gelten nur auf Karten, die höhere Schüttungen erlauben. Basisspiel-Karten begrenzen die Füllhöhe auf 4 m, dort fasst jede Wand ab 4 m die Menge aus der 4-m-Spalte.</div>
+</details>
+</div>
+<br>
+
+
+
+
 ## <div align="center"><img width="210" height="40" alt="options" src=".github/assets/badges/options.svg" /></div>
 
 <div align="center">

@@ -22,6 +22,24 @@ Dimensions:
 
 Fill height: bulk material piles up to the wall height at most, and never higher than the map allows (base game maps: 4 meters above the ground). Walls higher than the map limit add no extra volume.
 
+Approximate capacity of the Bunker silo (4 m / 8 m fill height):
+- 6 × 20 m: 420,000 l / 730,000 l
+- 10 × 40 m: 1,500,000 l / 2,800,000 l
+- 20 × 60 m: 4,600,000 l / 8,800,000 l
+- 30 × 100 m: 12,000,000 l / 23,000,000 l
+- 50 × 150 m: 30,000,000 l / 58,000,000 l
+- 100 × 200 m: 79,000,000 l / 156,000,000 l
+
+Approximate capacity of the Drive-through silo (4 m / 8 m fill height):
+- 6 × 20 m: 370,000 l / 500,000 l
+- 10 × 40 m: 1,400,000 l / 2,400,000 l
+- 20 × 60 m: 4,400,000 l / 8,100,000 l
+- 30 × 100 m: 11,000,000 l / 22,000,000 l
+- 50 × 150 m: 29,000,000 l / 56,000,000 l
+- 100 × 200 m: 78,000,000 l / 152,000,000 l
+
+The 8 meter values only apply on maps that allow piles higher than 4 meters. With a 2 meter wall the silo holds about half, with a 3 meter wall about three quarters of the 4 meter values. Grass and hay are converted to chaff liter for liter, so the values apply to all accepted fill types.
+
 The selected dimensions are applied to the walls, collisions, silo area, placement areas and interaction trigger. The wall insides remain vertical while their outer faces slope above a 1.5 meter base. The optional concrete floor slab spans the complete outside width. On the Bunker silo it can extend 30 meters beyond the entrance; on the Drive-through silo it can extend 30 meters behind and 15 meters in front. Original GIANTS concrete textures give all visible surfaces a detailed finish. Chaff, grass and hay can be fermented into silage.
 
 An optional AutoDrive course can be generated during placement. Its lanes and waypoints automatically adapt to the selected width and length. AutoDrive is required to use this option. Selling the silo removes all AutoDrive waypoints in the silo area, including the floor slab and the generated course.
@@ -41,6 +59,24 @@ Abmessungen:
 
 Füllhöhe: Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt (Basisspiel-Karten: 4 Meter über dem Boden). Wände höher als diese Grenze bringen kein zusätzliches Volumen.
 
+Ungefähres Fassungsvermögen Bunkersilo (4 m / 8 m Füllhöhe):
+- 6 × 20 m: 420.000 l / 730.000 l
+- 10 × 40 m: 1.500.000 l / 2.800.000 l
+- 20 × 60 m: 4.600.000 l / 8.800.000 l
+- 30 × 100 m: 12.000.000 l / 23.000.000 l
+- 50 × 150 m: 30.000.000 l / 58.000.000 l
+- 100 × 200 m: 79.000.000 l / 156.000.000 l
+
+Ungefähres Fassungsvermögen Fahrsilo (4 m / 8 m Füllhöhe):
+- 6 × 20 m: 370.000 l / 500.000 l
+- 10 × 40 m: 1.400.000 l / 2.400.000 l
+- 20 × 60 m: 4.400.000 l / 8.100.000 l
+- 30 × 100 m: 11.000.000 l / 22.000.000 l
+- 50 × 150 m: 29.000.000 l / 56.000.000 l
+- 100 × 200 m: 78.000.000 l / 152.000.000 l
+
+Die Werte für 8 Meter gelten nur auf Karten, die Schüttungen über 4 Meter erlauben. Mit 2 Meter Wandhöhe fasst das Silo etwa die Hälfte, mit 3 Meter etwa drei Viertel der Werte für 4 Meter. Gras und Heu werden Liter für Liter in Häckselgut umgewandelt, daher gelten die Werte für alle angenommenen Fruchtsorten.
+
 Die gewählten Abmessungen werden auf Wände, Kollisionen, Silobereich, Platzierungsflächen und Interaktionstrigger angewendet. Die Wandinnenseiten bleiben senkrecht, während die Außenseiten oberhalb eines 1,5 Meter hohen Sockels schräg verlaufen. Die optionale Beton-Bodenplatte reicht über die gesamte Außenbreite. Beim Bunkersilo kann sie 30 Meter über die Einfahrt hinausragen; beim Fahrsilo 30 Meter hinten und 15 Meter vorne. Originale GIANTS-Betontexturen geben allen sichtbaren Flächen eine detaillierte Oberfläche. Häckselgut, Gras und Heu können zu Silage vergoren werden.
 
 Beim Platzieren kann optional ein AutoDrive-Kurs erzeugt werden. Fahrspuren und Wegpunkte passen sich automatisch an die gewählte Breite und Länge an. Für diese Option wird AutoDrive benötigt. Beim Verkauf des Silos werden alle AutoDrive-Wegpunkte im Silobereich entfernt, einschließlich Bodenplatte und erzeugtem Kurs.
@@ -59,6 +95,24 @@ Dimensions :
 - Hauteur des murs : 2 à 8 mètres
 
 Hauteur de remplissage : le matériau en vrac s'empile au maximum jusqu'à la hauteur des murs, et jamais plus haut que la carte ne le permet (cartes du jeu de base : 4 mètres au-dessus du sol). Des murs plus hauts que cette limite n'ajoutent pas de volume.
+
+Capacité approximative du Silo bunker (hauteur de remplissage 4 m / 8 m) :
+- 6 × 20 m : 420 000 l / 730 000 l
+- 10 × 40 m : 1 500 000 l / 2 800 000 l
+- 20 × 60 m : 4 600 000 l / 8 800 000 l
+- 30 × 100 m : 12 000 000 l / 23 000 000 l
+- 50 × 150 m : 30 000 000 l / 58 000 000 l
+- 100 × 200 m : 79 000 000 l / 156 000 000 l
+
+Capacité approximative du Silo traversant (hauteur de remplissage 4 m / 8 m) :
+- 6 × 20 m : 370 000 l / 500 000 l
+- 10 × 40 m : 1 400 000 l / 2 400 000 l
+- 20 × 60 m : 4 400 000 l / 8 100 000 l
+- 30 × 100 m : 11 000 000 l / 22 000 000 l
+- 50 × 150 m : 29 000 000 l / 56 000 000 l
+- 100 × 200 m : 78 000 000 l / 152 000 000 l
+
+Les valeurs pour 8 mètres ne s'appliquent que sur les cartes qui autorisent des tas de plus de 4 mètres. Avec des murs de 2 mètres, le silo contient environ la moitié des valeurs pour 4 mètres ; avec 3 mètres, environ les trois quarts. L'herbe et le foin sont convertis en paille hachée litre pour litre, les valeurs s'appliquent donc à tous les produits acceptés.
 
 Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la zone du silo, aux zones de placement et au déclencheur d'interaction. L'intérieur des murs reste vertical tandis que leur face extérieure est inclinée au-dessus d'un socle de 1,5 mètre. La dalle optionnelle couvre toute la largeur extérieure. Pour le Silo bunker, elle peut dépasser l'entrée de 30 mètres ; pour le Silo traversant, elle dépasse de 30 mètres à l'arrière et de 15 mètres à l'avant. Les textures de béton GIANTS donnent un aspect détaillé à toutes les surfaces visibles. La paille hachée, l'herbe et le foin peuvent être fermentés en ensilage.
 
