@@ -127,7 +127,7 @@ Un parcours AutoDrive peut être généré en option lors du placement. Ses voie
 Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25_VariableBunker]]></fr>
     </description>
 
-    <iconFilename>dds/icon_VariableBunker.dds</iconFilename>
+    <iconFilename>icon_VariableBunker.dds</iconFilename>
     <multiplayer supported="true" />
     <l10n filenamePrefix="l10n/l10n" />
 

@@ -23,7 +23,7 @@ Describe what changed and why. | Beschreiben Sie, was sich geändert hat und war
 - [ ] `lua/VariableBunkerRegister.lua`
 - [ ] `lua/VariableBunkerAutoDrive.lua`
 - [ ] Localization in `l10n/` | Lokalisierung
-- [ ] Assets in `dds/`
+- [ ] Mod icon `icon_VariableBunker.dds` / store assets in `dds/`
 - [ ] README / documentation | README / Dokumentation
 - [ ] `.github/` templates or community files | Vorlagen oder Community-Dateien
 
@@ -31,7 +31,7 @@ Describe what changed and why. | Beschreiben Sie, was sich geändert hat und war
 
 - [ ] The repository root still matches the FS25 mod root. | Das Repository-Stammverzeichnis stimmt weiterhin mit dem FS25-Mod-Stammverzeichnis überein.
 - [ ] `modDesc.xml` remains in the repository root. | `modDesc.xml` verbleibt im Repository-Stammverzeichnis.
-- [ ] Runtime mod files stay in `lua/`, `l10n/`, `dds/`, `i3d/`, or `xml/`. | Laufzeit-Mod-Dateien verbleiben in `lua/`, `l10n/`, `dds/`, `i3d/` oder `xml/`.
+- [ ] The mod icon stays beside `modDesc.xml`; other runtime files stay in `lua/`, `l10n/`, `dds/`, `i3d/`, or `xml/`. | Das Mod-Icon verbleibt neben `modDesc.xml`; andere Laufzeit-Mod-Dateien verbleiben in `lua/`, `l10n/`, `dds/`, `i3d/` oder `xml/`.
 - [ ] GitHub-only files stay in `.github/` or root documentation files. | GitHub-spezifische Dateien verbleiben in `.github/` oder im Stammverzeichnis der Dokumentation.
 - [ ] No generated zip files, logs, savegames, cache files, or local test output were committed. | Es wurden keine generierten ZIP-Dateien, Protokolle, Spielstände, Cache-Dateien oder lokale Testausgaben eingecheckt.
 
