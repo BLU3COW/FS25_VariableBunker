@@ -248,7 +248,7 @@ end
 
 function Bunker:VariableBunkerGetAutoDriveCourseBounds()
     local spec = self.spec_VariableBunker
-    local length = spec ~= nil and spec.lengthMeters or 40
+    local length = spec ~= nil and spec.lengthMeters or 60
     if spec ~= nil and spec.hasRearWall == false then
         return -length * 0.5 - DRIVE_THROUGH_EXIT_OFFSET - DRIVE_THROUGH_CONNECTION_OFFSET,
             length * 0.5 + DRIVE_THROUGH_ENTRY_OFFSET + DRIVE_THROUGH_CONNECTION_OFFSET
@@ -258,8 +258,8 @@ end
 
 function Bunker:VariableBunkerCreateAutoDriveCourse(autoDrive, graphManager)
     local spec = self.spec_VariableBunker
-    local width = spec ~= nil and spec.widthMeters or 10
-    local length = spec ~= nil and spec.lengthMeters or 40
+    local width = spec ~= nil and spec.widthMeters or 40
+    local length = spec ~= nil and spec.lengthMeters or 60
     if spec ~= nil and spec.hasRearWall == false then
         return createDriveThroughCourse(self, autoDrive, graphManager, width, length)
     end

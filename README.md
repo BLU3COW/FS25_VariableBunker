@@ -3,7 +3,7 @@
 
 
 
-<div align="center"><img width="400" alt="variablebunker-logo" src=".github/assets/logos/variablebunker.png" /></div>
+<div align="center"><img width="500" alt="variablebunker-logo" src=".github/assets/logos/variablebunker.svg" /></div>
 
 # <div align="center"><img width="860" height="80" alt="variablebunker-title" src=".github/assets/badges/variablebunker-title.svg" /></div>
 
