@@ -122,14 +122,14 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 </div>
 <br>
 
-<div align="center">All dimensions are configured in construction mode before placing the silo. The wall insides stay vertical, while the outside rises vertically for 1.5 m and then slopes inward, so taller walls automatically receive a wider base. The purchase price and daily upkeep stay the same regardless of the chosen dimensions.<br><br><strong>Fill height:</strong> bulk material piles up to the wall height at most, and never higher than the map allows (base game maps: 4 m above the ground). Walls higher than the map limit add no extra volume.</div>
+<div align="center">All dimensions are configured in construction mode before placing the silo. The estimated capacity updates directly in the configuration list as the dimensions or design change. The wall insides stay vertical, while the outside rises vertically for 1.5 m and then slopes inward, so taller walls automatically receive a wider base. The purchase price and daily upkeep stay the same regardless of the chosen dimensions.<br><br><strong>Fill height:</strong> bulk material piles up to the wall height at most, and never higher than the map allows (base game maps: 4 m above the ground). Walls higher than the map limit add no extra volume.</div>
 <br>
 <div align="center">
 
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Alle Abmessungen werden im Baumodus vor dem Platzieren eingestellt. Die Wandinnenseiten bleiben senkrecht, während die Außenseite 1,5 m senkrecht ansteigt und danach schräg nach innen verläuft, sodass höhere Wände automatisch einen breiteren Fuß bekommen. Kaufpreis und täglicher Unterhalt bleiben unabhängig von der gewählten Größe gleich.<br><br><strong>Füllhöhe:</strong> Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt (Basisspiel-Karten: 4 m über dem Boden). Wände höher als diese Grenze bringen kein zusätzliches Volumen.</div>
+<div align="center">Alle Abmessungen werden im Baumodus vor dem Platzieren eingestellt. Das geschätzte Fassungsvermögen wird direkt in der Konfigurationsliste aktualisiert, sobald sich Maße oder Bauart ändern. Die Wandinnenseiten bleiben senkrecht, während die Außenseite 1,5 m senkrecht ansteigt und danach schräg nach innen verläuft, sodass höhere Wände automatisch einen breiteren Fuß bekommen. Kaufpreis und täglicher Unterhalt bleiben unabhängig von der gewählten Größe gleich.<br><br><strong>Füllhöhe:</strong> Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt (Basisspiel-Karten: 4 m über dem Boden). Wände höher als diese Grenze bringen kein zusätzliches Volumen.</div>
 </details>
 </div>
 <br>
@@ -251,16 +251,30 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 </div>
 <br>
 
-<div align="center">When the option is enabled, the course is created once when a new silo is placed and adapts to the selected width and length. The layouts follow the AutoDrive reference courses for the BGA bunker silo and the large bunker silo. Loading a savegame never creates duplicate nodes, and without AutoDrive the silo works completely on its own.</div>
+<div align="center">When the option is enabled, a visual course preview appears while the silo is being configured and positioned. The actual course is created only once after placement and adapts to the selected width and length. The layouts follow the AutoDrive reference courses for the BGA bunker silo and the large bunker silo. Cancelling placement creates no waypoints, loading a savegame never creates duplicate nodes, and without AutoDrive the silo works completely on its own.</div>
 <br>
 <div align="center">
 
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Ist die Option aktiviert, wird der Kurs einmalig beim Platzieren eines neuen Silos erzeugt und passt sich an die gewählte Breite und Länge an. Die Aufteilung folgt den AutoDrive-Referenzkursen für das BGA-Bunkersilo und das große Fahrsilo des Basisspiels. Beim Laden eines Spielstands entstehen nie doppelte Knoten, und ohne AutoDrive funktioniert das Silo vollständig eigenständig.</div>
+<div align="center">Ist die Option aktiviert, erscheint während der Konfiguration und Positionierung eine visuelle Kursvorschau. Der eigentliche Kurs wird erst nach dem Platzieren einmalig erzeugt und passt sich an die gewählte Breite und Länge an. Die Aufteilung folgt den AutoDrive-Referenzkursen für das BGA-Bunkersilo und das große Fahrsilo des Basisspiels. Ein Abbruch erzeugt keine Wegpunkte, beim Laden eines Spielstands entstehen nie doppelte Knoten, und ohne AutoDrive funktioniert das Silo vollständig eigenständig.</div>
 </details>
 </div>
+<br>
+
+
+## Settings
+
+The file `modSettings/FS25_VariableBunker.xml` is created automatically. Set `allowWallHeightsAboveFourMeters` to `false` to limit newly built silos to a maximum wall height of 4 m. The default is `true`. Existing silos remain unchanged. Restart the game after editing the file. In multiplayer, the host or dedicated server setting is authoritative and is sent to joining clients.
+
+<details>
+<summary><strong>Deutsch</strong></summary>
+  <br>
+
+Die Datei `modSettings/FS25_VariableBunker.xml` wird automatisch erstellt. Setze `allowWallHeightsAboveFourMeters` auf `false`, um neu gebaute Silos auf maximal 4 m Wandhöhe zu begrenzen. Standard ist `true`. Bereits gebaute Silos bleiben unverändert. Nach einer Änderung muss das Spiel neu gestartet werden. Im Mehrspieler gilt die Einstellung des Hosts oder Dedicated Servers und wird an beitretende Spieler übertragen.
+
+</details>
 <br>
 
 

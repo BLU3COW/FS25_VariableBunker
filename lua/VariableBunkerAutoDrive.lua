@@ -266,6 +266,85 @@ function Bunker:VariableBunkerCreateAutoDriveCourse(autoDrive, graphManager)
     return createBunkerCourse(self, autoDrive, graphManager, width, length)
 end
 
+local function drawLocalLine(placeable, x1, z1, x2, z2, red, green, blue)
+    if drawDebugLine == nil or g_terrainNode == nil then
+        return
+    end
+    local worldX1, _, worldZ1 = localToWorld(placeable.rootNode, x1, 0, z1)
+    local worldX2, _, worldZ2 = localToWorld(placeable.rootNode, x2, 0, z2)
+    local worldY1 = getTerrainHeightAtWorldPos(g_terrainNode, worldX1, 0, worldZ1) + 0.15
+    local worldY2 = getTerrainHeightAtWorldPos(g_terrainNode, worldX2, 0, worldZ2) + 0.15
+    drawDebugLine(worldX1, worldY1, worldZ1, red, green, blue, worldX2, worldY2, worldZ2, red, green, blue)
+end
+
+local function drawLocalPoint(placeable, x, z, red, green, blue)
+    if drawDebugPoint == nil or g_terrainNode == nil then
+        return
+    end
+    local worldX, _, worldZ = localToWorld(placeable.rootNode, x, 0, z)
+    local worldY = getTerrainHeightAtWorldPos(g_terrainNode, worldX, 0, worldZ) + 0.2
+    drawDebugPoint(worldX, worldY, worldZ, red, green, blue, 1, false)
+end
+
+local function drawBunkerPreview(placeable, width, length)
+    local laneCount, laneSpacing = getLaneLayout(width)
+    local rear = length * 0.5 - REAR_CLEARANCE
+    local nearCluster = -length * 0.5 - NEAR_FRONT_CONNECTION_OFFSET
+    local farCluster = -length * 0.5 - FAR_FRONT_CONNECTION_OFFSET
+    local farMain = farCluster + 1
+    local farReturn = farCluster - FAR_RETURN_OFFSET
+    local farTerminal = -length * 0.5 - FRONT_APPROACH
+    local firstX = -width * 0.5 + laneSpacing * 0.5
+    local lastX = width * 0.5 - laneSpacing * 0.5
+
+    for lane = 1, laneCount do
+        local localX = -width * 0.5 + laneSpacing * (lane - 0.5)
+        drawLocalLine(placeable, localX, rear, localX, farMain, 0, 0, 1)
+        drawLocalLine(placeable, localX, farMain, localX - FAR_CENTER_SIDE_OFFSET, farCluster, 0, 1, 0)
+        drawLocalLine(placeable, localX - FAR_CENTER_SIDE_OFFSET, farCluster, localX, farTerminal, 0, 1, 0)
+        drawLocalLine(placeable, localX, farReturn, localX, farMain, 0, 0.569, 0.835)
+        drawLocalPoint(placeable, localX, rear, 1, 0.5, 0)
+    end
+    drawLocalLine(placeable, firstX - 2, nearCluster, lastX + 2, nearCluster, 0, 0, 1)
+    drawLocalLine(placeable, firstX - 2, farCluster, lastX + 2, farCluster, 0, 0, 1)
+end
+
+local function drawDriveThroughPreview(placeable, width, length)
+    local laneCount = getDriveThroughLaneCount(width)
+    local entry = length * 0.5 + DRIVE_THROUGH_ENTRY_OFFSET
+    local exit = -length * 0.5 - DRIVE_THROUGH_EXIT_OFFSET
+    local entryCluster = entry + DRIVE_THROUGH_CONNECTION_OFFSET
+    local exitCluster = exit - DRIVE_THROUGH_CONNECTION_OFFSET
+    local firstX = -(laneCount - 1) * DRIVE_THROUGH_LANE_SPACING * 0.5
+    local lastX = (laneCount - 1) * DRIVE_THROUGH_LANE_SPACING * 0.5
+
+    for lane = 1, laneCount do
+        local localX = (lane - (laneCount + 1) * 0.5) * DRIVE_THROUGH_LANE_SPACING
+        drawLocalLine(placeable, localX, entry, localX, exit, 0, 1, 0)
+        drawLocalLine(placeable, localX - 1, entryCluster, localX, entry, 0, 1, 0)
+        drawLocalLine(placeable, localX + 1, entryCluster, localX, entry, 0, 1, 0)
+        drawLocalLine(placeable, localX, exit, localX - 1, exitCluster, 0, 1, 0)
+        drawLocalLine(placeable, localX, exit, localX + 1, exitCluster, 0, 1, 0)
+        drawLocalPoint(placeable, localX, exit, 1, 0.5, 0)
+    end
+    drawLocalLine(placeable, firstX - 1, entryCluster, lastX + 1, entryCluster, 0, 0, 1)
+    drawLocalLine(placeable, firstX - 1, exitCluster, lastX + 1, exitCluster, 0, 0, 1)
+end
+
+function Bunker:VariableBunkerDrawAutoDrivePreview()
+    if self.rootNode == nil or not self:VariableBunkerHasAutoDriveCourse() then
+        return
+    end
+    local spec = self.spec_VariableBunker
+    local width = spec ~= nil and spec.widthMeters or 40
+    local length = spec ~= nil and spec.lengthMeters or 60
+    if spec ~= nil and spec.hasRearWall == false then
+        drawDriveThroughPreview(self, width, length)
+    else
+        drawBunkerPreview(self, width, length)
+    end
+end
+
 function Bunker:onFinalizePlacement()
     local spec = self.spec_VariableBunker
     self:VariableBunkerUpdateCollisionStates()

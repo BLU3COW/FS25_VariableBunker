@@ -44,7 +44,7 @@ The 8 meter values only apply on maps that allow piles higher than 4 meters. Wit
 
 The selected dimensions are applied to the walls, collisions, silo area, placement areas and interaction trigger. The wall insides remain vertical while their outer faces slope above a 1.5 meter base. The optional concrete floor slab spans the complete outside width. On the Bunker silo it can extend 30 meters beyond the entrance; on the Drive-through silo it can extend 30 meters behind and 15 meters in front. Original GIANTS concrete textures give all visible surfaces a detailed finish. Chaff, grass and hay can be fermented into silage.
 
-An optional AutoDrive course can be generated during placement. Its lanes and waypoints automatically adapt to the selected width and length. AutoDrive is required to use this option. Selling the silo removes all AutoDrive waypoints in the silo area, including the floor slab and the generated course.
+The estimated capacity is shown live while configuring the silo. An optional AutoDrive course can be generated during placement, with a visual preview before purchase. Its lanes and waypoints automatically adapt to the selected width and length. AutoDrive is required to use this option. Selling the silo removes all AutoDrive waypoints in the silo area, including the floor slab and the generated course. A modSettings option can limit newly built silos to a maximum wall height of 4 meters.
 
 Source code, help and issue reports: https://github.com/BLU3COW/FS25_VariableBunker]]></en>
         <de><![CDATA[VariableBunker
@@ -83,7 +83,7 @@ Die Werte für 8 Meter gelten nur auf Karten, die Schüttungen über 4 Meter erl
 
 Die gewählten Abmessungen werden auf Wände, Kollisionen, Silobereich, Platzierungsflächen und Interaktionstrigger angewendet. Die Wandinnenseiten bleiben senkrecht, während die Außenseiten oberhalb eines 1,5 Meter hohen Sockels schräg verlaufen. Die optionale Beton-Bodenplatte reicht über die gesamte Außenbreite. Beim Bunkersilo kann sie 30 Meter über die Einfahrt hinausragen; beim Fahrsilo 30 Meter hinten und 15 Meter vorne. Originale GIANTS-Betontexturen geben allen sichtbaren Flächen eine detaillierte Oberfläche. Häckselgut, Gras und Heu können zu Silage vergoren werden.
 
-Beim Platzieren kann optional ein AutoDrive-Kurs erzeugt werden. Fahrspuren und Wegpunkte passen sich automatisch an die gewählte Breite und Länge an. Für diese Option wird AutoDrive benötigt. Beim Verkauf des Silos werden alle AutoDrive-Wegpunkte im Silobereich entfernt, einschließlich Bodenplatte und erzeugtem Kurs.
+Das geschätzte Fassungsvermögen wird während der Konfiguration direkt angezeigt. Beim Platzieren kann optional ein AutoDrive-Kurs mit visueller Vorschau vor dem Kauf erzeugt werden. Fahrspuren und Wegpunkte passen sich automatisch an die gewählte Breite und Länge an. Für diese Option wird AutoDrive benötigt. Beim Verkauf des Silos werden alle AutoDrive-Wegpunkte im Silobereich entfernt, einschließlich Bodenplatte und erzeugtem Kurs. Über eine modSettings-Option lassen sich neu gebaute Silos auf maximal 4 Meter Wandhöhe begrenzen.
 
 Quellcode, Hilfe und Fehlermeldungen: https://github.com/BLU3COW/FS25_VariableBunker]]></de>
         <fr><![CDATA[VariableBunker
@@ -122,7 +122,7 @@ Les valeurs pour 8 mètres ne s'appliquent que sur les cartes qui autorisent des
 
 Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la zone du silo, aux zones de placement et au déclencheur d'interaction. L'intérieur des murs reste vertical tandis que leur face extérieure est inclinée au-dessus d'un socle de 1,5 mètre. La dalle optionnelle couvre toute la largeur extérieure. Pour le Silo bunker, elle peut dépasser l'entrée de 30 mètres ; pour le Silo traversant, elle dépasse de 30 mètres à l'arrière et de 15 mètres à l'avant. Les textures de béton GIANTS donnent un aspect détaillé à toutes les surfaces visibles. La paille hachée, l'herbe et le foin peuvent être fermentés en ensilage.
 
-Un parcours AutoDrive peut être généré en option lors du placement. Ses voies et points de passage s'adaptent automatiquement à la largeur et à la longueur sélectionnées. AutoDrive est requis pour utiliser cette option. La vente du silo supprime tous les points de passage AutoDrive de la zone du silo, dalle de sol et parcours généré compris.
+La capacité estimée est affichée directement pendant la configuration. Un parcours AutoDrive peut être généré en option lors du placement, avec un aperçu visuel avant l'achat. Ses voies et points de passage s'adaptent automatiquement à la largeur et à la longueur sélectionnées. AutoDrive est requis pour utiliser cette option. La vente du silo supprime tous les points de passage AutoDrive de la zone du silo, dalle de sol et parcours généré compris. Une option modSettings peut limiter les nouveaux silos à une hauteur maximale de 4 mètres.
 
 Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25_VariableBunker]]></fr>
     </description>
@@ -132,8 +132,10 @@ Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25
     <l10n filenamePrefix="l10n/l10n" />
 
     <extraSourceFiles>
+        <sourceFile filename="lua/VariableBunkerSettings.lua" />
         <sourceFile filename="lua/VariableBunker.lua" />
         <sourceFile filename="lua/VariableBunkerAutoDrive.lua" />
+        <sourceFile filename="lua/VariableBunkerGui.lua" />
         <sourceFile filename="lua/VariableBunkerRegister.lua" />
     </extraSourceFiles>
 

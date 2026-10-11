@@ -15,5 +15,7 @@
         <text name="configuration_VariableBunkerAutoDrive" text="AutoDrive course" />
         <text name="option_VariableBunkerAutoDriveOff" text="Off" />
         <text name="option_VariableBunkerAutoDriveOn" text="Generate automatically" />
+        <text name="configuration_VariableBunkerEstimatedCapacity" text="Estimated capacity" />
+        <text name="capacity_VariableBunkerMapLimit" text="map limit %s m" />
     </texts>
 </l10n>

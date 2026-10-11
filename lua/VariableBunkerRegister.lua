@@ -37,6 +37,15 @@ function VariableBunkerDimensionConfigurationItem:loadFromXML(
     end
 
     self.meters = math.max(xmlFile:getValue(configKey .. "#meters", self.meters), 0)
+    self.variableBunkerBaseSelectable = self.isSelectable ~= false
+    if
+        self.configName == Bunker.CONFIG_HEIGHT
+        and Bunker.settings ~= nil
+        and not Bunker.settings.allowWallHeightsAboveFourMeters
+        and self.meters > 4
+    then
+        self.isSelectable = false
+    end
     local decimals = math.abs(self.meters - math.floor(self.meters)) > 0.001 and 1 or 0
     self.name = string.format("%s %s", g_i18n:formatNumber(self.meters, decimals, true), g_i18n:getText("unit_mShort"))
     return true

@@ -15,5 +15,7 @@
         <text name="configuration_VariableBunkerAutoDrive" text="Parcours AutoDrive" />
         <text name="option_VariableBunkerAutoDriveOff" text="Désactivé" />
         <text name="option_VariableBunkerAutoDriveOn" text="Générer automatiquement" />
+        <text name="configuration_VariableBunkerEstimatedCapacity" text="Capacité estimée" />
+        <text name="capacity_VariableBunkerMapLimit" text="limite de carte %s m" />
     </texts>
 </l10n>

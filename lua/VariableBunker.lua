@@ -273,12 +273,35 @@ function Bunker.registerFunctions(placeableType)
         "VariableBunkerGetAutoDriveCourseBounds",
         Bunker.VariableBunkerGetAutoDriveCourseBounds
     )
+    SpecializationUtil.registerFunction(
+        placeableType,
+        "VariableBunkerDrawAutoDrivePreview",
+        Bunker.VariableBunkerDrawAutoDrivePreview
+    )
 end
 
 function Bunker:onLoad(savegame)
     self.spec_VariableBunker = {}
     local spec = self.spec_VariableBunker
     spec.loadedFromSavegame = savegame ~= nil
+
+    if
+        not spec.loadedFromSavegame
+        and Bunker.settings ~= nil
+        and not Bunker.settings.allowWallHeightsAboveFourMeters
+        and self.configurations ~= nil
+    then
+        local storeItem = g_storeManager ~= nil and g_storeManager:getItemByXMLFilename(self.configFileName) or nil
+        local heightItems = storeItem ~= nil and storeItem.configurations[ROOT_KEY_HEIGHT] or nil
+        if heightItems ~= nil then
+            for _, item in ipairs(heightItems) do
+                if math.abs((tonumber(item.meters) or 0) - 4) < 0.001 then
+                    self.configurations[ROOT_KEY_HEIGHT] = item.index
+                    break
+                end
+            end
+        end
+    end
 
     for _, attributeName in ipairs(NODE_ATTRIBUTES) do
         spec[attributeName] =
