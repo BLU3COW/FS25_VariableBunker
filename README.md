@@ -74,6 +74,8 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 
 <div align="center">
 
+<img width="1600" height="900" alt="variablebunker-ai" src=".github/assets/screenshots/variablebunker_ai.png" />
+
 <img width="1600" height="900" alt="variablebunker-gif" src=".github/assets/screenshots/variablebunker-gif.gif" />
 
 </div>
