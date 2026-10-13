@@ -29,7 +29,7 @@ local FLOOR_CONFIGURATION_EXTENDED = 3
 local TYPE_CONFIGURATION_BUNKER = 1
 local TYPE_CONFIGURATION_DRIVE_THROUGH = 2
 local SCALE_EPSILON = 0.0001
-local STATION_HALF_WIDTH = 4.5
+local STATION_HALF_WIDTH = 5.25
 local STATION_HALF_DEPTH = 5.5
 local STATION_CLEARANCE = 0.5
 
@@ -170,6 +170,7 @@ local NODE_ATTRIBUTES = {
     "tipOcclusionEndNode",
     "inputStationRootNode",
     "inputExactFillRootNode",
+    "inputBaleTriggerNode",
     "inputMarkerNode",
     "inputClearAreaStartNode",
     "inputClearAreaWidthNode",
@@ -183,6 +184,7 @@ local NODE_ATTRIBUTES = {
     "outputLoadTriggerNode",
     "outputPadNode",
     "outputMarkerNode",
+    "outputPostCollisionNode",
     "outputClearAreaStartNode",
     "outputClearAreaWidthNode",
     "outputClearAreaHeightNode",
@@ -233,6 +235,12 @@ local function setPhysicsNodeEnabled(node, enabled)
     end
 
     setRigidBodyType(node, enabled and RigidBodyType.STATIC or RigidBodyType.NONE)
+end
+
+local function disableTriggerNode(node, enabled)
+    if node ~= nil and not enabled then
+        setRigidBodyType(node, RigidBodyType.NONE)
+    end
 end
 
 local function setStationAreaNodes(spec, prefix, enabled)
@@ -577,25 +585,25 @@ function Bunker:VariableBunkerRefreshStationState()
     setVisibility(spec.inputStationRootNode, inputActive)
     setVisibility(spec.outputStationRootNode, outputActive)
     setPhysicsNodeEnabled(spec.inputExactFillRootNode, inputActive)
-    setPhysicsNodeEnabled(spec.outputLoadTriggerNode, outputActive)
-    if spec.inputGridNode == nil and self.spec_dynamicallyLoadedParts ~= nil then
+    setPhysicsNodeEnabled(spec.outputPostCollisionNode, outputActive)
+    disableTriggerNode(spec.inputBaleTriggerNode, inputActive)
+    disableTriggerNode(spec.outputLoadTriggerNode, outputActive)
+    spec.inputGridPhysicsStates = spec.inputGridPhysicsStates or {}
+    if self.spec_dynamicallyLoadedParts ~= nil then
         for _, part in ipairs(self.spec_dynamicallyLoadedParts.parts or {}) do
             local filename = string.lower(part.filename or "")
-            if string.find(filename, "sellingstationgenericnocoverwidegrid", 1, true) ~= nil then
-                spec.inputGridNode = part.node
-                break
-            end
-        end
-    end
-    if spec.inputGridNode ~= nil then
-        setVisibility(spec.inputGridNode, inputActive)
-        if spec.stationsFinalized then
-            if inputActive and spec.inputGridPhysicsEnabled == false then
-                addToPhysics(spec.inputGridNode)
-                spec.inputGridPhysicsEnabled = true
-            elseif not inputActive and spec.inputGridPhysicsEnabled ~= false then
-                removeFromPhysics(spec.inputGridNode)
-                spec.inputGridPhysicsEnabled = false
+            if part.node ~= nil and string.find(filename, "sellingstationgenericnocoverwidegrid", 1, true) ~= nil then
+                setVisibility(part.node, inputActive)
+                if spec.stationsFinalized then
+                    local physicsEnabled = spec.inputGridPhysicsStates[part.node]
+                    if inputActive and physicsEnabled == false then
+                        addToPhysics(part.node)
+                        spec.inputGridPhysicsStates[part.node] = true
+                    elseif not inputActive and physicsEnabled ~= false then
+                        removeFromPhysics(part.node)
+                        spec.inputGridPhysicsStates[part.node] = false
+                    end
+                end
             end
         end
     end
@@ -625,7 +633,6 @@ function Bunker.VariableBunkerFinalizeStations(self)
         storageSystem:addStorageToLoadingStation(spec.outputStorage, spec.outputStation)
     end
     spec.stationsFinalized = true
-    spec.inputGridPhysicsEnabled = true
     self:VariableBunkerRefreshStationState()
 end
 

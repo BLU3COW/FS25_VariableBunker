@@ -51,7 +51,7 @@
     <leveling requireLeveling="true" maxSmoothDistance="3" maxSlope="75" maxEdgeAngle="30">
         <levelAreas>
             <levelArea startNode="levelAreaStart" widthNode="levelAreaWidth" heightNode="levelAreaHeight" groundType="concrete" />
-            <levelArea startNode="inputLevelAreaStart" widthNode="inputLevelAreaWidth" heightNode="inputLevelAreaHeight" groundType="concrete" />
+            <levelArea startNode="inputLevelAreaStart" widthNode="inputLevelAreaWidth" heightNode="inputLevelAreaHeight" />
             <levelArea startNode="outputLevelAreaStart" widthNode="outputLevelAreaWidth" heightNode="outputLevelAreaHeight" groundType="concrete" />
         </levelAreas>
     </leveling>
@@ -93,7 +93,7 @@
                     inputLevelAreaStartNode="inputLevelAreaStart" inputLevelAreaWidthNode="inputLevelAreaWidth" inputLevelAreaHeightNode="inputLevelAreaHeight"
                     inputTestAreaStartNode="inputTestAreaStart" inputTestAreaEndNode="inputTestAreaEnd"
                     outputStationRootNode="outputStationRoot" outputLoadTriggerNode="outputLoadTrigger" outputPadNode="outputPad"
-                    outputMarkerNode="outputMarker"
+                    outputMarkerNode="outputMarker" outputPostCollisionNode="outputPostCollision" inputBaleTriggerNode="inputBaleTrigger"
                     outputClearAreaStartNode="outputClearAreaStart" outputClearAreaWidthNode="outputClearAreaWidth" outputClearAreaHeightNode="outputClearAreaHeight"
                     outputLevelAreaStartNode="outputLevelAreaStart" outputLevelAreaWidthNode="outputLevelAreaWidth" outputLevelAreaHeightNode="outputLevelAreaHeight"
                     outputTestAreaStartNode="outputTestAreaStart" outputTestAreaEndNode="outputTestAreaEnd">
@@ -202,15 +202,23 @@
                 <fillTypeConversion incomingFillType="GRASS_WINDROW" outgoingFillType="CHAFF" ratio="1" />
                 <fillTypeConversion incomingFillType="DRYGRASS_WINDROW" outgoingFillType="CHAFF" ratio="1" />
             </unloadTrigger>
+            <baleTrigger triggerNode="inputBaleTrigger" deleteLitersPerSecond="10000" fillTypes="CHAFF GRASS_WINDROW DRYGRASS_WINDROW">
+                <fillTypeConversion incomingFillType="GRASS_WINDROW" outgoingFillType="CHAFF" ratio="1" />
+                <fillTypeConversion incomingFillType="DRYGRASS_WINDROW" outgoingFillType="CHAFF" ratio="1" />
+            </baleTrigger>
         </inputStation>
 
         <outputStation node="outputStationRoot" stationName="$l10n_station_VariableBunkerOutput" supportsExtension="false" fillTypes="CHAFF SILAGE">
-            <loadTrigger triggerNode="outputLoadTrigger" fillLitersPerSecond="2000" fillTypes="CHAFF SILAGE" />
+            <loadTrigger triggerNode="outputLoadTrigger" fillLitersPerSecond="2000" fillTypes="CHAFF SILAGE" dischargeNode="outputDischargeNode" dischargeWidth="1" dischargeLength="1">
+                <effectNode effectClass="PipeEffect" filename="$data/placeables/brandless/limeStation/limeStation.i3d" node="0>4|3|3|0" linkNode="outputDischargeNode" rotation="90 0 0" materialType="pipe" fadeTime="0.5" maxBending="0" shapeScaleSpread="0.8 0.8 1 0" controlPoint="2.5 0 0 0" />
+                <effectNode filename="$data/placeables/brandless/limeStation/limeStation.i3d" node="0>4|3|3|1" linkNode="outputDischargeNode" position="0 -2.5 0" materialType="unloadingSmoke" fadeTime="0.5" />
+            </loadTrigger>
         </outputStation>
     </VariableBunker>
 
     <dynamicallyLoadedParts>
         <dynamicallyLoadedPart filename="$data/placeables/shared/sellingStationGeneric/sellingStationGenericNoCoverWideGrid.i3d" node="0" linkNode="inputGridLink" />
+        <dynamicallyLoadedPart filename="$data/placeables/shared/sellingStationGeneric/sellingStationGenericNoCoverWideGrid.i3d" node="0" linkNode="inputGridLink2" />
     </dynamicallyLoadedParts>
 
     <triggerMarkers>
@@ -276,9 +284,10 @@
         <i3dMapping id="innerAreaWidth" node="0>6|1|1" />
         <i3dMapping id="innerAreaHeight" node="0>6|1|2" />
         <i3dMapping id="inputStationRoot" node="0>7|0" />
-        <i3dMapping id="inputPad" node="0>7|0|0" />
+        <i3dMapping id="inputBaleTrigger" node="0>7|0|0" />
         <i3dMapping id="inputExactFillRoot" node="0>7|0|1" />
         <i3dMapping id="inputGridLink" node="0>7|0|2" />
+        <i3dMapping id="inputGridLink2" node="0>7|0|2|0" />
         <i3dMapping id="inputMarker" node="0>7|0|3" />
         <i3dMapping id="inputClearAreaStart" node="0>7|0|4" />
         <i3dMapping id="inputClearAreaWidth" node="0>7|0|4|0" />
@@ -300,5 +309,10 @@
         <i3dMapping id="outputLevelAreaHeight" node="0>7|1|4|1" />
         <i3dMapping id="outputTestAreaStart" node="0>7|1|5" />
         <i3dMapping id="outputTestAreaEnd" node="0>7|1|5|0" />
+        <i3dMapping id="outputPost" node="0>7|1|6" />
+        <i3dMapping id="outputArm" node="0>7|1|7" />
+        <i3dMapping id="outputSpout" node="0>7|1|8" />
+        <i3dMapping id="outputPostCollision" node="0>7|1|9" />
+        <i3dMapping id="outputDischargeNode" node="0>7|1|10" />
     </i3dMappings>
 </placeable>

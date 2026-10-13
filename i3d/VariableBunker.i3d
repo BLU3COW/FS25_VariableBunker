@@ -98,9 +98,11 @@
       </TransformGroup>
       <TransformGroup name="stations" nodeId="68">
         <TransformGroup name="inputStationRoot" visibility="false" nodeId="69">
-          <Shape name="inputPad" translation="0 -0.08 0" scale="9 0.2 11" shapeId="1" clipDistance="300" nodeId="70" castsShadows="true" receiveShadows="true" materialIds="5"/>
-          <Shape name="inputExactFillRoot" translation="0 1.5 0" scale="7 3 9" shapeId="1" static="true" collisionFilterGroup="0x40000000" collisionFilterMask="0x20000000" nodeId="71" nonRenderable="true" materialIds="6"/>
-          <TransformGroup name="inputGridLink" translation="0 0.02 0" nodeId="72"/>
+          <Shape name="inputBaleTrigger" translation="0 2 0" scale="8.8 4 9.5" shapeId="1" static="true" trigger="true" collisionFilterGroup="0x20000000" collisionFilterMask="0x50000" nodeId="70" nonRenderable="true" materialIds="6"/>
+          <Shape name="inputExactFillRoot" translation="0 0.15 0" scale="8.6 0.1 9.3" shapeId="1" static="true" collisionFilterGroup="0x40000000" collisionFilterMask="0x20000000" nodeId="71" nonRenderable="true" materialIds="6"/>
+          <TransformGroup name="inputGridLink" translation="0 0.02 -2.375" nodeId="72">
+            <TransformGroup name="inputGridLink2" translation="0 0 4.75" nodeId="94"/>
+          </TransformGroup>
           <TransformGroup name="inputMarker" translation="0 0.05 0" nodeId="73"/>
           <TransformGroup name="inputClearAreaStart" translation="-4.5 0 -5.5" nodeId="74">
             <TransformGroup name="inputClearAreaWidth" translation="9 0 0" nodeId="75"/>
@@ -114,7 +116,7 @@
             <TransformGroup name="inputTestAreaEnd" translation="9 4 11" nodeId="81"/>
           </TransformGroup>
         </TransformGroup>
-        <TransformGroup name="outputStationRoot" visibility="false" nodeId="82">
+        <TransformGroup name="outputStationRoot" translation="0 0 -30" visibility="false" nodeId="82">
           <Shape name="outputPad" translation="0 -0.08 0" scale="9 0.2 11" shapeId="1" clipDistance="300" nodeId="83" castsShadows="true" receiveShadows="true" materialIds="5"/>
           <Shape name="outputLoadTrigger" translation="0 2 0" scale="8 4 10" shapeId="1" static="true" trigger="true" collisionFilterGroup="0x20000000" collisionFilterMask="0x40000000" nodeId="84" nonRenderable="true" materialIds="6"/>
           <TransformGroup name="outputMarker" translation="0 0.05 0" nodeId="85"/>
@@ -129,6 +131,11 @@
           <TransformGroup name="outputTestAreaStart" translation="-4.5 0 -5.5" nodeId="92">
             <TransformGroup name="outputTestAreaEnd" translation="9 4 11" nodeId="93"/>
           </TransformGroup>
+          <Shape name="outputPost" translation="-4.85 3.1 0" scale="0.5 6.2 0.5" shapeId="1" clipDistance="300" nodeId="95" castsShadows="true" receiveShadows="true" materialIds="5"/>
+          <Shape name="outputArm" translation="-2.3 5.95 0" scale="5.6 0.5 0.5" shapeId="1" clipDistance="300" nodeId="96" castsShadows="true" receiveShadows="true" materialIds="5"/>
+          <Shape name="outputSpout" translation="0 5.4 0" scale="0.7 0.6 0.7" shapeId="1" clipDistance="300" nodeId="97" castsShadows="true" receiveShadows="true" materialIds="5"/>
+          <Shape name="outputPostCollision" translation="-4.85 3.1 0" scale="0.5 6.2 0.5" shapeId="1" static="true" collisionFilterGroup="0x1024" collisionFilterMask="0xfffffbff" nodeId="98" nonRenderable="true" materialIds="6"/>
+          <TransformGroup name="outputDischargeNode" translation="0 5.1 0" nodeId="99"/>
         </TransformGroup>
       </TransformGroup>
     </TransformGroup>
