@@ -1,7 +1,7 @@
 VariableBunkerStorage = {}
 
 local VariableBunkerStorage_mt = Class(VariableBunkerStorage, Object)
-InitStaticObjectClass(VariableBunkerStorage, "VariableBunkerStorage")
+InitObjectClass(VariableBunkerStorage, "VariableBunkerStorage")
 
 local MODE_INPUT = 1
 local MODE_OUTPUT = 2

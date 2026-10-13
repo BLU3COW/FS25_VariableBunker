@@ -158,8 +158,11 @@ local function installHooks()
     end
     ConstructionScreen.updateConfigOptionsDisplay =
         Utils.appendedFunction(ConstructionScreen.updateConfigOptionsDisplay, addCapacityDisplay)
-    ConstructionScreen.updateConfigOptionsData =
-        Utils.prependedFunction(ConstructionScreen.updateConfigOptionsData, prepareStationOptions)
+    local updateConfigOptionsData = ConstructionScreen.updateConfigOptionsData
+    ConstructionScreen.updateConfigOptionsData = function(screen, storeItem)
+        prepareStationOptions(screen, storeItem)
+        return updateConfigOptionsData(screen, storeItem)
+    end
     ConstructionScreen.loadCurrentConfiguration =
         Utils.appendedFunction(ConstructionScreen.loadCurrentConfiguration, refreshConfigurationDisplay)
     ConstructionScreen.draw = Utils.appendedFunction(ConstructionScreen.draw, drawAutoDrivePreview)
