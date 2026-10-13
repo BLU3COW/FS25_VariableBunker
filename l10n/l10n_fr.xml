@@ -8,17 +8,17 @@
         <text name="configuration_VariableBunkerType" text="Type de silo" />
         <text name="option_VariableBunkerTypeBunker" text="Silo bunker" />
         <text name="option_VariableBunkerTypeDriveThrough" text="Silo traversant" />
-        <text name="configuration_VariableBunkerFloor" text="Dalle en béton" />
-        <text name="option_VariableBunkerFloorOff" text="Sans dalle" />
-        <text name="option_VariableBunkerFloorFlush" text="Jusqu'au bord avant" />
-        <text name="option_VariableBunkerFloorExtended" text="Avec aire étendue" />
+        <text name="configuration_VariableBunkerFloor" text="Dalle" />
+        <text name="option_VariableBunkerFloorOff" text="Aucune" />
+        <text name="option_VariableBunkerFloorFlush" text="Standard" />
+        <text name="option_VariableBunkerFloorExtended" text="Étendue" />
         <text name="configuration_VariableBunkerAutoDrive" text="Parcours AutoDrive" />
         <text name="option_VariableBunkerAutoDriveOff" text="Désactivé" />
         <text name="option_VariableBunkerAutoDriveOn" text="Générer automatiquement" />
         <text name="configuration_VariableBunkerEstimatedCapacity" text="Capacité estimée" />
         <text name="capacity_VariableBunkerMapLimit" text="limite de carte %s m" />
-        <text name="configuration_VariableBunkerInput" text="Grille au sol pour le remplissage" />
-        <text name="configuration_VariableBunkerOutput" text="Point de prélèvement fixe" />
+        <text name="configuration_VariableBunkerInput" text="Point de déchargement" />
+        <text name="configuration_VariableBunkerOutput" text="Point de chargement" />
         <text name="option_VariableBunkerStationOff" text="Désactivé" />
         <text name="option_VariableBunkerStationLeft" text="Gauche" />
         <text name="option_VariableBunkerStationRight" text="Droite" />

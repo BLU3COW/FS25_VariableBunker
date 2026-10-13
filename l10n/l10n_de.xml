@@ -8,17 +8,17 @@
         <text name="configuration_VariableBunkerType" text="Silobauart" />
         <text name="option_VariableBunkerTypeBunker" text="Bunkersilo" />
         <text name="option_VariableBunkerTypeDriveThrough" text="Fahrsilo" />
-        <text name="configuration_VariableBunkerFloor" text="Beton-Bodenplatte" />
-        <text name="option_VariableBunkerFloorOff" text="Ohne Bodenplatte" />
-        <text name="option_VariableBunkerFloorFlush" text="Bis zur Vorderkante" />
-        <text name="option_VariableBunkerFloorExtended" text="Mit erweitertem Vorplatz" />
+        <text name="configuration_VariableBunkerFloor" text="Bodenplatte" />
+        <text name="option_VariableBunkerFloorOff" text="Ohne" />
+        <text name="option_VariableBunkerFloorFlush" text="Standard" />
+        <text name="option_VariableBunkerFloorExtended" text="Erweitert" />
         <text name="configuration_VariableBunkerAutoDrive" text="AutoDrive-Kurs" />
         <text name="option_VariableBunkerAutoDriveOff" text="Aus" />
         <text name="option_VariableBunkerAutoDriveOn" text="Automatisch erzeugen" />
         <text name="configuration_VariableBunkerEstimatedCapacity" text="Geschätzte Kapazität" />
         <text name="capacity_VariableBunkerMapLimit" text="Kartenlimit %s m" />
-        <text name="configuration_VariableBunkerInput" text="Bodengitter zum Befüllen" />
-        <text name="configuration_VariableBunkerOutput" text="Feste Entnahmestelle" />
+        <text name="configuration_VariableBunkerInput" text="Abladestelle" />
+        <text name="configuration_VariableBunkerOutput" text="Ladestelle" />
         <text name="option_VariableBunkerStationOff" text="Aus" />
         <text name="option_VariableBunkerStationLeft" text="Links" />
         <text name="option_VariableBunkerStationRight" text="Rechts" />

@@ -8,17 +8,17 @@
         <text name="configuration_VariableBunkerType" text="Silo design" />
         <text name="option_VariableBunkerTypeBunker" text="Bunker silo" />
         <text name="option_VariableBunkerTypeDriveThrough" text="Drive-through silo" />
-        <text name="configuration_VariableBunkerFloor" text="Concrete floor slab" />
-        <text name="option_VariableBunkerFloorOff" text="Without floor slab" />
-        <text name="option_VariableBunkerFloorFlush" text="Up to the front edge" />
-        <text name="option_VariableBunkerFloorExtended" text="With extended apron" />
+        <text name="configuration_VariableBunkerFloor" text="Floor" />
+        <text name="option_VariableBunkerFloorOff" text="None" />
+        <text name="option_VariableBunkerFloorFlush" text="Standard" />
+        <text name="option_VariableBunkerFloorExtended" text="Extended" />
         <text name="configuration_VariableBunkerAutoDrive" text="AutoDrive course" />
         <text name="option_VariableBunkerAutoDriveOff" text="Off" />
         <text name="option_VariableBunkerAutoDriveOn" text="Generate automatically" />
         <text name="configuration_VariableBunkerEstimatedCapacity" text="Estimated capacity" />
         <text name="capacity_VariableBunkerMapLimit" text="map limit %s m" />
-        <text name="configuration_VariableBunkerInput" text="Floor grid for filling" />
-        <text name="configuration_VariableBunkerOutput" text="Fixed unloading point" />
+        <text name="configuration_VariableBunkerInput" text="Unloading" />
+        <text name="configuration_VariableBunkerOutput" text="Loading" />
         <text name="option_VariableBunkerStationOff" text="Off" />
         <text name="option_VariableBunkerStationLeft" text="Left" />
         <text name="option_VariableBunkerStationRight" text="Right" />
