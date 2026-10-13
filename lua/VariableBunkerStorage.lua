@@ -23,6 +23,15 @@ local function getAreaFillLevel(area, fillTypeIndex)
     return DensityMapHeightUtil.getFillLevelAtArea(fillTypeIndex, area.sx, area.sz, area.wx, area.wz, area.hx, area.hz)
 end
 
+local function getCurrentFillLevel(bunkerSilo)
+    local missionTime = g_currentMission ~= nil and g_currentMission.time or nil
+    if bunkerSilo.isServer and (missionTime == nil or bunkerSilo.variableBunkerFillLevelUpdateTime ~= missionTime) then
+        bunkerSilo:updateFillLevel()
+        bunkerSilo.variableBunkerFillLevelUpdateTime = missionTime
+    end
+    return bunkerSilo.fillLevel or 0
+end
+
 local function getMapHeightLimit()
     local getDensityMapMaxHeightFunction = getfenv(0).getDensityMapMaxHeight
     if
@@ -52,7 +61,7 @@ local function getEstimatedCapacity(placeable)
     return math.max(volume * 1000, 0)
 end
 
-local function getBands(area)
+local function createBands(area)
     local dx = area.hx - area.sx
     local dy = area.hy - area.sy
     local dz = area.hz - area.sz
@@ -79,9 +88,18 @@ local function getBands(area)
             hx = area.sx + dirX * endOffset,
             hy = area.sy + dirY * endOffset,
             hz = area.sz + dirZ * endOffset,
+            inputOffsetKey = "input_" .. index,
+            outputOffsetKeys = {},
         })
     end
     return bands
+end
+
+local function getBands(storage, bunkerSilo)
+    if storage.bands == nil then
+        storage.bands = createBands(bunkerSilo.bunkerSiloArea.inner)
+    end
+    return storage.bands
 end
 
 local function getBandCenter(band)
@@ -142,6 +160,9 @@ function VariableBunkerStorage.new(placeable, mode, customMt)
     self.unloadingStations = {}
     self.loadingStations = {}
     self.lineOffsets = {}
+    self.bands = nil
+    self.inputBandIndex = 1
+    self.outputBandIndices = {}
     self.fillTypes = {}
     if mode == MODE_INPUT then
         self.fillTypes[FillType.CHAFF] = true
@@ -180,10 +201,9 @@ function VariableBunkerStorage:getFillLevel(fillTypeIndex)
     if bunkerSilo == nil or not self:getIsFillTypeSupported(fillTypeIndex) then
         return 0
     end
-    local area = bunkerSilo.bunkerSiloArea.inner
     if self.mode == MODE_INPUT then
         if bunkerSilo.state == BunkerSilo.STATE_FILL and fillTypeIndex == FillType.CHAFF then
-            return getAreaFillLevel(area, FillType.CHAFF)
+            return getCurrentFillLevel(bunkerSilo)
         end
         return 0
     end
@@ -191,13 +211,13 @@ function VariableBunkerStorage:getFillLevel(fillTypeIndex)
         return 0
     end
     if bunkerSilo.state == BunkerSilo.STATE_FILL and fillTypeIndex == FillType.CHAFF then
-        return getAreaFillLevel(area, FillType.CHAFF)
+        return getCurrentFillLevel(bunkerSilo)
     end
     if
         (bunkerSilo.state == BunkerSilo.STATE_FERMENTED or bunkerSilo.state == BunkerSilo.STATE_DRAIN)
         and fillTypeIndex == FillType.SILAGE
     then
-        return getAreaFillLevel(area, FillType.TARP) + getAreaFillLevel(area, FillType.SILAGE)
+        return getCurrentFillLevel(bunkerSilo)
     end
     return 0
 end
@@ -225,7 +245,7 @@ function VariableBunkerStorage:getFreeCapacity(fillTypeIndex)
     if bunkerSilo == nil or bunkerSilo.state ~= BunkerSilo.STATE_FILL then
         return 0
     end
-    return math.max(self:getCapacity(fillTypeIndex) - self:getFillLevel(fillTypeIndex), 0)
+    return math.huge
 end
 
 function VariableBunkerStorage:addMaterial(liters, fillTypeIndex)
@@ -241,17 +261,45 @@ function VariableBunkerStorage:addMaterial(liters, fillTypeIndex)
     local area = bunkerSilo.bunkerSiloArea.inner
     local moved = 0
     if self.placeable.spec_VariableBunker.hasRearWall then
-        for index, band in ipairs(getBands(area)) do
-            local added = moveAtArea(self, band, liters - moved, fillTypeIndex, "input_" .. index, true)
+        local bands = getBands(self, bunkerSilo)
+        local bandCount = #bands
+        local index = math.min(self.inputBandIndex, bandCount)
+        for _ = 1, bandCount do
+            local band = bands[index]
+            local added = moveAtArea(self, band, liters - moved, fillTypeIndex, band.inputOffsetKey, true)
             moved = moved + added
             if liters - moved < 0.001 then
+                self.inputBandIndex = index
                 break
             end
+            index = index % bandCount + 1
+            self.inputBandIndex = index
         end
     else
         moved = moveAtArea(self, area, liters, fillTypeIndex, "input_flat", true)
     end
     return moved
+end
+
+local function openFermentedBand(bunkerSilo, band)
+    local fermentingFillType = bunkerSilo.fermentingFillType
+    if fermentingFillType == nil or getAreaFillLevel(band, fermentingFillType) < 0.001 then
+        return
+    end
+    local x, y, z = getBandCenter(band)
+    bunkerSilo:onChangedFillLevelCallback(nil, -1, bunkerSilo.outputFillType, x, y, z)
+    if getAreaFillLevel(band, fermentingFillType) > 0.001 then
+        DensityMapHeightUtil.changeFillTypeAtArea(
+            band.sx,
+            band.sz,
+            band.wx,
+            band.wz,
+            band.hx,
+            band.hz,
+            fermentingFillType,
+            bunkerSilo.outputFillType
+        )
+    end
 end
 
 function VariableBunkerStorage:openFermentedSide(bunkerSilo)
@@ -292,32 +340,35 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
     if fillTypeIndex == FillType.SILAGE then
         self:openFermentedSide(bunkerSilo)
     end
-    local bands = getBands(bunkerSilo.bunkerSiloArea.inner)
+    local bands = getBands(self, bunkerSilo)
     local hasRearWall = self.placeable.spec_VariableBunker.hasRearWall
-    local startIndex = hasRearWall and #bands or 1
-    local endIndex = hasRearWall and 1 or #bands
     local step = hasRearWall and -1 or 1
+    local defaultIndex = hasRearWall and #bands or 1
+    local index = self.outputBandIndices[fillTypeIndex] or defaultIndex
     local moved = 0
-    for index = startIndex, endIndex, step do
+    for _ = 1, #bands do
         local band = bands[index]
-        if fillTypeIndex == FillType.SILAGE and getAreaFillLevel(band, FillType.SILAGE) < 0.001 then
-            if getAreaFillLevel(band, FillType.TARP) > 0.001 then
-                local x, y, z = getBandCenter(band)
-                bunkerSilo:onChangedFillLevelCallback(nil, -1, FillType.SILAGE, x, y, z)
-            end
+        if fillTypeIndex == FillType.SILAGE then
+            openFermentedBand(bunkerSilo, band)
         end
-        local removed = moveAtArea(
-            self,
-            band,
-            liters - moved,
-            fillTypeIndex,
-            string.format("output_%d_%d", fillTypeIndex, index),
-            false
-        )
+        local offsetKey = band.outputOffsetKeys[fillTypeIndex]
+        if offsetKey == nil then
+            offsetKey = string.format("output_%d_%d", fillTypeIndex, index)
+            band.outputOffsetKeys[fillTypeIndex] = offsetKey
+        end
+        local removed = moveAtArea(self, band, liters - moved, fillTypeIndex, offsetKey, false)
         moved = moved + removed
         if liters - moved < 0.001 then
+            self.outputBandIndices[fillTypeIndex] = index
             break
         end
+        index = index + step
+        if index < 1 then
+            index = #bands
+        elseif index > #bands then
+            index = 1
+        end
+        self.outputBandIndices[fillTypeIndex] = index
     end
     return moved
 end
@@ -337,6 +388,7 @@ function VariableBunkerStorage:setFillLevel(fillLevel, fillTypeIndex)
     if moved > 0 then
         local bunkerSilo = getBunkerSilo(self.placeable)
         bunkerSilo:updateFillLevel()
+        bunkerSilo.variableBunkerFillLevelUpdateTime = g_currentMission ~= nil and g_currentMission.time or nil
         bunkerSilo:updateCompacting(bunkerSilo.compactedFillLevel)
         bunkerSilo:raiseDirtyFlags(bunkerSilo.bunkerSiloDirtyFlag)
     end

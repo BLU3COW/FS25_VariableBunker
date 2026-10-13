@@ -170,8 +170,6 @@ local NODE_ATTRIBUTES = {
     "tipOcclusionEndNode",
     "inputStationRootNode",
     "inputExactFillRootNode",
-    "inputPadNode",
-    "inputGridLinkNode",
     "inputMarkerNode",
     "inputClearAreaStartNode",
     "inputClearAreaWidthNode",
@@ -286,6 +284,37 @@ local function applyStationLayout(self, halfOuterWidth, halfLength, rearFootExte
     setVisibility(spec.outputPadNode, spec.hasOutputStation and not sameSide)
 end
 
+local function addFillLevelWithRollback(
+    station,
+    fillableObject,
+    fillUnitIndex,
+    fillTypeIndex,
+    fillDelta,
+    fillInfo,
+    toolType
+)
+    local oldFillLevel = fillableObject:getFillUnitFillLevel(fillUnitIndex)
+    local transferred = LoadingStation.addFillLevelToFillableObject(
+        station,
+        fillableObject,
+        fillUnitIndex,
+        fillTypeIndex,
+        fillDelta,
+        fillInfo,
+        toolType
+    )
+    local credited = math.max(fillableObject:getFillUnitFillLevel(fillUnitIndex) - oldFillLevel, 0)
+    local excess = credited - transferred
+    if excess > 0.0001 then
+        local farmId = fillableObject:getOwnerFarmId()
+        if fillableObject:isa(Vehicle) then
+            farmId = fillableObject:getActiveFarm()
+        end
+        fillableObject:addFillUnitFillLevel(farmId, fillUnitIndex, -excess, fillTypeIndex, toolType, fillInfo)
+    end
+    return transferred
+end
+
 function Bunker.prerequisitesPresent(_specializations)
     return true
 end
@@ -380,6 +409,7 @@ function Bunker:onLoad(savegame)
 
     if
         not spec.loadedFromSavegame
+        and self.isServer
         and Bunker.settings ~= nil
         and not Bunker.settings.allowWallHeightsAboveFourMeters
         and self.configurations ~= nil
@@ -458,9 +488,12 @@ function Bunker:onLoad(savegame)
         else
             spec.outputStation.owningPlaceable = self
             spec.outputStation.hasStoragePerFarm = false
+            spec.outputStation.addFillLevelToFillableObject = addFillLevelWithRollback
         end
     end
-    Bunker.activeSilos[self] = true
+    if self.propertyState ~= PlaceablePropertyState.CONSTRUCTION_PREVIEW then
+        Bunker.activeSilos[self] = true
+    end
 end
 
 function Bunker:onDelete()

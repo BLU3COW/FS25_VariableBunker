@@ -198,7 +198,7 @@ local function init()
     Bunker.loadSettings()
     if FSBaseMission ~= nil and FSBaseMission.onConnectionFinishedLoading ~= nil then
         FSBaseMission.onConnectionFinishedLoading =
-            Utils.prependedFunction(FSBaseMission.onConnectionFinishedLoading, sendSettingsToClient)
+            Utils.appendedFunction(FSBaseMission.onConnectionFinishedLoading, sendSettingsToClient)
     end
 end
 
