@@ -52,7 +52,7 @@
 
 <div align="center">With <strong>VariableBunker</strong>, you get a single silo that adapts to your farm instead of the other way around. Choose between a <strong>bunker silo</strong> with rear wall and a <strong>drive-through silo</strong> open at both ends, and set the interior width, length, and wall height freely in construction mode. Walls, collisions, the silo area, and all placement areas follow the selected dimensions, while the purchase price stays the same.
 <br><br>
-An optional concrete floor slab and an automatically generated <strong>AutoDrive</strong> course complete the silo. Further improvements are already being considered. Want to help shape the project? Feel free to get involved and share your requests, suggestions, or ideas for improvement.</div>
+An optional concrete floor slab, configurable filling and extraction stations, and an automatically generated <strong>AutoDrive</strong> course complete the silo. Further improvements are already being considered. Want to help shape the project? Feel free to get involved and share your requests, suggestions, or ideas for improvement.</div>
 <br>
 <div align="center">
 
@@ -61,7 +61,7 @@ An optional concrete floor slab and an automatically generated <strong>AutoDrive
 <br>
 <div align="center">Mit <strong>VariableBunker</strong> bekommst du ein einziges Silo, das sich deinem Hof anpasst und nicht umgekehrt. Wähle zwischen einem <strong>Bunkersilo</strong> mit Rückwand und einem <strong>Fahrsilo</strong>, das an beiden Enden offen ist, und stelle Innenbreite, Länge und Wandhöhe im Baumodus frei ein. Wände, Kollisionen, Silobereich und alle Platzierungsflächen folgen den gewählten Abmessungen, während der Kaufpreis gleich bleibt.
 <br><br>
-Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive</strong>-Kurs runden das Silo ab. Weitere Verbesserungen sind bereits in Überlegung. Du möchtest das Projekt mitgestalten? Dann bring dich gerne ein und teile deine Wünsche, Vorschläge oder Ideen zur Verbesserung.</div>
+Eine optionale Beton-Bodenplatte, frei platzierbare Befüll- und Entnahmestationen und ein automatisch erzeugter <strong>AutoDrive</strong>-Kurs runden das Silo ab. Weitere Verbesserungen sind bereits in Überlegung. Du möchtest das Projekt mitgestalten? Dann bring dich gerne ein und teile deine Wünsche, Vorschläge oder Ideen zur Verbesserung.</div>
 </details>
 </div>
 <br>
@@ -219,19 +219,21 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 | Option | Choices | Default |
 | --- | --- | --- |
 | Concrete floor slab | Without floor slab / Up to the front edge / With extended apron | Without floor slab |
+| Floor grid for filling | Off / Left / Right / Front / Rear | Off |
+| Fixed extraction point | Bunker: Off / Left / Right / Rear; drive-through: Off / Left / Right | Off |
 | AutoDrive course | Off / Generate automatically | Off |
 
 </div>
 <br>
 
-<div align="center">The <strong>concrete floor slab</strong> covers the complete outside width including the wall bases. It can end flush with the silo or include an extended apron: 30 m in front of a bunker silo, or 30 m behind and 15 m in front of a drive-through silo. The <strong>AutoDrive course</strong> option is only shown when AutoDrive is active in the savegame.</div>
+<div align="center">The <strong>concrete floor slab</strong> covers the complete outside width including the wall bases. It can end flush with the silo or include an extended apron: 30 m in front of a bunker silo, or 30 m behind and 15 m in front of a drive-through silo. The floor grid accepts chaff, grass, and hay while the silo is open; grass and hay are converted to chaff liter for liter. The fixed extraction point loads chaff before covering and silage after fermentation. It removes the real density-map material in straight transverse sections and progressively uncovers fermented silage. Filling builds a rear-to-front wedge in the bunker silo and distributes material broadly across the drive-through silo. These side stations do not create AutoDrive routes or targets. The <strong>AutoDrive course</strong> option is only shown when AutoDrive is active in the savegame.</div>
 <br>
 <div align="center">
 
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Die <strong>Beton-Bodenplatte</strong> deckt die gesamte Außenbreite einschließlich der Wandfüße ab. Sie endet wahlweise bündig mit dem Silo oder hat einen Vorplatz: 30 m vor einem Bunkersilo, bzw. 30 m hinter und 15 m vor einem Fahrsilo. Die Option <strong>AutoDrive-Kurs</strong> wird nur angezeigt, wenn AutoDrive im Spielstand aktiv ist.</div>
+<div align="center">Die <strong>Beton-Bodenplatte</strong> deckt die gesamte Außenbreite einschließlich der Wandfüße ab. Sie endet wahlweise bündig mit dem Silo oder hat einen Vorplatz: 30 m vor einem Bunkersilo, bzw. 30 m hinter und 15 m vor einem Fahrsilo. Das Bodengitter nimmt im offenen Silo Häckselgut, Gras und Heu an; Gras und Heu werden Liter für Liter in Häckselgut umgewandelt. Die feste Entnahmestelle lädt vor dem Abdecken Häckselgut und nach der Gärung Silage. Dabei wird das echte Schüttgut in geraden Querabschnitten entnommen und die Silageabdeckung schrittweise geöffnet. Beim Befüllen entsteht im Bunkersilo ein Keil von der Rückwand zur Einfahrt, während das Fahrsilo breitflächig gefüllt wird. Die seitlichen Stationen erzeugen keine AutoDrive-Kurse oder Ziele. Die Option <strong>AutoDrive-Kurs</strong> wird nur angezeigt, wenn AutoDrive im Spielstand aktiv ist.</div>
 </details>
 </div>
 <br>
@@ -266,13 +268,13 @@ Eine optionale Beton-Bodenplatte und ein automatisch erzeugter <strong>AutoDrive
 
 ## Settings
 
-The file `modSettings/FS25_VariableBunker.xml` is created automatically. Set `allowWallHeightsAboveFourMeters` to `false` to limit newly built silos to a maximum wall height of 4 m. The default is `true`. Existing silos remain unchanged. Restart the game after editing the file. In multiplayer, the host or dedicated server setting is authoritative and is sent to joining clients.
+The file `modSettings/FS25_VariableBunker.xml` is created automatically. `allowWallHeightsAboveFourMeters` limits newly built silos to 4 m when set to `false`. `allowInputStation` controls filling through the floor grid, and `allowOutputStation` controls extraction through the fixed loading point. All three settings default to `true`. Disabled station choices are hidden for new construction; stations already saved on existing silos are disabled and hidden without losing their selected side. Restart the game after editing the file. In multiplayer, the host or dedicated server settings are authoritative and are sent to joining clients.
 
 <details>
 <summary><strong>Deutsch</strong></summary>
   <br>
 
-Die Datei `modSettings/FS25_VariableBunker.xml` wird automatisch erstellt. Setze `allowWallHeightsAboveFourMeters` auf `false`, um neu gebaute Silos auf maximal 4 m Wandhöhe zu begrenzen. Standard ist `true`. Bereits gebaute Silos bleiben unverändert. Nach einer Änderung muss das Spiel neu gestartet werden. Im Mehrspieler gilt die Einstellung des Hosts oder Dedicated Servers und wird an beitretende Spieler übertragen.
+Die Datei `modSettings/FS25_VariableBunker.xml` wird automatisch erstellt. `allowWallHeightsAboveFourMeters` begrenzt neu gebaute Silos bei `false` auf 4 m. `allowInputStation` steuert das Befüllen über das Bodengitter, `allowOutputStation` die Entnahme über den festen Ladepunkt. Alle drei Einstellungen stehen standardmäßig auf `true`. Deaktivierte Stationsoptionen werden bei Neubauten ausgeblendet; bereits gespeicherte Stationen bestehender Silos werden ohne Verlust ihrer Seitenwahl abgeschaltet und verborgen. Nach einer Änderung muss das Spiel neu gestartet werden. Im Mehrspieler gelten die Einstellungen des Hosts oder Dedicated Servers und werden an beitretende Spieler übertragen.
 
 </details>
 <br>

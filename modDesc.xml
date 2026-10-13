@@ -46,6 +46,8 @@ The selected dimensions are applied to the walls, collisions, silo area, placeme
 
 The estimated capacity is shown live while configuring the silo. An optional AutoDrive course can be generated during placement, with a visual preview before purchase. Its lanes and waypoints automatically adapt to the selected width and length. AutoDrive is required to use this option. Selling the silo removes all AutoDrive waypoints in the silo area, including the floor slab and the generated course. A modSettings option can limit newly built silos to a maximum wall height of 4 meters.
 
+An optional floor grid can fill the real silo material from the left, right, front or rear. A separate fixed extraction point is available on the left, right or rear of the Bunker silo and on the left or right of the Drive-through silo. Filling and extraction can be disabled separately in modSettings. The side stations do not create AutoDrive routes or targets.
+
 Source code, help and issue reports: https://github.com/BLU3COW/FS25_VariableBunker]]></en>
         <de><![CDATA[VariableBunker
 Shopkategorie: Silos
@@ -84,6 +86,8 @@ Die Werte für 8 Meter gelten nur auf Karten, die Schüttungen über 4 Meter erl
 Die gewählten Abmessungen werden auf Wände, Kollisionen, Silobereich, Platzierungsflächen und Interaktionstrigger angewendet. Die Wandinnenseiten bleiben senkrecht, während die Außenseiten oberhalb eines 1,5 Meter hohen Sockels schräg verlaufen. Die optionale Beton-Bodenplatte reicht über die gesamte Außenbreite. Beim Bunkersilo kann sie 30 Meter über die Einfahrt hinausragen; beim Fahrsilo 30 Meter hinten und 15 Meter vorne. Originale GIANTS-Betontexturen geben allen sichtbaren Flächen eine detaillierte Oberfläche. Häckselgut, Gras und Heu können zu Silage vergoren werden.
 
 Das geschätzte Fassungsvermögen wird während der Konfiguration direkt angezeigt. Beim Platzieren kann optional ein AutoDrive-Kurs mit visueller Vorschau vor dem Kauf erzeugt werden. Fahrspuren und Wegpunkte passen sich automatisch an die gewählte Breite und Länge an. Für diese Option wird AutoDrive benötigt. Beim Verkauf des Silos werden alle AutoDrive-Wegpunkte im Silobereich entfernt, einschließlich Bodenplatte und erzeugtem Kurs. Über eine modSettings-Option lassen sich neu gebaute Silos auf maximal 4 Meter Wandhöhe begrenzen.
+
+Über ein optionales Bodengitter kann das echte Silomaterial von links, rechts, vorne oder hinten eingefüllt werden. Eine getrennte feste Entnahmestelle ist beim Bunkersilo links, rechts oder hinten und beim Fahrsilo links oder rechts verfügbar. Befüllen und Entnehmen lassen sich in den modSettings getrennt deaktivieren. Die seitlichen Stationen erzeugen keine AutoDrive-Kurse oder Ziele.
 
 Quellcode, Hilfe und Fehlermeldungen: https://github.com/BLU3COW/FS25_VariableBunker]]></de>
         <fr><![CDATA[VariableBunker
@@ -124,6 +128,8 @@ Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la 
 
 La capacité estimée est affichée directement pendant la configuration. Un parcours AutoDrive peut être généré en option lors du placement, avec un aperçu visuel avant l'achat. Ses voies et points de passage s'adaptent automatiquement à la largeur et à la longueur sélectionnées. AutoDrive est requis pour utiliser cette option. La vente du silo supprime tous les points de passage AutoDrive de la zone du silo, dalle de sol et parcours généré compris. Une option modSettings peut limiter les nouveaux silos à une hauteur maximale de 4 mètres.
 
+Une grille au sol optionnelle permet de remplir le matériau réel du silo depuis la gauche, la droite, l'avant ou l'arrière. Un point de prélèvement fixe séparé est disponible à gauche, à droite ou à l'arrière du silo bunker, et à gauche ou à droite du silo traversant. Le remplissage et le prélèvement peuvent être désactivés séparément dans les modSettings. Les stations latérales ne créent aucun parcours ni cible AutoDrive.
+
 Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25_VariableBunker]]></fr>
     </description>
 
@@ -133,6 +139,7 @@ Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25
 
     <extraSourceFiles>
         <sourceFile filename="lua/VariableBunkerSettings.lua" />
+        <sourceFile filename="lua/VariableBunkerStorage.lua" />
         <sourceFile filename="lua/VariableBunker.lua" />
         <sourceFile filename="lua/VariableBunkerAutoDrive.lua" />
         <sourceFile filename="lua/VariableBunkerGui.lua" />

@@ -7,6 +7,8 @@ local ROOT_KEY_LENGTH = Bunker.CONFIG_LENGTH or "VariableBunkerLength"
 local ROOT_KEY_HEIGHT = Bunker.CONFIG_HEIGHT or "VariableBunkerHeight"
 local ROOT_KEY_TYPE = Bunker.CONFIG_TYPE or "VariableBunkerType"
 local ROOT_KEY_FLOOR = Bunker.CONFIG_FLOOR or "VariableBunkerFloor"
+local ROOT_KEY_INPUT = Bunker.CONFIG_INPUT or "VariableBunkerInput"
+local ROOT_KEY_OUTPUT = Bunker.CONFIG_OUTPUT or "VariableBunkerOutput"
 local DEFAULT_WIDTH = 40
 local DEFAULT_LENGTH = 60
 local DEFAULT_HEIGHT = 4
@@ -27,6 +29,9 @@ local FLOOR_CONFIGURATION_EXTENDED = 3
 local TYPE_CONFIGURATION_BUNKER = 1
 local TYPE_CONFIGURATION_DRIVE_THROUGH = 2
 local SCALE_EPSILON = 0.0001
+local STATION_HALF_WIDTH = 4.5
+local STATION_HALF_DEPTH = 5.5
+local STATION_CLEARANCE = 0.5
 
 Bunker.activeSilos = Bunker.activeSilos or {}
 
@@ -163,6 +168,31 @@ local NODE_ATTRIBUTES = {
     "testAreaEndNode",
     "tipOcclusionStartNode",
     "tipOcclusionEndNode",
+    "inputStationRootNode",
+    "inputExactFillRootNode",
+    "inputPadNode",
+    "inputGridLinkNode",
+    "inputMarkerNode",
+    "inputClearAreaStartNode",
+    "inputClearAreaWidthNode",
+    "inputClearAreaHeightNode",
+    "inputLevelAreaStartNode",
+    "inputLevelAreaWidthNode",
+    "inputLevelAreaHeightNode",
+    "inputTestAreaStartNode",
+    "inputTestAreaEndNode",
+    "outputStationRootNode",
+    "outputLoadTriggerNode",
+    "outputPadNode",
+    "outputMarkerNode",
+    "outputClearAreaStartNode",
+    "outputClearAreaWidthNode",
+    "outputClearAreaHeightNode",
+    "outputLevelAreaStartNode",
+    "outputLevelAreaWidthNode",
+    "outputLevelAreaHeightNode",
+    "outputTestAreaStartNode",
+    "outputTestAreaEndNode",
 }
 
 local function setPhysicsNodeTransform(node, tx, ty, tz, sx, sy, sz)
@@ -207,6 +237,55 @@ local function setPhysicsNodeEnabled(node, enabled)
     setRigidBodyType(node, enabled and RigidBodyType.STATIC or RigidBodyType.NONE)
 end
 
+local function setStationAreaNodes(spec, prefix, enabled)
+    local minX = enabled and -STATION_HALF_WIDTH or 0
+    local minZ = enabled and -STATION_HALF_DEPTH or 0
+    local width = enabled and STATION_HALF_WIDTH * 2 or 0
+    local depth = enabled and STATION_HALF_DEPTH * 2 or 0
+    setNodeTranslation(spec[prefix .. "ClearAreaStartNode"], minX, 0, minZ)
+    setNodeTranslation(spec[prefix .. "ClearAreaWidthNode"], width, 0, 0)
+    setNodeTranslation(spec[prefix .. "ClearAreaHeightNode"], 0, 0, depth)
+    setNodeTranslation(spec[prefix .. "LevelAreaStartNode"], minX, 0, minZ)
+    setNodeTranslation(spec[prefix .. "LevelAreaWidthNode"], width, 0, 0)
+    setNodeTranslation(spec[prefix .. "LevelAreaHeightNode"], 0, 0, depth)
+    setNodeTranslation(spec[prefix .. "TestAreaStartNode"], minX, 0, minZ)
+    setNodeTranslation(spec[prefix .. "TestAreaEndNode"], width, enabled and 4 or 0, depth)
+end
+
+local function setStationRootTransform(rootNode, side, halfOuterWidth, halfLength, rearFootExtension)
+    if rootNode == nil then
+        return
+    end
+    local x = 0
+    local z = 0
+    local rotationY = 0
+    if side == "left" then
+        x = -halfOuterWidth - STATION_HALF_DEPTH - STATION_CLEARANCE
+        rotationY = math.pi * 0.5
+    elseif side == "right" then
+        x = halfOuterWidth + STATION_HALF_DEPTH + STATION_CLEARANCE
+        rotationY = math.pi * 0.5
+    elseif side == "front" then
+        z = -halfLength - STATION_HALF_DEPTH - STATION_CLEARANCE
+    elseif side == "rear" then
+        z = halfLength + rearFootExtension + STATION_HALF_DEPTH + STATION_CLEARANCE
+    end
+    setTranslation(rootNode, x, 0, z)
+    setRotation(rootNode, 0, rotationY, 0)
+end
+
+local function applyStationLayout(self, halfOuterWidth, halfLength, rearFootExtension)
+    local spec = self.spec_VariableBunker
+    setStationRootTransform(spec.inputStationRootNode, spec.inputSide, halfOuterWidth, halfLength, rearFootExtension)
+    setStationRootTransform(spec.outputStationRootNode, spec.outputSide, halfOuterWidth, halfLength, rearFootExtension)
+    local sameSide = spec.hasInputStation and spec.hasOutputStation and spec.inputSide == spec.outputSide
+    setNodeTranslation(spec.inputMarkerNode, sameSide and -1.5 or 0, 0.05, 0)
+    setNodeTranslation(spec.outputMarkerNode, sameSide and 1.5 or 0, 0.05, 0)
+    setStationAreaNodes(spec, "input", spec.hasInputStation)
+    setStationAreaNodes(spec, "output", spec.hasOutputStation and not sameSide)
+    setVisibility(spec.outputPadNode, spec.hasOutputStation and not sameSide)
+end
+
 function Bunker.prerequisitesPresent(_specializations)
     return true
 end
@@ -216,6 +295,8 @@ function Bunker.registerXMLPaths(schema, basePath)
     for _, attributeName in ipairs(NODE_ATTRIBUTES) do
         schema:register(XMLValueType.NODE_INDEX, basePath .. ".VariableBunker#" .. attributeName, attributeName)
     end
+    UnloadingStation.registerXMLPaths(schema, basePath .. ".VariableBunker.inputStation")
+    LoadingStation.registerXMLPaths(schema, basePath .. ".VariableBunker.outputStation")
     schema:setXMLSpecializationType()
 end
 
@@ -224,6 +305,13 @@ function Bunker.registerEventListeners(placeableType)
     SpecializationUtil.registerEventListener(placeableType, "onFinalizePlacement", Bunker)
     SpecializationUtil.registerEventListener(placeableType, "onDelete", Bunker)
     SpecializationUtil.registerEventListener(placeableType, "onSell", Bunker)
+    SpecializationUtil.registerEventListener(placeableType, "onReadStream", Bunker)
+    SpecializationUtil.registerEventListener(placeableType, "onWriteStream", Bunker)
+end
+
+function Bunker.registerOverwrittenFunctions(placeableType)
+    SpecializationUtil.registerOverwrittenFunction(placeableType, "setOwnerFarmId", Bunker.setOwnerFarmId)
+    SpecializationUtil.registerOverwrittenFunction(placeableType, "setShowMarkers", Bunker.setShowMarkers)
 end
 
 function Bunker.registerFunctions(placeableType)
@@ -278,6 +366,11 @@ function Bunker.registerFunctions(placeableType)
         "VariableBunkerDrawAutoDrivePreview",
         Bunker.VariableBunkerDrawAutoDrivePreview
     )
+    SpecializationUtil.registerFunction(
+        placeableType,
+        "VariableBunkerRefreshStationState",
+        Bunker.VariableBunkerRefreshStationState
+    )
 end
 
 function Bunker:onLoad(savegame)
@@ -308,11 +401,97 @@ function Bunker:onLoad(savegame)
             self.xmlFile:getValue(BASE_KEY .. "#" .. attributeName, nil, self.components, self.i3dMappings)
     end
 
+    local inputItem = self:VariableBunkerGetConfigurationItem(ROOT_KEY_INPUT)
+    local outputItem = self:VariableBunkerGetConfigurationItem(ROOT_KEY_OUTPUT)
+    spec.inputSide = inputItem ~= nil and inputItem.side or "off"
+    spec.outputSide = outputItem ~= nil and outputItem.side or "off"
+    if self:VariableBunkerGetTypeConfiguration() == TYPE_CONFIGURATION_DRIVE_THROUGH and spec.outputSide == "rear" then
+        spec.outputSide = "off"
+    end
+    spec.hasInputStation = spec.inputSide ~= "off"
+    spec.hasOutputStation = spec.outputSide ~= "off"
+
     self:VariableBunkerApplyDimensions()
+
+    if spec.hasInputStation then
+        spec.inputStorage = VariableBunkerStorage.new(self, VariableBunkerStorage.MODE_INPUT)
+        spec.inputStation = UnloadingStation.new(self.isServer, self.isClient)
+        if
+            not spec.inputStation:load(
+                self.components,
+                self.xmlFile,
+                BASE_KEY .. ".inputStation",
+                self.customEnvironment,
+                self.i3dMappings,
+                spec.inputStationRootNode
+            )
+        then
+            spec.inputStation:delete()
+            spec.inputStation = nil
+            spec.inputStorage:delete()
+            spec.inputStorage = nil
+            spec.hasInputStation = false
+        else
+            spec.inputStation.owningPlaceable = self
+            spec.inputStation.hasStoragePerFarm = false
+        end
+    end
+
+    if spec.hasOutputStation then
+        spec.outputStorage = VariableBunkerStorage.new(self, VariableBunkerStorage.MODE_OUTPUT)
+        spec.outputStation = LoadingStation.new(self.isServer, self.isClient)
+        if
+            not spec.outputStation:load(
+                self.components,
+                self.xmlFile,
+                BASE_KEY .. ".outputStation",
+                self.customEnvironment,
+                self.i3dMappings,
+                spec.outputStationRootNode
+            )
+        then
+            spec.outputStation:delete()
+            spec.outputStation = nil
+            spec.outputStorage:delete()
+            spec.outputStorage = nil
+            spec.hasOutputStation = false
+        else
+            spec.outputStation.owningPlaceable = self
+            spec.outputStation.hasStoragePerFarm = false
+        end
+    end
     Bunker.activeSilos[self] = true
 end
 
 function Bunker:onDelete()
+    local spec = self.spec_VariableBunker
+    local storageSystem = g_currentMission ~= nil and g_currentMission.storageSystem or nil
+    if spec ~= nil then
+        if spec.inputStation ~= nil then
+            if storageSystem ~= nil then
+                storageSystem:removeUnloadingStation(spec.inputStation, self)
+            end
+            spec.inputStation:delete()
+            spec.inputStation = nil
+        end
+        if spec.outputStation ~= nil then
+            if storageSystem ~= nil then
+                storageSystem:removeLoadingStation(spec.outputStation, self)
+            end
+            spec.outputStation:delete()
+            spec.outputStation = nil
+        end
+        for _, storage in pairs({ spec.inputStorage, spec.outputStorage }) do
+            if storage ~= nil then
+                if storageSystem ~= nil then
+                    storageSystem:removeStorage(storage)
+                end
+                storage:delete()
+            end
+        end
+        spec.inputStorage = nil
+        spec.outputStorage = nil
+    end
     Bunker.activeSilos[self] = nil
 end
 
@@ -352,6 +531,132 @@ end
 
 function Bunker:VariableBunkerHasRearWall()
     return self:VariableBunkerGetTypeConfiguration() ~= TYPE_CONFIGURATION_DRIVE_THROUGH
+end
+
+function Bunker:VariableBunkerRefreshStationState()
+    local spec = self.spec_VariableBunker
+    if spec == nil then
+        return
+    end
+    local settings = Bunker.settings or {}
+    local inputActive = spec.hasInputStation and settings.allowInputStation ~= false
+    local outputActive = spec.hasOutputStation and settings.allowOutputStation ~= false
+    setVisibility(spec.inputStationRootNode, inputActive)
+    setVisibility(spec.outputStationRootNode, outputActive)
+    setPhysicsNodeEnabled(spec.inputExactFillRootNode, inputActive)
+    setPhysicsNodeEnabled(spec.outputLoadTriggerNode, outputActive)
+    if spec.inputGridNode == nil and self.spec_dynamicallyLoadedParts ~= nil then
+        for _, part in ipairs(self.spec_dynamicallyLoadedParts.parts or {}) do
+            local filename = string.lower(part.filename or "")
+            if string.find(filename, "sellingstationgenericnocoverwidegrid", 1, true) ~= nil then
+                spec.inputGridNode = part.node
+                break
+            end
+        end
+    end
+    if spec.inputGridNode ~= nil then
+        setVisibility(spec.inputGridNode, inputActive)
+        if spec.stationsFinalized then
+            if inputActive and spec.inputGridPhysicsEnabled == false then
+                addToPhysics(spec.inputGridNode)
+                spec.inputGridPhysicsEnabled = true
+            elseif not inputActive and spec.inputGridPhysicsEnabled ~= false then
+                removeFromPhysics(spec.inputGridNode)
+                spec.inputGridPhysicsEnabled = false
+            end
+        end
+    end
+    if spec.stationsFinalized and self.setShowMarkers ~= nil and g_currentMission ~= nil then
+        self:setShowMarkers(g_currentMission.accessHandler:canPlayerAccess(self))
+    end
+end
+
+function Bunker.VariableBunkerFinalizeStations(self)
+    local spec = self.spec_VariableBunker
+    local storageSystem = g_currentMission.storageSystem
+    local ownerFarmId = self:getOwnerFarmId()
+    if spec.inputStation ~= nil and spec.inputStorage ~= nil then
+        spec.inputStation:register(true)
+        spec.inputStation:setOwnerFarmId(ownerFarmId, true)
+        storageSystem:addUnloadingStation(spec.inputStation, self)
+        spec.inputStorage:setOwnerFarmId(ownerFarmId, true)
+        storageSystem:addStorage(spec.inputStorage)
+        storageSystem:addStorageToUnloadingStation(spec.inputStorage, spec.inputStation)
+    end
+    if spec.outputStation ~= nil and spec.outputStorage ~= nil then
+        spec.outputStation:register(true)
+        spec.outputStation:setOwnerFarmId(ownerFarmId, true)
+        storageSystem:addLoadingStation(spec.outputStation, self)
+        spec.outputStorage:setOwnerFarmId(ownerFarmId, true)
+        storageSystem:addStorage(spec.outputStorage)
+        storageSystem:addStorageToLoadingStation(spec.outputStorage, spec.outputStation)
+    end
+    spec.stationsFinalized = true
+    spec.inputGridPhysicsEnabled = true
+    self:VariableBunkerRefreshStationState()
+end
+
+function Bunker:onReadStream(streamId, connection)
+    local spec = self.spec_VariableBunker
+    if spec.inputStation ~= nil then
+        local stationId = NetworkUtil.readNodeObjectId(streamId)
+        spec.inputStation:readStream(streamId, connection)
+        g_client:finishRegisterObject(spec.inputStation, stationId)
+    end
+    if spec.outputStation ~= nil then
+        local stationId = NetworkUtil.readNodeObjectId(streamId)
+        spec.outputStation:readStream(streamId, connection)
+        g_client:finishRegisterObject(spec.outputStation, stationId)
+    end
+end
+
+function Bunker:onWriteStream(streamId, connection)
+    local spec = self.spec_VariableBunker
+    if spec.inputStation ~= nil then
+        NetworkUtil.writeNodeObjectId(streamId, NetworkUtil.getObjectId(spec.inputStation))
+        spec.inputStation:writeStream(streamId, connection)
+        g_server:registerObjectInStream(connection, spec.inputStation)
+    end
+    if spec.outputStation ~= nil then
+        NetworkUtil.writeNodeObjectId(streamId, NetworkUtil.getObjectId(spec.outputStation))
+        spec.outputStation:writeStream(streamId, connection)
+        g_server:registerObjectInStream(connection, spec.outputStation)
+    end
+end
+
+function Bunker:setOwnerFarmId(superFunc, farmId, noEventSend)
+    superFunc(self, farmId, noEventSend)
+    local spec = self.spec_VariableBunker
+    if spec == nil then
+        return
+    end
+    for _, object in pairs({ spec.inputStation, spec.outputStation, spec.inputStorage, spec.outputStorage }) do
+        if object ~= nil then
+            object:setOwnerFarmId(farmId, true)
+        end
+    end
+end
+
+function Bunker:setShowMarkers(superFunc, doShow)
+    superFunc(self, doShow)
+    local spec = self.spec_VariableBunker
+    local markerSpec = self.spec_triggerMarkers
+    if spec == nil or markerSpec == nil then
+        return
+    end
+    local settings = Bunker.settings or {}
+    if not spec.hasInputStation or settings.allowInputStation == false then
+        local marker = markerSpec.triggerMarkers[1]
+        if marker ~= nil then
+            g_currentMission:removeTriggerMarker(marker.node)
+        end
+    end
+    if not spec.hasOutputStation or settings.allowOutputStation == false then
+        local marker = markerSpec.triggerMarkers[2]
+        if marker ~= nil then
+            g_currentMission:removeTriggerMarker(marker.node)
+        end
+    end
 end
 
 function Bunker:VariableBunkerUpdateCollisionStates()
@@ -657,6 +962,7 @@ function Bunker:VariableBunkerApplyDimensions()
     setNodeTranslation(spec.testAreaEndNode, baseOuterWidth, height, footprintLength)
     setNodeTranslation(spec.tipOcclusionStartNode, -baseOuterWidth * 0.5, 0, footprintStart)
     setNodeTranslation(spec.tipOcclusionEndNode, baseOuterWidth, 0, footprintLength)
+    applyStationLayout(self, baseOuterWidth * 0.5, length * 0.5, rearFootExtension)
 
     local placementSpec = self.spec_placement
     if placementSpec ~= nil and self.loadTestArea ~= nil then
@@ -692,6 +998,7 @@ function Bunker:VariableBunkerApplyDimensions()
     end
 
     self:VariableBunkerUpdateCollisionStates()
+    self:VariableBunkerRefreshStationState()
     if self.isPreplaced then
         self:addToPhysics()
     end

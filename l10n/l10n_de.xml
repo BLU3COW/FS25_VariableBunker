@@ -17,5 +17,14 @@
         <text name="option_VariableBunkerAutoDriveOn" text="Automatisch erzeugen" />
         <text name="configuration_VariableBunkerEstimatedCapacity" text="Geschätzte Kapazität" />
         <text name="capacity_VariableBunkerMapLimit" text="Kartenlimit %s m" />
+        <text name="configuration_VariableBunkerInput" text="Bodengitter zum Befüllen" />
+        <text name="configuration_VariableBunkerOutput" text="Feste Entnahmestelle" />
+        <text name="option_VariableBunkerStationOff" text="Aus" />
+        <text name="option_VariableBunkerStationLeft" text="Links" />
+        <text name="option_VariableBunkerStationRight" text="Rechts" />
+        <text name="option_VariableBunkerStationFront" text="Vorne" />
+        <text name="option_VariableBunkerStationRear" text="Hinten" />
+        <text name="station_VariableBunkerInput" text="VariableBunker Befüllung" />
+        <text name="station_VariableBunkerOutput" text="VariableBunker Entnahme" />
     </texts>
 </l10n>

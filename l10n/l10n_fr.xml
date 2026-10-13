@@ -17,5 +17,14 @@
         <text name="option_VariableBunkerAutoDriveOn" text="Générer automatiquement" />
         <text name="configuration_VariableBunkerEstimatedCapacity" text="Capacité estimée" />
         <text name="capacity_VariableBunkerMapLimit" text="limite de carte %s m" />
+        <text name="configuration_VariableBunkerInput" text="Grille au sol pour le remplissage" />
+        <text name="configuration_VariableBunkerOutput" text="Point de prélèvement fixe" />
+        <text name="option_VariableBunkerStationOff" text="Désactivé" />
+        <text name="option_VariableBunkerStationLeft" text="Gauche" />
+        <text name="option_VariableBunkerStationRight" text="Droite" />
+        <text name="option_VariableBunkerStationFront" text="Avant" />
+        <text name="option_VariableBunkerStationRear" text="Arrière" />
+        <text name="station_VariableBunkerInput" text="Remplissage VariableBunker" />
+        <text name="station_VariableBunkerOutput" text="Prélèvement VariableBunker" />
     </texts>
 </l10n>

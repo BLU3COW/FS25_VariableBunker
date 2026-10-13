@@ -10,6 +10,8 @@ Bunker.CONFIG_HEIGHT = "VariableBunkerHeight"
 Bunker.CONFIG_TYPE = "VariableBunkerType"
 Bunker.CONFIG_FLOOR = "VariableBunkerFloor"
 Bunker.CONFIG_AUTODRIVE = "VariableBunkerAutoDrive"
+Bunker.CONFIG_INPUT = "VariableBunkerInput"
+Bunker.CONFIG_OUTPUT = "VariableBunkerOutput"
 
 VariableBunkerDimensionConfigurationItem = {}
 local VariableBunkerDimensionConfigurationItem_mt =
@@ -93,6 +95,44 @@ function VariableBunkerAutoDriveConfigurationItem.registerXMLPaths(schema, rootP
     VariableBunkerAutoDriveConfigurationItem:superClass().registerXMLPaths(schema, rootPath, configPath)
 end
 
+local VariableBunkerStationConfigurationItem = {}
+local VariableBunkerStationConfigurationItem_mt =
+    Class(VariableBunkerStationConfigurationItem, PlaceableConfigurationItem)
+
+function VariableBunkerStationConfigurationItem.new(configName, customMt)
+    local self = VariableBunkerStationConfigurationItem:superClass()
+        .new(configName, customMt or VariableBunkerStationConfigurationItem_mt)
+    self.side = "off"
+    return self
+end
+
+function VariableBunkerStationConfigurationItem:loadFromXML(
+    xmlFile,
+    baseKey,
+    configKey,
+    baseDirectory,
+    customEnvironment
+)
+    if
+        not VariableBunkerStationConfigurationItem:superClass()
+            .loadFromXML(self, xmlFile, baseKey, configKey, baseDirectory, customEnvironment)
+    then
+        return false
+    end
+    self.side = xmlFile:getValue(configKey .. "#side", "off")
+    self.variableBunkerBaseSelectable = self.isSelectable ~= false
+    local settings = Bunker.settings or {}
+    local enabled = self.configName == Bunker.CONFIG_INPUT and settings.allowInputStation ~= false
+        or self.configName == Bunker.CONFIG_OUTPUT and settings.allowOutputStation ~= false
+    self.isSelectable = self.variableBunkerBaseSelectable and (enabled or self.side == "off")
+    return true
+end
+
+function VariableBunkerStationConfigurationItem.registerXMLPaths(schema, rootPath, configPath)
+    VariableBunkerStationConfigurationItem:superClass().registerXMLPaths(schema, rootPath, configPath)
+    schema:register(XMLValueType.STRING, configPath .. "#side", "Configured station side", "off")
+end
+
 local function registerConfigurationTypes()
     if g_placeableConfigurationManager == nil then
         return
@@ -114,6 +154,8 @@ local function registerConfigurationTypes()
     addConfigType(Bunker.CONFIG_HEIGHT, "configuration_VariableBunkerHeight", VariableBunkerDimensionConfigurationItem)
     addConfigType(Bunker.CONFIG_TYPE, "configuration_VariableBunkerType", PlaceableConfigurationItem)
     addConfigType(Bunker.CONFIG_FLOOR, "configuration_VariableBunkerFloor", PlaceableConfigurationItem)
+    addConfigType(Bunker.CONFIG_INPUT, "configuration_VariableBunkerInput", VariableBunkerStationConfigurationItem)
+    addConfigType(Bunker.CONFIG_OUTPUT, "configuration_VariableBunkerOutput", VariableBunkerStationConfigurationItem)
     addConfigType(
         Bunker.CONFIG_AUTODRIVE,
         "configuration_VariableBunkerAutoDrive",

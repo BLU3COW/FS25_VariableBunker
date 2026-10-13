@@ -17,5 +17,14 @@
         <text name="option_VariableBunkerAutoDriveOn" text="Generate automatically" />
         <text name="configuration_VariableBunkerEstimatedCapacity" text="Estimated capacity" />
         <text name="capacity_VariableBunkerMapLimit" text="map limit %s m" />
+        <text name="configuration_VariableBunkerInput" text="Floor grid for filling" />
+        <text name="configuration_VariableBunkerOutput" text="Fixed unloading point" />
+        <text name="option_VariableBunkerStationOff" text="Off" />
+        <text name="option_VariableBunkerStationLeft" text="Left" />
+        <text name="option_VariableBunkerStationRight" text="Right" />
+        <text name="option_VariableBunkerStationFront" text="Front" />
+        <text name="option_VariableBunkerStationRear" text="Rear" />
+        <text name="station_VariableBunkerInput" text="VariableBunker filling" />
+        <text name="station_VariableBunkerOutput" text="VariableBunker extraction" />
     </texts>
 </l10n>

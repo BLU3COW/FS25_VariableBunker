@@ -5,6 +5,7 @@ local CONFIG_WIDTH = "VariableBunkerWidth"
 local CONFIG_LENGTH = "VariableBunkerLength"
 local CONFIG_HEIGHT = "VariableBunkerHeight"
 local CONFIG_TYPE = "VariableBunkerType"
+local CONFIG_OUTPUT = "VariableBunkerOutput"
 local DRIVE_THROUGH_CONFIGURATION = 2
 local SURFACE_ANGLE = math.rad(40)
 
@@ -94,6 +95,49 @@ local function updateCapacityDisplay(screen, storeItem)
     end
 end
 
+local function prepareStationOptions(screen, storeItem)
+    if not isVariableBunkerStoreItem(storeItem) or screen.configSelection == nil then
+        return
+    end
+    local optionSets = screen.configSelection.options
+    local options = optionSets ~= nil and optionSets[screen.currentConfigSet] or nil
+    if options == nil then
+        return
+    end
+    local isDriveThrough = screen.configurations[CONFIG_TYPE] == DRIVE_THROUGH_CONFIGURATION
+    for _, option in ipairs(options) do
+        if option.name == CONFIG_OUTPUT then
+            option.texts = {}
+            option.options = {}
+            option.defaultIndex = 1
+            local selectedIsAvailable = false
+            for _, item in ipairs(storeItem.configurations[CONFIG_OUTPUT] or {}) do
+                if item.isSelectable ~= false and not (isDriveThrough and item.side == "rear") then
+                    table.insert(option.texts, item.name)
+                    table.insert(option.options, item)
+                    if item.isDefault then
+                        option.defaultIndex = #option.options
+                    end
+                    if screen.configurations[CONFIG_OUTPUT] == item.index then
+                        selectedIsAvailable = true
+                    end
+                end
+            end
+            if not selectedIsAvailable and option.options[option.defaultIndex] ~= nil then
+                screen.configurations[CONFIG_OUTPUT] = option.options[option.defaultIndex].index
+            end
+        end
+    end
+end
+
+local function refreshConfigurationDisplay(screen, storeItem)
+    if screen.configSelection ~= nil and isVariableBunkerStoreItem(storeItem) then
+        screen:updateConfigOptionsDisplay(storeItem)
+    else
+        updateCapacityDisplay(screen, storeItem)
+    end
+end
+
 local function drawAutoDrivePreview(screen)
     if ConstructionScreen.uiHidden or screen.configurations == nil or screen.brush == nil then
         return
@@ -114,8 +158,10 @@ local function installHooks()
     end
     ConstructionScreen.updateConfigOptionsDisplay =
         Utils.appendedFunction(ConstructionScreen.updateConfigOptionsDisplay, addCapacityDisplay)
+    ConstructionScreen.updateConfigOptionsData =
+        Utils.prependedFunction(ConstructionScreen.updateConfigOptionsData, prepareStationOptions)
     ConstructionScreen.loadCurrentConfiguration =
-        Utils.appendedFunction(ConstructionScreen.loadCurrentConfiguration, updateCapacityDisplay)
+        Utils.appendedFunction(ConstructionScreen.loadCurrentConfiguration, refreshConfigurationDisplay)
     ConstructionScreen.draw = Utils.appendedFunction(ConstructionScreen.draw, drawAutoDrivePreview)
     Bunker.constructionScreenHooksInstalled = true
 end

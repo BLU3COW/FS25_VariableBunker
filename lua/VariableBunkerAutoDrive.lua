@@ -347,6 +347,7 @@ end
 
 function Bunker:onFinalizePlacement()
     local spec = self.spec_VariableBunker
+    Bunker.VariableBunkerFinalizeStations(self)
     self:VariableBunkerUpdateCollisionStates()
     if
         not self.isServer

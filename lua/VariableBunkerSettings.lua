@@ -4,10 +4,15 @@ local Bunker = VariableBunker
 local SETTINGS_ROOT = "VariableBunkerSettings"
 local SETTINGS_KEY = SETTINGS_ROOT .. ".construction"
 local HEIGHT_CONFIG_NAME = "VariableBunkerHeight"
+local INPUT_CONFIG_NAME = "VariableBunkerInput"
+local OUTPUT_CONFIG_NAME = "VariableBunkerOutput"
 
-Bunker.settings = Bunker.settings or {
-    allowWallHeightsAboveFourMeters = true,
-}
+Bunker.settings = Bunker.settings
+    or {
+        allowWallHeightsAboveFourMeters = true,
+        allowInputStation = true,
+        allowOutputStation = true,
+    }
 
 local function getSettingsFilename()
     if getUserProfileAppPath == nil then
@@ -31,12 +36,14 @@ local function writeSettingsFile(filename)
         return false
     end
 
-    setXMLInt(xmlFile, SETTINGS_ROOT .. "#version", 1)
+    setXMLInt(xmlFile, SETTINGS_ROOT .. "#version", 2)
     setXMLBool(
         xmlFile,
         SETTINGS_KEY .. "#allowWallHeightsAboveFourMeters",
         Bunker.settings.allowWallHeightsAboveFourMeters == true
     )
+    setXMLBool(xmlFile, SETTINGS_KEY .. "#allowInputStation", Bunker.settings.allowInputStation == true)
+    setXMLBool(xmlFile, SETTINGS_KEY .. "#allowOutputStation", Bunker.settings.allowOutputStation == true)
     saveXMLFile(xmlFile)
     delete(xmlFile)
     return true
@@ -64,10 +71,45 @@ function Bunker.applyHeightSettingToStoreItems()
     end
 end
 
+function Bunker.applyStationSettingsToStoreItems()
+    if g_storeManager == nil or g_storeManager.getItems == nil then
+        return
+    end
+    for _, storeItem in ipairs(g_storeManager:getItems()) do
+        local configurations = storeItem.configurations
+        for configName, enabled in pairs({
+            [INPUT_CONFIG_NAME] = Bunker.settings.allowInputStation,
+            [OUTPUT_CONFIG_NAME] = Bunker.settings.allowOutputStation,
+        }) do
+            local items = configurations ~= nil and configurations[configName] or nil
+            if items ~= nil then
+                for _, item in ipairs(items) do
+                    local baseSelectable = item.variableBunkerBaseSelectable
+                    if baseSelectable == nil then
+                        baseSelectable = item.isSelectable ~= false
+                        item.variableBunkerBaseSelectable = baseSelectable
+                    end
+                    item.isSelectable = baseSelectable and (enabled or item.side == "off")
+                end
+            end
+        end
+    end
+end
+
 function Bunker.applySettings(settings)
     Bunker.settings.allowWallHeightsAboveFourMeters = settings ~= nil
         and settings.allowWallHeightsAboveFourMeters == true
+    Bunker.settings.allowInputStation = settings == nil or settings.allowInputStation ~= false
+    Bunker.settings.allowOutputStation = settings == nil or settings.allowOutputStation ~= false
     Bunker.applyHeightSettingToStoreItems()
+    Bunker.applyStationSettingsToStoreItems()
+    if Bunker.activeSilos ~= nil then
+        for placeable in pairs(Bunker.activeSilos) do
+            if placeable.VariableBunkerRefreshStationState ~= nil then
+                placeable:VariableBunkerRefreshStationState()
+            end
+        end
+    end
 end
 
 function Bunker.loadSettings()
@@ -76,7 +118,11 @@ function Bunker.loadSettings()
         return false
     end
 
-    Bunker.applySettings({ allowWallHeightsAboveFourMeters = true })
+    Bunker.applySettings({
+        allowWallHeightsAboveFourMeters = true,
+        allowInputStation = true,
+        allowOutputStation = true,
+    })
     if fileExists == nil or not fileExists(filename) then
         return writeSettingsFile(filename)
     end
@@ -88,9 +134,13 @@ function Bunker.loadSettings()
     end
 
     local allowHigherWalls = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowWallHeightsAboveFourMeters")
+    local allowInputStation = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowInputStation")
+    local allowOutputStation = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowOutputStation")
     delete(xmlFile)
     Bunker.applySettings({
         allowWallHeightsAboveFourMeters = allowHigherWalls == nil or allowHigherWalls == true,
+        allowInputStation = allowInputStation == nil or allowInputStation == true,
+        allowOutputStation = allowOutputStation == nil or allowOutputStation == true,
     })
     if not writeSettingsFile(filename) then
         Logging.warning("[VariableBunker] Could not update modSettings file '%s'", filename)
@@ -110,22 +160,30 @@ end
 function VariableBunkerSettingsEvent.new(settings)
     local self = VariableBunkerSettingsEvent.emptyNew()
     self.allowWallHeightsAboveFourMeters = settings.allowWallHeightsAboveFourMeters == true
+    self.allowInputStation = settings.allowInputStation == true
+    self.allowOutputStation = settings.allowOutputStation == true
     return self
 end
 
 function VariableBunkerSettingsEvent:readStream(streamId, connection)
     self.allowWallHeightsAboveFourMeters = streamReadBool(streamId)
+    self.allowInputStation = streamReadBool(streamId)
+    self.allowOutputStation = streamReadBool(streamId)
     self:run(connection)
 end
 
 function VariableBunkerSettingsEvent:writeStream(streamId, _connection)
     streamWriteBool(streamId, self.allowWallHeightsAboveFourMeters)
+    streamWriteBool(streamId, self.allowInputStation)
+    streamWriteBool(streamId, self.allowOutputStation)
 end
 
 function VariableBunkerSettingsEvent:run(connection)
     if connection ~= nil and connection.getIsServer ~= nil and connection:getIsServer() then
         Bunker.applySettings({
             allowWallHeightsAboveFourMeters = self.allowWallHeightsAboveFourMeters,
+            allowInputStation = self.allowInputStation,
+            allowOutputStation = self.allowOutputStation,
         })
     end
 end
