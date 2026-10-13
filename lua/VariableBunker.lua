@@ -19,8 +19,8 @@ local INNER_MARGIN = 0.25
 local LEVEL_MARGIN = 1
 local TRIGGER_MARGIN = 1
 local FLOOR_FRONT_EXTENSION = 30
-local DRIVE_THROUGH_FLOOR_BACK_EXTENSION = 30
-local DRIVE_THROUGH_FLOOR_FRONT_EXTENSION = 15
+local DRIVE_THROUGH_FLOOR_BACK_EXTENSION = 20
+local DRIVE_THROUGH_FLOOR_FRONT_EXTENSION = 30
 local FLOOR_THICKNESS = 0.2
 local FLOOR_TOP_OFFSET = 0.02
 local FLOOR_CONFIGURATION_NONE = 1
@@ -29,9 +29,9 @@ local FLOOR_CONFIGURATION_EXTENDED = 3
 local TYPE_CONFIGURATION_BUNKER = 1
 local TYPE_CONFIGURATION_DRIVE_THROUGH = 2
 local SCALE_EPSILON = 0.0001
-local STATION_HALF_WIDTH = 5.25
-local STATION_HALF_DEPTH = 5.5
-local STATION_CLEARANCE = 0.5
+local STATION_HALF_WIDTH = 4.5
+local STATION_HALF_DEPTH = 3
+local STATION_FRONT_OFFSET = 4
 
 Bunker.activeSilos = Bunker.activeSilos or {}
 
@@ -182,9 +182,7 @@ local NODE_ATTRIBUTES = {
     "inputTestAreaEndNode",
     "outputStationRootNode",
     "outputLoadTriggerNode",
-    "outputPadNode",
     "outputMarkerNode",
-    "outputPostCollisionNode",
     "outputClearAreaStartNode",
     "outputClearAreaWidthNode",
     "outputClearAreaHeightNode",
@@ -258,38 +256,23 @@ local function setStationAreaNodes(spec, prefix, enabled)
     setNodeTranslation(spec[prefix .. "TestAreaEndNode"], width, enabled and 4 or 0, depth)
 end
 
-local function setStationRootTransform(rootNode, side, halfOuterWidth, halfLength, rearFootExtension)
+local function setStationRootTransform(rootNode, halfLength)
     if rootNode == nil then
         return
     end
-    local x = 0
-    local z = 0
-    local rotationY = 0
-    if side == "left" then
-        x = -halfOuterWidth - STATION_HALF_DEPTH - STATION_CLEARANCE
-        rotationY = math.pi * 0.5
-    elseif side == "right" then
-        x = halfOuterWidth + STATION_HALF_DEPTH + STATION_CLEARANCE
-        rotationY = math.pi * 0.5
-    elseif side == "front" then
-        z = -halfLength - STATION_HALF_DEPTH - STATION_CLEARANCE
-    elseif side == "rear" then
-        z = halfLength + rearFootExtension + STATION_HALF_DEPTH + STATION_CLEARANCE
-    end
-    setTranslation(rootNode, x, 0, z)
-    setRotation(rootNode, 0, rotationY, 0)
+    setTranslation(rootNode, 0, 0, -halfLength - STATION_FRONT_OFFSET)
+    setRotation(rootNode, 0, math.pi, 0)
 end
 
-local function applyStationLayout(self, halfOuterWidth, halfLength, rearFootExtension)
+local function applyStationLayout(self, halfLength)
     local spec = self.spec_VariableBunker
-    setStationRootTransform(spec.inputStationRootNode, spec.inputSide, halfOuterWidth, halfLength, rearFootExtension)
-    setStationRootTransform(spec.outputStationRootNode, spec.outputSide, halfOuterWidth, halfLength, rearFootExtension)
-    local sameSide = spec.hasInputStation and spec.hasOutputStation and spec.inputSide == spec.outputSide
-    setNodeTranslation(spec.inputMarkerNode, sameSide and -1.5 or 0, 0.05, 0)
-    setNodeTranslation(spec.outputMarkerNode, sameSide and 1.5 or 0, 0.05, 0)
+    setStationRootTransform(spec.inputStationRootNode, halfLength)
+    setStationRootTransform(spec.outputStationRootNode, halfLength)
+    local combined = spec.hasInputStation and spec.hasOutputStation
+    setNodeTranslation(spec.inputMarkerNode, combined and -1.5 or 0, 0.05, 0)
+    setNodeTranslation(spec.outputMarkerNode, combined and 1.5 or 0, 0.05, 0)
     setStationAreaNodes(spec, "input", spec.hasInputStation)
-    setStationAreaNodes(spec, "output", spec.hasOutputStation and not sameSide)
-    setVisibility(spec.outputPadNode, spec.hasOutputStation and not sameSide)
+    setStationAreaNodes(spec, "output", spec.hasOutputStation and not combined)
 end
 
 local function addFillLevelWithRollback(
@@ -349,6 +332,7 @@ end
 function Bunker.registerOverwrittenFunctions(placeableType)
     SpecializationUtil.registerOverwrittenFunction(placeableType, "setOwnerFarmId", Bunker.setOwnerFarmId)
     SpecializationUtil.registerOverwrittenFunction(placeableType, "setShowMarkers", Bunker.setShowMarkers)
+    SpecializationUtil.registerOverwrittenFunction(placeableType, "collectPickObjects", Bunker.collectPickObjects)
 end
 
 function Bunker.registerFunctions(placeableType)
@@ -443,9 +427,6 @@ function Bunker:onLoad(savegame)
     local outputItem = self:VariableBunkerGetConfigurationItem(ROOT_KEY_OUTPUT)
     spec.inputSide = inputItem ~= nil and inputItem.side or "off"
     spec.outputSide = outputItem ~= nil and outputItem.side or "off"
-    if self:VariableBunkerGetTypeConfiguration() == TYPE_CONFIGURATION_DRIVE_THROUGH and spec.outputSide == "rear" then
-        spec.outputSide = "off"
-    end
     spec.hasInputStation = spec.inputSide ~= "off"
     spec.hasOutputStation = spec.outputSide ~= "off"
 
@@ -585,7 +566,6 @@ function Bunker:VariableBunkerRefreshStationState()
     setVisibility(spec.inputStationRootNode, inputActive)
     setVisibility(spec.outputStationRootNode, outputActive)
     setPhysicsNodeEnabled(spec.inputExactFillRootNode, inputActive)
-    setPhysicsNodeEnabled(spec.outputPostCollisionNode, outputActive)
     disableTriggerNode(spec.inputBaleTriggerNode, inputActive)
     disableTriggerNode(spec.outputLoadTriggerNode, outputActive)
     spec.inputGridPhysicsStates = spec.inputGridPhysicsStates or {}
@@ -675,6 +655,27 @@ function Bunker:setOwnerFarmId(superFunc, farmId, noEventSend)
             object:setOwnerFarmId(farmId, true)
         end
     end
+end
+
+function Bunker:collectPickObjects(superFunc, node)
+    local spec = self.spec_VariableBunker
+    if spec ~= nil then
+        if spec.inputStation ~= nil then
+            for _, unloadTrigger in ipairs(spec.inputStation.unloadTriggers) do
+                if node == unloadTrigger.exactFillRootNode then
+                    return
+                end
+            end
+        end
+        if spec.outputStation ~= nil then
+            for _, loadTrigger in ipairs(spec.outputStation.loadTriggers) do
+                if node == loadTrigger.triggerNode then
+                    return
+                end
+            end
+        end
+    end
+    superFunc(self, node)
 end
 
 function Bunker:setShowMarkers(superFunc, doShow)
@@ -1002,7 +1003,7 @@ function Bunker:VariableBunkerApplyDimensions()
     setNodeTranslation(spec.testAreaEndNode, baseOuterWidth, height, footprintLength)
     setNodeTranslation(spec.tipOcclusionStartNode, -baseOuterWidth * 0.5, 0, footprintStart)
     setNodeTranslation(spec.tipOcclusionEndNode, baseOuterWidth, 0, footprintLength)
-    applyStationLayout(self, baseOuterWidth * 0.5, length * 0.5, rearFootExtension)
+    applyStationLayout(self, length * 0.5)
 
     local placementSpec = self.spec_placement
     if placementSpec ~= nil and self.loadTestArea ~= nil then

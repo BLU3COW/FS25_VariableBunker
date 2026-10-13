@@ -6,6 +6,7 @@ local CONFIG_LENGTH = "VariableBunkerLength"
 local CONFIG_HEIGHT = "VariableBunkerHeight"
 local CONFIG_TYPE = "VariableBunkerType"
 local CONFIG_OUTPUT = "VariableBunkerOutput"
+local CONFIG_LOADING_RATE = "ADRP"
 local DRIVE_THROUGH_CONFIGURATION = 2
 local SURFACE_ANGLE = math.rad(40)
 
@@ -58,10 +59,10 @@ local function getCapacityText(screen, storeItem)
     local volume = width
         * math.max(0, length * fillHeight - openEnds * fillHeight * fillHeight / (2 * math.tan(SURFACE_ANGLE)))
     local liters = math.floor(volume * 0.1 + 0.5) * 10000
-    local text = "≈ " .. g_i18n:formatNumber(liters, 0, true) .. " l"
+    local text = "~ " .. g_i18n:formatNumber(liters, 0, true) .. " l"
     if mapHeightLimit ~= nil and selectedHeight > mapHeightLimit + 0.01 then
         text = text
-            .. " · "
+            .. ", "
             .. string.format(
                 g_i18n:getText("capacity_VariableBunkerMapLimit"),
                 g_i18n:formatNumber(mapHeightLimit, 1, true)
@@ -95,39 +96,42 @@ local function updateCapacityDisplay(screen, storeItem)
     end
 end
 
-local function prepareStationOptions(screen, storeItem)
-    if not isVariableBunkerStoreItem(storeItem) or screen.configSelection == nil then
+local function getIsLoadingRateHidden(screen, storeItem)
+    if not isVariableBunkerStoreItem(storeItem) or storeItem.configurations[CONFIG_LOADING_RATE] == nil then
+        return false
+    end
+    local outputItem = getConfigurationItem(screen, storeItem, CONFIG_OUTPUT)
+    return outputItem == nil or outputItem.side == nil or outputItem.side == "off"
+end
+
+local function resetHiddenLoadingRate(screen, storeItem)
+    if screen.configurations == nil or not getIsLoadingRateHidden(screen, storeItem) then
         return
     end
-    local optionSets = screen.configSelection.options
+    local defaultIds = storeItem.defaultConfigurationIds
+    local defaultId = defaultIds ~= nil and defaultIds[CONFIG_LOADING_RATE] or nil
+    if defaultId ~= nil and screen.configurations[CONFIG_LOADING_RATE] ~= nil then
+        screen.configurations[CONFIG_LOADING_RATE] = defaultId
+    end
+end
+
+local function updateConfigOptionsDataWithoutHiddenRows(screen, superFunc, storeItem)
+    local selection = screen.configSelection
+    local optionSets = selection ~= nil and selection.options or nil
     local options = optionSets ~= nil and optionSets[screen.currentConfigSet] or nil
-    if options == nil then
-        return
+    if options == nil or not getIsLoadingRateHidden(screen, storeItem) then
+        return superFunc(screen, storeItem)
     end
-    local isDriveThrough = screen.configurations[CONFIG_TYPE] == DRIVE_THROUGH_CONFIGURATION
+    local visibleOptions = {}
     for _, option in ipairs(options) do
-        if option.name == CONFIG_OUTPUT then
-            option.texts = {}
-            option.options = {}
-            option.defaultIndex = 1
-            local selectedIsAvailable = false
-            for _, item in ipairs(storeItem.configurations[CONFIG_OUTPUT] or {}) do
-                if item.isSelectable ~= false and not (isDriveThrough and item.side == "rear") then
-                    table.insert(option.texts, item.name)
-                    table.insert(option.options, item)
-                    if item.isDefault then
-                        option.defaultIndex = #option.options
-                    end
-                    if screen.configurations[CONFIG_OUTPUT] == item.index then
-                        selectedIsAvailable = true
-                    end
-                end
-            end
-            if not selectedIsAvailable and option.options[option.defaultIndex] ~= nil then
-                screen.configurations[CONFIG_OUTPUT] = option.options[option.defaultIndex].index
-            end
+        if option.name ~= CONFIG_LOADING_RATE then
+            table.insert(visibleOptions, option)
         end
     end
+    optionSets[screen.currentConfigSet] = visibleOptions
+    local result = superFunc(screen, storeItem)
+    optionSets[screen.currentConfigSet] = options
+    return result
 end
 
 local function refreshConfigurationDisplay(screen, storeItem)
@@ -158,11 +162,10 @@ local function installHooks()
     end
     ConstructionScreen.updateConfigOptionsDisplay =
         Utils.appendedFunction(ConstructionScreen.updateConfigOptionsDisplay, addCapacityDisplay)
-    local updateConfigOptionsData = ConstructionScreen.updateConfigOptionsData
-    ConstructionScreen.updateConfigOptionsData = function(screen, storeItem)
-        prepareStationOptions(screen, storeItem)
-        return updateConfigOptionsData(screen, storeItem)
-    end
+    ConstructionScreen.updateConfigOptionsData =
+        Utils.overwrittenFunction(ConstructionScreen.updateConfigOptionsData, updateConfigOptionsDataWithoutHiddenRows)
+    ConstructionScreen.loadCurrentConfiguration =
+        Utils.prependedFunction(ConstructionScreen.loadCurrentConfiguration, resetHiddenLoadingRate)
     ConstructionScreen.loadCurrentConfiguration =
         Utils.appendedFunction(ConstructionScreen.loadCurrentConfiguration, refreshConfigurationDisplay)
     ConstructionScreen.draw = Utils.appendedFunction(ConstructionScreen.draw, drawAutoDrivePreview)

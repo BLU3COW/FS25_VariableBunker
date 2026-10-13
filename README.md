@@ -219,21 +219,21 @@ Eine optionale Beton-Bodenplatte, frei platzierbare Befüll- und Entnahmestation
 | Option | Choices | Default |
 | --- | --- | --- |
 | Concrete floor slab | Without floor slab / Up to the front edge / With extended apron | Without floor slab |
-| Floor grid for filling | Off / Left / Right / Front / Rear | Off |
-| Fixed extraction point | Bunker: Off / Left / Right / Rear; drive-through: Off / Left / Right | Off |
+| Floor grid for filling | Off / Front | Off |
+| Loading point | Off / Front | Off |
 | AutoDrive course | Off / Generate automatically | Off |
 
 </div>
 <br>
 
-<div align="center">The <strong>concrete floor slab</strong> covers the complete outside width including the wall bases. It can end flush with the silo or include an extended apron: 30 m in front of a bunker silo, or 30 m behind and 15 m in front of a drive-through silo. The floor grid accepts chaff, grass, and hay while the silo is open; grass and hay are converted to chaff liter for liter. The fixed extraction point loads chaff before covering and silage after fermentation. It removes the real density-map material in straight transverse sections and progressively uncovers fermented silage. Filling builds a rear-to-front wedge in the bunker silo and distributes material broadly across the drive-through silo. These side stations do not create AutoDrive routes or targets. The <strong>AutoDrive course</strong> option is only shown when AutoDrive is active in the savegame.</div>
+<div align="center">The <strong>concrete floor slab</strong> covers the complete outside width including the wall bases. It can end flush with the silo or include an extended apron: 30 m in front of a bunker silo, or 30 m in front of the entrance and 20 m behind the exit of a drive-through silo. The floor grid accepts chaff, grass, and hay while the silo is open; grass and hay are converted to chaff liter for liter. The grid sits 4 m in front of the entrance. The loading point at the same spot (no grid of its own; loading rate adjustable with AdjustSuite ADR-P) loads chaff before covering and silage after fermentation. It removes the real density-map material in straight transverse sections and progressively uncovers fermented silage. Filling builds a rear-to-front wedge in the bunker silo and distributes material broadly across the drive-through silo. These stations do not create AutoDrive routes or targets. The <strong>AutoDrive course</strong> option is only shown when AutoDrive is active in the savegame.</div>
 <br>
 <div align="center">
 
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Die <strong>Beton-Bodenplatte</strong> deckt die gesamte Außenbreite einschließlich der Wandfüße ab. Sie endet wahlweise bündig mit dem Silo oder hat einen Vorplatz: 30 m vor einem Bunkersilo, bzw. 30 m hinter und 15 m vor einem Fahrsilo. Das Bodengitter nimmt im offenen Silo Häckselgut, Gras und Heu an; Gras und Heu werden Liter für Liter in Häckselgut umgewandelt. Die feste Entnahmestelle lädt vor dem Abdecken Häckselgut und nach der Gärung Silage. Dabei wird das echte Schüttgut in geraden Querabschnitten entnommen und die Silageabdeckung schrittweise geöffnet. Beim Befüllen entsteht im Bunkersilo ein Keil von der Rückwand zur Einfahrt, während das Fahrsilo breitflächig gefüllt wird. Die seitlichen Stationen erzeugen keine AutoDrive-Kurse oder Ziele. Die Option <strong>AutoDrive-Kurs</strong> wird nur angezeigt, wenn AutoDrive im Spielstand aktiv ist.</div>
+<div align="center">Die <strong>Beton-Bodenplatte</strong> deckt die gesamte Außenbreite einschließlich der Wandfüße ab. Sie endet wahlweise bündig mit dem Silo oder hat einen Vorplatz: 30 m vor einem Bunkersilo, bzw. 30 m vor der Einfahrt und 20 m hinter der Ausfahrt eines Fahrsilos. Das Bodengitter nimmt im offenen Silo Häckselgut, Gras und Heu an; Gras und Heu werden Liter für Liter in Häckselgut umgewandelt. Das Gitter liegt 4 m vor der Einfahrt. Die Ladestelle an derselben Stelle (ohne eigenes Gitter; Laderate mit AdjustSuite ADR-P einstellbar) lädt vor dem Abdecken Häckselgut und nach der Gärung Silage. Dabei wird das echte Schüttgut in geraden Querabschnitten entnommen und die Silageabdeckung schrittweise geöffnet. Beim Befüllen entsteht im Bunkersilo ein Keil von der Rückwand zur Einfahrt, während das Fahrsilo breitflächig gefüllt wird. Die Stationen erzeugen keine AutoDrive-Kurse oder Ziele. Die Option <strong>AutoDrive-Kurs</strong> wird nur angezeigt, wenn AutoDrive im Spielstand aktiv ist.</div>
 </details>
 </div>
 <br>

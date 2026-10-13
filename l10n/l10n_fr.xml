@@ -20,10 +20,7 @@
         <text name="configuration_VariableBunkerInput" text="Point de déchargement" />
         <text name="configuration_VariableBunkerOutput" text="Point de chargement" />
         <text name="option_VariableBunkerStationOff" text="Désactivé" />
-        <text name="option_VariableBunkerStationLeft" text="Gauche" />
-        <text name="option_VariableBunkerStationRight" text="Droite" />
         <text name="option_VariableBunkerStationFront" text="Avant" />
-        <text name="option_VariableBunkerStationRear" text="Arrière" />
         <text name="station_VariableBunkerInput" text="Remplissage VariableBunker" />
         <text name="station_VariableBunkerOutput" text="Prélèvement VariableBunker" />
     </texts>

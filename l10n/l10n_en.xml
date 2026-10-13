@@ -20,10 +20,7 @@
         <text name="configuration_VariableBunkerInput" text="Unloading" />
         <text name="configuration_VariableBunkerOutput" text="Loading" />
         <text name="option_VariableBunkerStationOff" text="Off" />
-        <text name="option_VariableBunkerStationLeft" text="Left" />
-        <text name="option_VariableBunkerStationRight" text="Right" />
         <text name="option_VariableBunkerStationFront" text="Front" />
-        <text name="option_VariableBunkerStationRear" text="Rear" />
         <text name="station_VariableBunkerInput" text="VariableBunker filling" />
         <text name="station_VariableBunkerOutput" text="VariableBunker extraction" />
     </texts>

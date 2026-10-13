@@ -14,7 +14,7 @@ local TARGET_APPROACH_SPACING = 1
 local WAYPOINT_SPACING = 3
 local DRIVE_THROUGH_LANE_SPACING = 3.5
 local DRIVE_THROUGH_ENTRY_OFFSET = 25
-local DRIVE_THROUGH_EXIT_OFFSET = 14
+local DRIVE_THROUGH_EXIT_OFFSET = 15
 local DRIVE_THROUGH_WAYPOINT_SPACING = 2
 local DRIVE_THROUGH_CONNECTION_OFFSET = 1
 local DRIVE_THROUGH_CONNECTION_SIDE_OFFSET = 1
@@ -188,10 +188,10 @@ end
 
 local function createDriveThroughCourse(placeable, autoDrive, graphManager, width, length)
     local laneCount = getDriveThroughLaneCount(width)
-    local entry = length * 0.5 + DRIVE_THROUGH_ENTRY_OFFSET
-    local exit = -length * 0.5 - DRIVE_THROUGH_EXIT_OFFSET
-    local entryCluster = entry + DRIVE_THROUGH_CONNECTION_OFFSET
-    local exitCluster = exit - DRIVE_THROUGH_CONNECTION_OFFSET
+    local entry = -length * 0.5 - DRIVE_THROUGH_ENTRY_OFFSET
+    local exit = length * 0.5 + DRIVE_THROUGH_EXIT_OFFSET
+    local entryCluster = entry - DRIVE_THROUGH_CONNECTION_OFFSET
+    local exitCluster = exit + DRIVE_THROUGH_CONNECTION_OFFSET
     local zValues = {}
     appendSegmentValues(zValues, entry, exit, DRIVE_THROUGH_WAYPOINT_SPACING)
 
@@ -203,7 +203,7 @@ local function createDriveThroughCourse(placeable, autoDrive, graphManager, widt
     local exitLeft = {}
     local exitRight = {}
     for lane = 1, laneCount do
-        local localX = (lane - (laneCount + 1) * 0.5) * DRIVE_THROUGH_LANE_SPACING
+        local localX = ((laneCount + 1) * 0.5 - lane) * DRIVE_THROUGH_LANE_SPACING
         local firstIndex = nil
         local previousIndex = nil
         for _, localZ in ipairs(zValues) do
@@ -217,8 +217,8 @@ local function createDriveThroughCourse(placeable, autoDrive, graphManager, widt
         end
         markers[lane] = previousIndex
 
-        local leftX = localX - DRIVE_THROUGH_CONNECTION_SIDE_OFFSET
-        local rightX = localX + DRIVE_THROUGH_CONNECTION_SIDE_OFFSET
+        local leftX = localX + DRIVE_THROUGH_CONNECTION_SIDE_OFFSET
+        local rightX = localX - DRIVE_THROUGH_CONNECTION_SIDE_OFFSET
         entryLeft[lane] = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, leftX, entryCluster)
         entryRight[lane] = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, rightX, entryCluster)
         exitLeft[lane] = addLocalWaypoint(placeable, wayPoints, baseId, autoDrive, leftX, exitCluster)
@@ -250,8 +250,8 @@ function Bunker:VariableBunkerGetAutoDriveCourseBounds()
     local spec = self.spec_VariableBunker
     local length = spec ~= nil and spec.lengthMeters or 60
     if spec ~= nil and spec.hasRearWall == false then
-        return -length * 0.5 - DRIVE_THROUGH_EXIT_OFFSET - DRIVE_THROUGH_CONNECTION_OFFSET,
-            length * 0.5 + DRIVE_THROUGH_ENTRY_OFFSET + DRIVE_THROUGH_CONNECTION_OFFSET
+        return -length * 0.5 - DRIVE_THROUGH_ENTRY_OFFSET - DRIVE_THROUGH_CONNECTION_OFFSET,
+            length * 0.5 + DRIVE_THROUGH_EXIT_OFFSET + DRIVE_THROUGH_CONNECTION_OFFSET
     end
     return -length * 0.5 - FRONT_APPROACH, length * 0.5 - REAR_CLEARANCE
 end
@@ -311,10 +311,10 @@ end
 
 local function drawDriveThroughPreview(placeable, width, length)
     local laneCount = getDriveThroughLaneCount(width)
-    local entry = length * 0.5 + DRIVE_THROUGH_ENTRY_OFFSET
-    local exit = -length * 0.5 - DRIVE_THROUGH_EXIT_OFFSET
-    local entryCluster = entry + DRIVE_THROUGH_CONNECTION_OFFSET
-    local exitCluster = exit - DRIVE_THROUGH_CONNECTION_OFFSET
+    local entry = -length * 0.5 - DRIVE_THROUGH_ENTRY_OFFSET
+    local exit = length * 0.5 + DRIVE_THROUGH_EXIT_OFFSET
+    local entryCluster = entry - DRIVE_THROUGH_CONNECTION_OFFSET
+    local exitCluster = exit + DRIVE_THROUGH_CONNECTION_OFFSET
     local firstX = -(laneCount - 1) * DRIVE_THROUGH_LANE_SPACING * 0.5
     local lastX = (laneCount - 1) * DRIVE_THROUGH_LANE_SPACING * 0.5
 
