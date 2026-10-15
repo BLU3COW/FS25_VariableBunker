@@ -13,6 +13,8 @@ local MIN_OUTPUT_CHUNK = 250
 local FULL_RETRY_TIME = 2000
 local FULL_CHECK_INTERVAL = 500
 local FULL_HEIGHT_TOLERANCE = 0.15
+local FULL_RELEASE_LITERS = 1000
+local FULL_RELEASE_SHARE = 0.002
 local SURFACE_ANGLE = math.rad(40)
 
 VariableBunkerStorage.MODE_INPUT = MODE_INPUT
@@ -195,6 +197,8 @@ function VariableBunkerStorage.new(placeable, mode, customMt)
     self.inputBandIndex = 1
     self.pendingLiters = 0
     self.fullUntilTime = nil
+    self.fullFillLevel = nil
+    self.fillExhausted = false
     self.fullCheckTime = nil
     self.fullCheckResult = false
     self.openBandIndex = 1
@@ -386,7 +390,15 @@ function VariableBunkerStorage:getFreeCapacity(fillTypeIndex)
     end
     local bunkerSilo = getBunkerSilo(self.placeable)
     if bunkerSilo == nil or bunkerSilo.state ~= BunkerSilo.STATE_FILL then
+        self.fullFillLevel = nil
         return 0
+    end
+    if self.fullFillLevel ~= nil then
+        local releaseLiters = math.max(FULL_RELEASE_LITERS, self.fullFillLevel * FULL_RELEASE_SHARE)
+        if getCurrentFillLevel(bunkerSilo) > self.fullFillLevel - releaseLiters then
+            return 0
+        end
+        self.fullFillLevel = nil
     end
     local missionTime = getMissionTime()
     if self.fullUntilTime ~= nil then
@@ -439,6 +451,7 @@ function VariableBunkerStorage:fillBandsToWallHeight(liters, fillTypeIndex)
         index = index % bandCount + 1
     end
     self.inputBandIndex = index
+    self.fillExhausted = moved < 0.001 and liters >= MAX_PENDING_LITERS
     return moved
 end
 
@@ -503,6 +516,7 @@ function VariableBunkerStorage:fillBandsInLayers(bunkerSilo, liters, fillTypeInd
             break
         else
             if self.layerHeight >= maxHeight - 0.001 then
+                self.fillExhausted = movedInPass < 0.001 and liters - moved >= MAX_PENDING_LITERS
                 break
             end
             self.layerHeight = math.min(self.layerHeight + LAYER_STEP, maxHeight)
@@ -514,6 +528,7 @@ function VariableBunkerStorage:fillBandsInLayers(bunkerSilo, liters, fillTypeInd
 end
 
 function VariableBunkerStorage:addMaterial(liters, fillTypeIndex)
+    self.fillExhausted = false
     local bunkerSilo = getBunkerSilo(self.placeable)
     if
         bunkerSilo == nil
@@ -623,6 +638,9 @@ function VariableBunkerStorage:addFromStation(bunkerSilo, liters, fillTypeIndex)
         missing = MAX_PENDING_LITERS
         local missionTime = getMissionTime()
         self.fullUntilTime = missionTime ~= nil and missionTime + FULL_RETRY_TIME or nil
+    end
+    if self.fillExhausted then
+        self.fullFillLevel = getCurrentFillLevel(bunkerSilo)
     end
     self.pendingLiters = missing
     if placed > 0 then
