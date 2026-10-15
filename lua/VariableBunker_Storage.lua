@@ -10,6 +10,7 @@ local LAYER_STEP = 0.5
 local MAX_LAYER_PASSES = 4
 local MAX_PENDING_LITERS = 250
 local MIN_OUTPUT_CHUNK = 250
+local MAX_UNREACHABLE_BANDS = 2
 local FULL_RETRY_TIME = 2000
 local FULL_CHECK_INTERVAL = 500
 local FULL_HEIGHT_TOLERANCE = 0.15
@@ -599,6 +600,7 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
     end
     local index = math.min(self.outputBandIndex or bandCount, bandCount)
     local moved = 0
+    local unreachableBands = 0
     for _ = 1, bandCount do
         local band = bands[index]
         if fillTypeIndex == FillType.SILAGE then
@@ -619,9 +621,20 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
         if liters - moved < 0.001 then
             break
         end
+        local isBandUnreachable = false
+        if getAreaFillLevel(band, fillTypeIndex) >= MIN_OUTPUT_CHUNK then
+            if removed >= 0.001 then
+                break
+            end
+            isBandUnreachable = true
+            unreachableBands = unreachableBands + 1
+        end
         index = index - 1
         if index < 1 then
             index = bandCount
+        end
+        if isBandUnreachable and unreachableBands >= MAX_UNREACHABLE_BANDS then
+            break
         end
     end
     self.outputBandIndex = index
