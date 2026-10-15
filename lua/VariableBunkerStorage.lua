@@ -12,6 +12,7 @@ local MIN_OUTPUT_CHUNK = 250
 local FULL_RETRY_TIME = 2000
 local FULL_CHECK_INTERVAL = 500
 local FULL_HEIGHT_TOLERANCE = 0.15
+local FULL_RELEASE_LITERS = 1000
 local SURFACE_ANGLE = math.rad(40)
 
 VariableBunkerStorage.MODE_INPUT = MODE_INPUT
@@ -381,6 +382,14 @@ function VariableBunkerStorage:getFreeCapacity(fillTypeIndex)
         end
         self.fullUntilTime = nil
     end
+    if self.fullLevelMarker ~= nil then
+        local current = self:getMeasuredFillLevel(bunkerSilo)
+        if current < self.fullLevelMarker - math.max(FULL_RELEASE_LITERS, self.fullLevelMarker * 0.002) then
+            self.fullLevelMarker = nil
+        else
+            return 0
+        end
+    end
     if self:getIsGeometricallyFull() then
         return 0
     end
@@ -573,6 +582,8 @@ function VariableBunkerStorage:addFromStation(bunkerSilo, liters, fillTypeIndex)
         missing = MAX_PENDING_LITERS
         local missionTime = getMissionTime()
         self.fullUntilTime = missionTime ~= nil and missionTime + FULL_RETRY_TIME or nil
+        self.wallLevelTime = nil
+        self.fullLevelMarker = self:getMeasuredFillLevel(bunkerSilo)
     end
     self.pendingLiters = missing
     if placed > 0 then
