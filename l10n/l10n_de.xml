@@ -20,7 +20,7 @@
         <text name="configuration_VariableBunkerInput" text="Abladestelle" />
         <text name="configuration_VariableBunkerOutput" text="Ladestelle" />
         <text name="option_VariableBunkerStationOff" text="Aus" />
-        <text name="option_VariableBunkerStationFront" text="Vorne" />
+        <text name="option_VariableBunkerStationOn" text="An" />
         <text name="station_VariableBunkerInput" text="VariableBunker Befüllung" />
         <text name="station_VariableBunkerOutput" text="VariableBunker Entnahme" />
         <text name="configuration_VariableBunkerCompaction" text="Verdichtungsservice" />

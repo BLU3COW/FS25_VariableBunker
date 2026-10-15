@@ -20,7 +20,7 @@
         <text name="configuration_VariableBunkerInput" text="Unloading" />
         <text name="configuration_VariableBunkerOutput" text="Loading" />
         <text name="option_VariableBunkerStationOff" text="Off" />
-        <text name="option_VariableBunkerStationFront" text="Front" />
+        <text name="option_VariableBunkerStationOn" text="On" />
         <text name="station_VariableBunkerInput" text="VariableBunker filling" />
         <text name="station_VariableBunkerOutput" text="VariableBunker extraction" />
         <text name="configuration_VariableBunkerCompaction" text="Compaction service" />

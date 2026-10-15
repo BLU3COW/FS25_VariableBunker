@@ -20,7 +20,7 @@
         <text name="configuration_VariableBunkerInput" text="Point de déchargement" />
         <text name="configuration_VariableBunkerOutput" text="Point de chargement" />
         <text name="option_VariableBunkerStationOff" text="Désactivé" />
-        <text name="option_VariableBunkerStationFront" text="Avant" />
+        <text name="option_VariableBunkerStationOn" text="Activé" />
         <text name="station_VariableBunkerInput" text="Remplissage VariableBunker" />
         <text name="station_VariableBunkerOutput" text="Prélèvement VariableBunker" />
         <text name="configuration_VariableBunkerCompaction" text="Service de compactage" />

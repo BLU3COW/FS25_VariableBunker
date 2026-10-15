@@ -180,12 +180,12 @@
 
         <VariableBunkerInputConfigurations title="$l10n_configuration_VariableBunkerInput">
             <VariableBunkerInputConfiguration name="$l10n_option_VariableBunkerStationOff" side="off" isDefault="true" saveId="off" />
-            <VariableBunkerInputConfiguration name="$l10n_option_VariableBunkerStationFront" side="front" saveId="front" />
+            <VariableBunkerInputConfiguration name="$l10n_option_VariableBunkerStationOn" side="front" saveId="front" />
         </VariableBunkerInputConfigurations>
 
         <VariableBunkerOutputConfigurations title="$l10n_configuration_VariableBunkerOutput">
             <VariableBunkerOutputConfiguration name="$l10n_option_VariableBunkerStationOff" side="off" isDefault="true" saveId="off" />
-            <VariableBunkerOutputConfiguration name="$l10n_option_VariableBunkerStationFront" side="front" saveId="front" />
+            <VariableBunkerOutputConfiguration name="$l10n_option_VariableBunkerStationOn" side="front" saveId="front" />
         </VariableBunkerOutputConfigurations>
 
         <VariableBunkerCompactionConfigurations title="$l10n_configuration_VariableBunkerCompaction">
