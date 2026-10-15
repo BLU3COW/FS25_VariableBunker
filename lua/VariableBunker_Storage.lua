@@ -11,6 +11,7 @@ local MAX_LAYER_PASSES = 4
 local MAX_PENDING_LITERS = 250
 local MIN_OUTPUT_CHUNK = 250
 local MAX_UNREACHABLE_BANDS = 2
+local RESIDUE_CELL_WIDTH = 1
 local FULL_RETRY_TIME = 2000
 local FULL_CHECK_INTERVAL = 500
 local FULL_HEIGHT_TOLERANCE = 0.15
@@ -121,6 +122,9 @@ local function createBands(placeable)
         local band = {
             length = bandLength,
             radius = radius,
+            halfWidth = halfWidth,
+            startZ = startZ,
+            endZ = endZ,
             inputOffsetKey = "input_" .. index,
             outputOffsetKeys = {},
         }
@@ -611,16 +615,12 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
             offsetKey = string.format("output_%d_%d", fillTypeIndex, index)
             band.outputOffsetKeys[fillTypeIndex] = offsetKey
         end
-        local request = liters - moved
-        local removed = moveAtArea(self, band, request, fillTypeIndex, offsetKey, false)
-        if request - removed >= 0.001 and self.lineOffsets[offsetKey] ~= nil then
-            self.lineOffsets[offsetKey] = nil
-            removed = removed + moveAtArea(self, band, request - removed, fillTypeIndex, offsetKey, false)
-        end
+        local removed = moveAtArea(self, band, liters - moved, fillTypeIndex, offsetKey, false)
         moved = moved + removed
         if liters - moved < 0.001 then
             break
         end
+        self.lineOffsets[offsetKey] = nil
         if removed < 0.001 and getAreaFillLevel(band, fillTypeIndex) >= MIN_OUTPUT_CHUNK then
             unreachableBands = unreachableBands + 1
         end
@@ -633,6 +633,42 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
         end
     end
     self.outputBandIndex = index
+    if moved < 0.001 then
+        moved = self:removeResidue(bunkerSilo, bands, liters, fillTypeIndex)
+    end
+    return moved
+end
+
+function VariableBunkerStorage:removeResidue(bunkerSilo, bands, liters, fillTypeIndex)
+    local rootNode = self.placeable.rootNode
+    local moved = 0
+    for index = #bands, 1, -1 do
+        local band = bands[index]
+        local fermentingFillType = fillTypeIndex == FillType.SILAGE and bunkerSilo.fermentingFillType or nil
+        if
+            getAreaFillLevel(band, fillTypeIndex) >= 0.001
+            or (fermentingFillType ~= nil and getAreaFillLevel(band, fermentingFillType) >= 0.001)
+        then
+            if fermentingFillType ~= nil then
+                openFermentedBand(bunkerSilo, band)
+            end
+            local cellCount = math.max(math.ceil(band.halfWidth * 2 / RESIDUE_CELL_WIDTH), 1)
+            local cellWidth = band.halfWidth * 2 / cellCount
+            for cell = 1, cellCount do
+                local x0 = band.halfWidth - (cell - 1) * cellWidth
+                local x1 = x0 - cellWidth
+                local sx, _, sz = localToWorld(rootNode, x0, 0, band.startZ)
+                local wx, _, wz = localToWorld(rootNode, x1, 0, band.startZ)
+                local hx, _, hz = localToWorld(rootNode, x0, 0, band.endZ)
+                if DensityMapHeightUtil.getFillLevelAtArea(fillTypeIndex, sx, sz, wx, wz, hx, hz) >= 0.001 then
+                    moved = moved + DensityMapHeightUtil.removeFromGroundByArea(sx, sz, wx, wz, hx, hz, fillTypeIndex)
+                    if liters - moved < 0.001 then
+                        return moved
+                    end
+                end
+            end
+        end
+    end
     return moved
 end
 
