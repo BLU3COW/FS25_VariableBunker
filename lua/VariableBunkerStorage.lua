@@ -7,6 +7,7 @@ local MODE_INPUT = 1
 local MODE_OUTPUT = 2
 local MAX_BAND_LENGTH = 1
 local LAYER_STEP = 0.5
+local MAX_LAYER_PASSES = 4
 local MAX_PENDING_LITERS = 250
 local MIN_OUTPUT_CHUNK = 250
 local FULL_RETRY_TIME = 2000
@@ -436,6 +437,30 @@ function VariableBunkerStorage:fillBandsToWallHeight(liters, fillTypeIndex)
     return moved
 end
 
+function VariableBunkerStorage:getIsLayerComplete(bands, layerHeight, fillTypeIndex)
+    local mapHeightLimit = getMapHeightLimit()
+    local rootNode = self.placeable.rootNode
+    for index, band in ipairs(bands) do
+        local target = math.min(layerHeight, getBandHeightLimit(self.placeable, bands, index, fillTypeIndex))
+        if mapHeightLimit ~= nil then
+            target = math.min(target, mapHeightLimit)
+        end
+        if target >= LAYER_STEP * 0.5 then
+            local _, targetY, _ = localToWorld(rootNode, 0, target, 0)
+            for _, sample in ipairs(band.samples) do
+                local height, thickness = DensityMapHeightUtil.getHeightAtWorldPos(sample.x, sample.y, sample.z)
+                if
+                    (height or 0) < targetY - FULL_HEIGHT_TOLERANCE
+                    and (thickness or 0) < target - FULL_HEIGHT_TOLERANCE
+                then
+                    return false
+                end
+            end
+        end
+    end
+    return true
+end
+
 function VariableBunkerStorage:fillBandsInLayers(bunkerSilo, liters, fillTypeIndex)
     local bands = getBands(self)
     local bandCount = #bands
@@ -447,10 +472,14 @@ function VariableBunkerStorage:fillBandsInLayers(bunkerSilo, liters, fillTypeInd
         self.layerHeight = math.min(getInitialLayerHeight(bunkerSilo), maxHeight)
     end
     local moved = 0
+    local passes = 0
     local index = math.min(self.inputBandIndex, bandCount)
     while liters - moved >= 0.001 do
+        local movedInPass = 0
         for _ = 1, bandCount do
-            moved = moved + self:fillBand(bands, index, liters - moved, fillTypeIndex, self.layerHeight)
+            local added = self:fillBand(bands, index, liters - moved, fillTypeIndex, self.layerHeight)
+            moved = moved + added
+            movedInPass = movedInPass + added
             if liters - moved < 0.001 then
                 break
             end
@@ -459,10 +488,18 @@ function VariableBunkerStorage:fillBandsInLayers(bunkerSilo, liters, fillTypeInd
         if liters - moved < 0.001 then
             break
         end
-        if self.layerHeight >= maxHeight - 0.001 then
-            break
+        passes = passes + 1
+        if movedInPass >= 0.001 and not self:getIsLayerComplete(bands, self.layerHeight, fillTypeIndex) then
+            if passes >= MAX_LAYER_PASSES then
+                break
+            end
+        else
+            if self.layerHeight >= maxHeight - 0.001 then
+                break
+            end
+            self.layerHeight = math.min(self.layerHeight + LAYER_STEP, maxHeight)
+            passes = 0
         end
-        self.layerHeight = math.min(self.layerHeight + LAYER_STEP, maxHeight)
     end
     self.inputBandIndex = index
     return moved
