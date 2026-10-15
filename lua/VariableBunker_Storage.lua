@@ -243,16 +243,8 @@ function VariableBunkerStorage:getSupportedFillTypes()
     return self.fillTypes
 end
 
-function VariableBunkerStorage:getIsInputStationActive()
-    local spec = self.placeable ~= nil and self.placeable.spec_VariableBunker or nil
-    return spec ~= nil and spec.hasInputStation == true and self:getIsInputEnabled()
-end
-
 function VariableBunkerStorage:getIsFillTypeAvailable(bunkerSilo, fillTypeIndex)
     if fillTypeIndex == FillType.CHAFF then
-        if self.mode == MODE_OUTPUT and self:getIsInputStationActive() then
-            return false
-        end
         return bunkerSilo.state == BunkerSilo.STATE_FILL
     end
     if self.mode == MODE_OUTPUT and fillTypeIndex == FillType.SILAGE then
