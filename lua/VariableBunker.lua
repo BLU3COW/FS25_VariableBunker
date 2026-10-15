@@ -451,6 +451,7 @@ function Bunker:onLoad(savegame)
             spec.inputStorage = nil
             spec.hasInputStation = false
         else
+            spec.inputStation.stationName = g_i18n:getText("station_VariableBunkerInput", self.customEnvironment)
             spec.inputStation.owningPlaceable = self
             spec.inputStation.hasStoragePerFarm = false
         end
@@ -475,6 +476,7 @@ function Bunker:onLoad(savegame)
             spec.outputStorage = nil
             spec.hasOutputStation = false
         else
+            spec.outputStation.stationName = g_i18n:getText("station_VariableBunkerOutput", self.customEnvironment)
             spec.outputStation.owningPlaceable = self
             spec.outputStation.hasStoragePerFarm = false
             spec.outputStation.addFillLevelToFillableObject = addFillLevelWithRollback
