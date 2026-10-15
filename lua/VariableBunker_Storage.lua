@@ -128,6 +128,8 @@ local function createBands(placeable)
         band.hx, band.hy, band.hz = localToWorld(rootNode, halfWidth, 0, endZ)
         band.lsx, band.lsy, band.lsz = localToWorld(rootNode, lineHalfWidth, 0, centerZ)
         band.lex, band.ley, band.lez = localToWorld(rootNode, -lineHalfWidth, 0, centerZ)
+        band.rsx, band.rsy, band.rsz = localToWorld(rootNode, halfWidth, 0, centerZ)
+        band.rex, band.rey, band.rez = localToWorld(rootNode, -halfWidth, 0, centerZ)
         band.samples = {}
         for _, sampleX in ipairs({ -lineHalfWidth, 0, lineHalfWidth }) do
             local x, y, z = localToWorld(rootNode, sampleX, 0, centerZ)
@@ -164,24 +166,25 @@ local function moveAtArea(storage, area, liters, fillTypeIndex, offsetKey, addMa
     if math.abs(liters) < 0.001 then
         return 0
     end
-    local lsy = area.lsy
-    local ley = area.ley
-    local delta = addMaterial and liters or -liters
+    local sx, sy, sz = area.rsx, area.rsy, area.rsz
+    local ex, ey, ez = area.rex, area.rey, area.rez
+    local delta = -liters
     if addMaterial then
         local _, topY, _ = localToWorld(storage.placeable.rootNode, 0, lineHeight, 0)
-        lsy = topY
-        ley = topY
+        sx, sy, sz = area.lsx, topY, area.lsz
+        ex, ey, ez = area.lex, topY, area.lez
+        delta = liters
     end
     local moved, lineOffset = DensityMapHeightUtil.tipToGroundAroundLine(
         nil,
         delta,
         fillTypeIndex,
-        area.lsx,
-        lsy,
-        area.lsz,
-        area.lex,
-        ley,
-        area.lez,
+        sx,
+        sy,
+        sz,
+        ex,
+        ey,
+        ez,
         area.radius,
         area.radius,
         storage.lineOffsets[offsetKey],
@@ -606,7 +609,13 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
             offsetKey = string.format("output_%d_%d", fillTypeIndex, index)
             band.outputOffsetKeys[fillTypeIndex] = offsetKey
         end
-        moved = moved + moveAtArea(self, band, liters - moved, fillTypeIndex, offsetKey, false)
+        local request = liters - moved
+        local removed = moveAtArea(self, band, request, fillTypeIndex, offsetKey, false)
+        if request - removed >= 0.001 and self.lineOffsets[offsetKey] ~= nil then
+            self.lineOffsets[offsetKey] = nil
+            removed = removed + moveAtArea(self, band, request - removed, fillTypeIndex, offsetKey, false)
+        end
+        moved = moved + removed
         if liters - moved < 0.001 then
             break
         end
