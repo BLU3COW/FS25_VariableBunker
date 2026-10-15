@@ -449,17 +449,14 @@ function VariableBunkerStorage:fillBandsInLayers(bunkerSilo, liters, fillTypeInd
     local moved = 0
     local index = math.min(self.inputBandIndex, bandCount)
     while liters - moved >= 0.001 do
-        local movedInCycle = 0
         for _ = 1, bandCount do
-            local added = self:fillBand(bands, index, liters - moved, fillTypeIndex, self.layerHeight)
-            moved = moved + added
-            movedInCycle = movedInCycle + added
+            moved = moved + self:fillBand(bands, index, liters - moved, fillTypeIndex, self.layerHeight)
             if liters - moved < 0.001 then
                 break
             end
             index = index % bandCount + 1
         end
-        if liters - moved < 0.001 or movedInCycle >= 0.001 then
+        if liters - moved < 0.001 then
             break
         end
         if self.layerHeight >= maxHeight - 0.001 then
