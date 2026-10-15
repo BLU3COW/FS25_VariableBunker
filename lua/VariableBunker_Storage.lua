@@ -621,19 +621,14 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
         if liters - moved < 0.001 then
             break
         end
-        local isBandUnreachable = false
-        if getAreaFillLevel(band, fillTypeIndex) >= MIN_OUTPUT_CHUNK then
-            if removed >= 0.001 then
-                break
-            end
-            isBandUnreachable = true
+        if removed < 0.001 and getAreaFillLevel(band, fillTypeIndex) >= MIN_OUTPUT_CHUNK then
             unreachableBands = unreachableBands + 1
         end
         index = index - 1
         if index < 1 then
             index = bandCount
         end
-        if isBandUnreachable and unreachableBands >= MAX_UNREACHABLE_BANDS then
+        if unreachableBands >= MAX_UNREACHABLE_BANDS then
             break
         end
     end
