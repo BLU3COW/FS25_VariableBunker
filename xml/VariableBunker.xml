@@ -204,7 +204,7 @@
         </inputStation>
 
         <outputStation node="outputStationRoot" stationName="$l10n_station_VariableBunkerOutput" supportsExtension="false" fillTypes="CHAFF SILAGE">
-            <loadTrigger triggerNode="outputLoadTrigger" fillLitersPerSecond="2000" fillTypes="CHAFF SILAGE" dischargeNode="outputDischargeNode" dischargeWidth="1" dischargeLength="1" />
+            <loadTrigger triggerNode="outputLoadTrigger" fillLitersPerSecond="6000" fillTypes="CHAFF SILAGE" dischargeNode="outputDischargeNode" dischargeWidth="1" dischargeLength="1" />
         </outputStation>
     </VariableBunker>
 
