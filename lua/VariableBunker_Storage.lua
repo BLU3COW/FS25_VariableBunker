@@ -494,10 +494,13 @@ function VariableBunkerStorage:fillBandsInLayers(bunkerSilo, liters, fillTypeInd
             break
         end
         passes = passes + 1
-        if movedInPass >= 0.001 and not self:getIsLayerComplete(bands, self.layerHeight, fillTypeIndex) then
+        local isLayerComplete = self:getIsLayerComplete(bands, self.layerHeight, fillTypeIndex)
+        if not isLayerComplete and movedInPass >= 0.001 then
             if passes >= MAX_LAYER_PASSES then
                 break
             end
+        elseif not isLayerComplete and liters - moved < MAX_PENDING_LITERS then
+            break
         else
             if self.layerHeight >= maxHeight - 0.001 then
                 break
