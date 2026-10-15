@@ -252,6 +252,39 @@ function VariableBunkerStorage:getOutputBuffer(bunkerSilo, fillTypeIndex)
     return buffer
 end
 
+function VariableBunkerStorage:getMeasuredFillLevel(bunkerSilo)
+    local base = getCurrentFillLevel(bunkerSilo)
+    if not self.isServer then
+        return base
+    end
+    local missionTime = getMissionTime()
+    if missionTime ~= nil and self.wallLevelTime == missionTime then
+        return math.max(self.wallLevel or 0, base)
+    end
+    local bands = getBands(self)
+    local first = bands[1]
+    local last = bands[#bands]
+    local fullLevel = 0
+    if first ~= nil and last ~= nil then
+        local state = bunkerSilo.state
+        local types = {}
+        if state == BunkerSilo.STATE_FILL then
+            types = { bunkerSilo.inputFillType }
+        elseif state == BunkerSilo.STATE_CLOSED then
+            types = { bunkerSilo.fermentingFillType }
+        elseif state == BunkerSilo.STATE_FERMENTED or state == BunkerSilo.STATE_DRAIN then
+            types = { bunkerSilo.fermentingFillType, bunkerSilo.outputFillType }
+        end
+        local area = { sx = first.sx, sz = first.sz, wx = first.wx, wz = first.wz, hx = last.hx, hz = last.hz }
+        for _, fillType in ipairs(types) do
+            fullLevel = fullLevel + getAreaFillLevel(area, fillType)
+        end
+    end
+    self.wallLevel = fullLevel
+    self.wallLevelTime = missionTime
+    return math.max(fullLevel, base)
+end
+
 function VariableBunkerStorage:getFillLevel(fillTypeIndex)
     local bunkerSilo = getBunkerSilo(self.placeable)
     if bunkerSilo == nil or not self:getIsFillTypeSupported(fillTypeIndex) then
@@ -271,9 +304,9 @@ function VariableBunkerStorage:getFillLevel(fillTypeIndex)
         end
     end
     if self.mode == MODE_INPUT then
-        return getCurrentFillLevel(bunkerSilo) + self.pendingLiters
+        return self:getMeasuredFillLevel(bunkerSilo) + self.pendingLiters
     end
-    return getCurrentFillLevel(bunkerSilo) + self:getOutputBuffer(bunkerSilo, fillTypeIndex)
+    return self:getMeasuredFillLevel(bunkerSilo) + self:getOutputBuffer(bunkerSilo, fillTypeIndex)
 end
 
 function VariableBunkerStorage:getFillLevels()
@@ -531,6 +564,7 @@ end
 
 function VariableBunkerStorage:addFromStation(bunkerSilo, liters, fillTypeIndex)
     local request = liters + self.pendingLiters
+    self.wallLevelTime = nil
     local placed = self:addMaterial(request, fillTypeIndex)
     local missing = math.max(request - placed, 0)
     local accepted = liters
@@ -550,6 +584,7 @@ end
 function VariableBunkerStorage:takeForStation(bunkerSilo, liters, fillTypeIndex)
     local buffer = self:getOutputBuffer(bunkerSilo, fillTypeIndex)
     local fromBuffer = math.min(buffer, liters)
+    self.wallLevelTime = nil
     buffer = buffer - fromBuffer
     local missing = liters - fromBuffer
     local removed = 0
