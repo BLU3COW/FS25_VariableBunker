@@ -443,8 +443,7 @@ function VariableBunkerStorage:fillBandsToWallHeight(liters, fillTypeIndex)
         index = index % bandCount + 1
     end
     self.inputBandIndex = index
-    local remaining = liters - moved
-    self.fillExhausted = remaining >= MAX_PENDING_LITERS and moved < remaining
+    self.fillExhausted = liters - moved >= MAX_PENDING_LITERS
     return moved
 end
 
