@@ -306,6 +306,31 @@ local function addFillLevelWithRollback(
     return transferred
 end
 
+local function getIsLoadTriggerFillableObjectAvailable(loadTrigger, superFunc)
+    if not superFunc(loadTrigger) then
+        return false
+    end
+    if loadTrigger.isLoading then
+        return true
+    end
+    local fillableObject = loadTrigger.validFillableObject
+    local fillUnitIndex = loadTrigger.validFillableFillUnitIndex
+    if fillableObject == nil or fillUnitIndex == nil or loadTrigger.source == nil then
+        return false
+    end
+    local fillLevels = loadTrigger.source:getAllFillLevels(g_currentMission:getFarmId())
+    for fillTypeIndex, fillLevel in pairs(fillLevels) do
+        if
+            fillLevel > 0
+            and (loadTrigger.fillTypes == nil or loadTrigger.fillTypes[fillTypeIndex])
+            and fillableObject:getFillUnitAllowsFillType(fillUnitIndex, fillTypeIndex)
+        then
+            return true
+        end
+    end
+    return false
+end
+
 function Bunker.prerequisitesPresent(_specializations)
     return true
 end
@@ -480,6 +505,12 @@ function Bunker:onLoad(savegame)
             spec.outputStation.owningPlaceable = self
             spec.outputStation.hasStoragePerFarm = false
             spec.outputStation.addFillLevelToFillableObject = addFillLevelWithRollback
+            for _, loadTrigger in ipairs(spec.outputStation.loadTriggers) do
+                local superFunc = loadTrigger.getIsFillableObjectAvailable
+                loadTrigger.getIsFillableObjectAvailable = function(trigger)
+                    return getIsLoadTriggerFillableObjectAvailable(trigger, superFunc)
+                end
+            end
         end
     end
     if self.propertyState ~= PlaceablePropertyState.CONSTRUCTION_PREVIEW then
