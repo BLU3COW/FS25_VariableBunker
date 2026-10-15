@@ -23,20 +23,20 @@ Dimensions:
 Fill height: bulk material piles up to the wall height at most, and never higher than the map allows (base game maps: 4 meters above the ground). Walls higher than the map limit add no extra volume.
 
 Approximate capacity of the Bunker silo (4 m / 8 m fill height):
-- 6 × 20 m: 420,000 l / 730,000 l
+- 6 × 20 m: 410,000 l / 710,000 l
 - 10 × 40 m: 1,500,000 l / 2,800,000 l
 - 20 × 60 m: 4,600,000 l / 8,800,000 l
 - 30 × 100 m: 12,000,000 l / 23,000,000 l
-- 40 × 60 m: 9,200,000 l / 18,000,000 l
-- 50 × 150 m: 30,000,000 l / 58,000,000 l
+- 40 × 60 m: 9,100,000 l / 18,000,000 l
+- 50 × 150 m: 29,000,000 l / 58,000,000 l
 - 100 × 200 m: 79,000,000 l / 156,000,000 l
 
 Approximate capacity of the Drive-through silo (4 m / 8 m fill height):
-- 6 × 20 m: 370,000 l / 500,000 l
+- 6 × 20 m: 340,000 l / 450,000 l
 - 10 × 40 m: 1,400,000 l / 2,400,000 l
-- 20 × 60 m: 4,400,000 l / 8,100,000 l
-- 30 × 100 m: 11,000,000 l / 22,000,000 l
-- 40 × 60 m: 8,800,000 l / 16,000,000 l
+- 20 × 60 m: 4,300,000 l / 7,900,000 l
+- 30 × 100 m: 11,000,000 l / 21,000,000 l
+- 40 × 60 m: 8,700,000 l / 16,000,000 l
 - 50 × 150 m: 29,000,000 l / 56,000,000 l
 - 100 × 200 m: 78,000,000 l / 152,000,000 l
 
@@ -65,20 +65,20 @@ Abmessungen:
 Füllhöhe: Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt (Basisspiel-Karten: 4 Meter über dem Boden). Wände höher als diese Grenze bringen kein zusätzliches Volumen.
 
 Ungefähres Fassungsvermögen Bunkersilo (4 m / 8 m Füllhöhe):
-- 6 × 20 m: 420.000 l / 730.000 l
+- 6 × 20 m: 410.000 l / 710.000 l
 - 10 × 40 m: 1.500.000 l / 2.800.000 l
 - 20 × 60 m: 4.600.000 l / 8.800.000 l
 - 30 × 100 m: 12.000.000 l / 23.000.000 l
-- 40 × 60 m: 9.200.000 l / 18.000.000 l
-- 50 × 150 m: 30.000.000 l / 58.000.000 l
+- 40 × 60 m: 9.100.000 l / 18.000.000 l
+- 50 × 150 m: 29.000.000 l / 58.000.000 l
 - 100 × 200 m: 79.000.000 l / 156.000.000 l
 
 Ungefähres Fassungsvermögen Fahrsilo (4 m / 8 m Füllhöhe):
-- 6 × 20 m: 370.000 l / 500.000 l
+- 6 × 20 m: 340.000 l / 450.000 l
 - 10 × 40 m: 1.400.000 l / 2.400.000 l
-- 20 × 60 m: 4.400.000 l / 8.100.000 l
-- 30 × 100 m: 11.000.000 l / 22.000.000 l
-- 40 × 60 m: 8.800.000 l / 16.000.000 l
+- 20 × 60 m: 4.300.000 l / 7.900.000 l
+- 30 × 100 m: 11.000.000 l / 21.000.000 l
+- 40 × 60 m: 8.700.000 l / 16.000.000 l
 - 50 × 150 m: 29.000.000 l / 56.000.000 l
 - 100 × 200 m: 78.000.000 l / 152.000.000 l
 
@@ -107,20 +107,20 @@ Dimensions :
 Hauteur de remplissage : le matériau en vrac s'empile au maximum jusqu'à la hauteur des murs, et jamais plus haut que la carte ne le permet (cartes du jeu de base : 4 mètres au-dessus du sol). Des murs plus hauts que cette limite n'ajoutent pas de volume.
 
 Capacité approximative du Silo bunker (hauteur de remplissage 4 m / 8 m) :
-- 6 × 20 m : 420 000 l / 730 000 l
+- 6 × 20 m : 410 000 l / 710 000 l
 - 10 × 40 m : 1 500 000 l / 2 800 000 l
 - 20 × 60 m : 4 600 000 l / 8 800 000 l
 - 30 × 100 m : 12 000 000 l / 23 000 000 l
-- 40 × 60 m : 9 200 000 l / 18 000 000 l
-- 50 × 150 m : 30 000 000 l / 58 000 000 l
+- 40 × 60 m : 9 100 000 l / 18 000 000 l
+- 50 × 150 m : 29 000 000 l / 58 000 000 l
 - 100 × 200 m : 79 000 000 l / 156 000 000 l
 
 Capacité approximative du Silo traversant (hauteur de remplissage 4 m / 8 m) :
-- 6 × 20 m : 370 000 l / 500 000 l
+- 6 × 20 m : 340 000 l / 450 000 l
 - 10 × 40 m : 1 400 000 l / 2 400 000 l
-- 20 × 60 m : 4 400 000 l / 8 100 000 l
-- 30 × 100 m : 11 000 000 l / 22 000 000 l
-- 40 × 60 m : 8 800 000 l / 16 000 000 l
+- 20 × 60 m : 4 300 000 l / 7 900 000 l
+- 30 × 100 m : 11 000 000 l / 21 000 000 l
+- 40 × 60 m : 8 700 000 l / 16 000 000 l
 - 50 × 150 m : 29 000 000 l / 56 000 000 l
 - 100 × 200 m : 78 000 000 l / 152 000 000 l
 

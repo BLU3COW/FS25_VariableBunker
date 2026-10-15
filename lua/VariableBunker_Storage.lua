@@ -72,8 +72,18 @@ end
 local function getCapacityForDimensions(width, length, height, openEnds)
     local mapHeightLimit = getMapHeightLimit()
     local fillHeight = mapHeightLimit ~= nil and math.min(height, mapHeightLimit) or height
-    local slopeLoss = openEnds * fillHeight * fillHeight / (2 * math.tan(SURFACE_ANGLE))
-    return math.max(width * math.max(0, length * fillHeight - slopeLoss) * 1000, 0)
+    local count = math.max(math.ceil(length / MAX_BAND_LENGTH), 1)
+    local bandLength = length / count
+    local rampStep = bandLength * math.tan(SURFACE_ANGLE)
+    local area = 0
+    for index = 1, count do
+        local bandsToOpenEnd = count - index
+        if openEnds > 1 then
+            bandsToOpenEnd = math.min(bandsToOpenEnd, index - 1)
+        end
+        area = area + math.min(bandsToOpenEnd * rampStep, fillHeight) * bandLength
+    end
+    return math.max(width * area * 1000, 0)
 end
 
 local function getEstimatedCapacity(placeable)
