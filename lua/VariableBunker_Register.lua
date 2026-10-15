@@ -45,7 +45,7 @@ local function writeSettingsFile(filename)
         return false
     end
 
-    setXMLInt(xmlFile, SETTINGS_ROOT .. "#version", 4)
+    setXMLInt(xmlFile, SETTINGS_ROOT .. "#version", 5)
     setXMLBool(
         xmlFile,
         SETTINGS_KEY .. "#allowWallHeightsAboveFourMeters",
@@ -54,7 +54,11 @@ local function writeSettingsFile(filename)
     setXMLBool(xmlFile, SETTINGS_KEY .. "#allowInputStation", Bunker.settings.allowInputStation == true)
     setXMLBool(xmlFile, SETTINGS_KEY .. "#allowOutputStation", Bunker.settings.allowOutputStation == true)
     setXMLBool(xmlFile, SETTINGS_KEY .. "#allowCompactionService", Bunker.settings.allowCompactionService == true)
-    setXMLFloat(xmlFile, SETTINGS_KEY .. "#compactionPriceFactor", Bunker.settings.compactionPriceFactor)
+    setXMLInt(
+        xmlFile,
+        SETTINGS_KEY .. "#compactionPricePercent",
+        math.floor(Bunker.settings.compactionPriceFactor * 100 + 0.5)
+    )
     setXMLBool(xmlFile, DISPLAY_KEY .. "#showInfoBox", Bunker.settings.showInfoBox == true)
     saveXMLFile(xmlFile)
     delete(xmlFile)
@@ -168,7 +172,11 @@ function Bunker.loadSettings()
     local allowInputStation = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowInputStation")
     local allowOutputStation = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowOutputStation")
     local allowCompactionService = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowCompactionService")
+    local compactionPricePercent = getXMLInt(xmlFile, SETTINGS_KEY .. "#compactionPricePercent")
     local compactionPriceFactor = getXMLFloat(xmlFile, SETTINGS_KEY .. "#compactionPriceFactor")
+    if compactionPricePercent ~= nil then
+        compactionPriceFactor = compactionPricePercent / 100
+    end
     local showInfoBox = getXMLBool(xmlFile, DISPLAY_KEY .. "#showInfoBox")
     delete(xmlFile)
     Bunker.applySettings({
