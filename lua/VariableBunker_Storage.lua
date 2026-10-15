@@ -714,6 +714,10 @@ local function getCompactionText(placeable, key)
     return g_i18n:getText(key, placeable ~= nil and placeable.customEnvironment or nil)
 end
 
+function Bunker.getIsCompactionServiceEnabled()
+    return Bunker.settings == nil or Bunker.settings.allowCompactionService ~= false
+end
+
 function Bunker.getCompactionRemainingLiters(placeable)
     local bunkerSilo = getBunkerSilo(placeable)
     if bunkerSilo == nil or bunkerSilo.state ~= BunkerSilo.STATE_FILL then
@@ -764,6 +768,7 @@ function Bunker.executeCompaction(placeable)
     if
         spec == nil
         or not spec.hasCompactionService
+        or not Bunker.getIsCompactionServiceEnabled()
         or bunkerSilo == nil
         or bunkerSilo.state ~= BunkerSilo.STATE_FILL
     then
@@ -899,7 +904,7 @@ end
 function CompactionActivatable:getIsActivatable()
     local placeable = self.placeable
     local node = self:getAreaNode()
-    if node == nil or placeable.isDeleted or g_currentMission == nil then
+    if node == nil or placeable.isDeleted or g_currentMission == nil or not Bunker.getIsCompactionServiceEnabled() then
         return false
     end
     if not g_currentMission.accessHandler:canPlayerAccess(placeable) then

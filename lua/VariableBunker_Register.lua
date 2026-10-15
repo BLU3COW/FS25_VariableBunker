@@ -4,13 +4,16 @@ local Bunker = VariableBunker
 
 local SETTINGS_ROOT = "VariableBunkerSettings"
 local SETTINGS_KEY = SETTINGS_ROOT .. ".construction"
+local DISPLAY_KEY = SETTINGS_ROOT .. ".display"
 
 Bunker.settings = Bunker.settings
     or {
         allowWallHeightsAboveFourMeters = true,
         allowInputStation = true,
         allowOutputStation = true,
+        allowCompactionService = true,
         compactionPriceFactor = 1,
+        showInfoBox = true,
     }
 
 local MIN_COMPACTION_PRICE_FACTOR = 0
@@ -42,7 +45,7 @@ local function writeSettingsFile(filename)
         return false
     end
 
-    setXMLInt(xmlFile, SETTINGS_ROOT .. "#version", 3)
+    setXMLInt(xmlFile, SETTINGS_ROOT .. "#version", 4)
     setXMLBool(
         xmlFile,
         SETTINGS_KEY .. "#allowWallHeightsAboveFourMeters",
@@ -50,7 +53,9 @@ local function writeSettingsFile(filename)
     )
     setXMLBool(xmlFile, SETTINGS_KEY .. "#allowInputStation", Bunker.settings.allowInputStation == true)
     setXMLBool(xmlFile, SETTINGS_KEY .. "#allowOutputStation", Bunker.settings.allowOutputStation == true)
+    setXMLBool(xmlFile, SETTINGS_KEY .. "#allowCompactionService", Bunker.settings.allowCompactionService == true)
     setXMLFloat(xmlFile, SETTINGS_KEY .. "#compactionPriceFactor", Bunker.settings.compactionPriceFactor)
+    setXMLBool(xmlFile, DISPLAY_KEY .. "#showInfoBox", Bunker.settings.showInfoBox == true)
     saveXMLFile(xmlFile)
     delete(xmlFile)
     return true
@@ -100,6 +105,17 @@ function Bunker.applyStationSettingsToStoreItems()
                 end
             end
         end
+        local compactionItems = configurations ~= nil and configurations[Bunker.CONFIG_COMPACTION] or nil
+        if compactionItems ~= nil then
+            for _, item in ipairs(compactionItems) do
+                local baseSelectable = item.variableBunkerBaseSelectable
+                if baseSelectable == nil then
+                    baseSelectable = item.isSelectable ~= false
+                    item.variableBunkerBaseSelectable = baseSelectable
+                end
+                item.isSelectable = baseSelectable and (Bunker.settings.allowCompactionService or item.saveId == "off")
+            end
+        end
     end
 end
 
@@ -108,7 +124,11 @@ function Bunker.applySettings(settings)
         and settings.allowWallHeightsAboveFourMeters == true
     Bunker.settings.allowInputStation = settings == nil or settings.allowInputStation ~= false
     Bunker.settings.allowOutputStation = settings == nil or settings.allowOutputStation ~= false
+    Bunker.settings.allowCompactionService = settings == nil or settings.allowCompactionService ~= false
     Bunker.settings.compactionPriceFactor = getCompactionPriceFactor(settings ~= nil and settings.compactionPriceFactor)
+    if settings ~= nil and settings.showInfoBox ~= nil then
+        Bunker.settings.showInfoBox = settings.showInfoBox == true
+    end
     Bunker.applyHeightSettingToStoreItems()
     Bunker.applyStationSettingsToStoreItems()
     if Bunker.activeSilos ~= nil then
@@ -130,7 +150,9 @@ function Bunker.loadSettings()
         allowWallHeightsAboveFourMeters = true,
         allowInputStation = true,
         allowOutputStation = true,
+        allowCompactionService = true,
         compactionPriceFactor = 1,
+        showInfoBox = true,
     })
     if fileExists == nil or not fileExists(filename) then
         return writeSettingsFile(filename)
@@ -145,13 +167,17 @@ function Bunker.loadSettings()
     local allowHigherWalls = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowWallHeightsAboveFourMeters")
     local allowInputStation = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowInputStation")
     local allowOutputStation = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowOutputStation")
+    local allowCompactionService = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowCompactionService")
     local compactionPriceFactor = getXMLFloat(xmlFile, SETTINGS_KEY .. "#compactionPriceFactor")
+    local showInfoBox = getXMLBool(xmlFile, DISPLAY_KEY .. "#showInfoBox")
     delete(xmlFile)
     Bunker.applySettings({
         allowWallHeightsAboveFourMeters = allowHigherWalls == nil or allowHigherWalls == true,
         allowInputStation = allowInputStation == nil or allowInputStation == true,
         allowOutputStation = allowOutputStation == nil or allowOutputStation == true,
+        allowCompactionService = allowCompactionService == nil or allowCompactionService == true,
         compactionPriceFactor = compactionPriceFactor,
+        showInfoBox = showInfoBox == nil or showInfoBox == true,
     })
     if not writeSettingsFile(filename) then
         Logging.warning("[VariableBunker] Could not update modSettings file '%s'", filename)
@@ -173,6 +199,7 @@ function VariableBunkerSettingsEvent.new(settings)
     self.allowWallHeightsAboveFourMeters = settings.allowWallHeightsAboveFourMeters == true
     self.allowInputStation = settings.allowInputStation == true
     self.allowOutputStation = settings.allowOutputStation == true
+    self.allowCompactionService = settings.allowCompactionService == true
     self.compactionPriceFactor = settings.compactionPriceFactor or 1
     return self
 end
@@ -181,6 +208,7 @@ function VariableBunkerSettingsEvent:readStream(streamId, connection)
     self.allowWallHeightsAboveFourMeters = streamReadBool(streamId)
     self.allowInputStation = streamReadBool(streamId)
     self.allowOutputStation = streamReadBool(streamId)
+    self.allowCompactionService = streamReadBool(streamId)
     self.compactionPriceFactor = streamReadFloat32(streamId)
     self:run(connection)
 end
@@ -189,6 +217,7 @@ function VariableBunkerSettingsEvent:writeStream(streamId, _connection)
     streamWriteBool(streamId, self.allowWallHeightsAboveFourMeters)
     streamWriteBool(streamId, self.allowInputStation)
     streamWriteBool(streamId, self.allowOutputStation)
+    streamWriteBool(streamId, self.allowCompactionService)
     streamWriteFloat32(streamId, self.compactionPriceFactor)
 end
 
@@ -198,6 +227,7 @@ function VariableBunkerSettingsEvent:run(connection)
             allowWallHeightsAboveFourMeters = self.allowWallHeightsAboveFourMeters,
             allowInputStation = self.allowInputStation,
             allowOutputStation = self.allowOutputStation,
+            allowCompactionService = self.allowCompactionService,
             compactionPriceFactor = self.compactionPriceFactor,
         })
     end
@@ -432,7 +462,12 @@ local function getFermentingText(placeable, bunkerSilo)
 end
 
 local function getInfoPlaceable()
-    if g_currentMission == nil or g_localPlayer == nil or Bunker.activeSilos == nil then
+    if
+        Bunker.settings.showInfoBox == false
+        or g_currentMission == nil
+        or g_localPlayer == nil
+        or Bunker.activeSilos == nil
+    then
         return nil
     end
     for placeable in pairs(Bunker.activeSilos) do
@@ -619,6 +654,38 @@ function VariableBunkerStationConfigurationItem.registerXMLPaths(schema, rootPat
     schema:register(XMLValueType.STRING, configPath .. "#side", "Configured station side", "off")
 end
 
+local VariableBunkerServiceConfigurationItem = {}
+local VariableBunkerServiceConfigurationItem_mt =
+    Class(VariableBunkerServiceConfigurationItem, PlaceableConfigurationItem)
+
+function VariableBunkerServiceConfigurationItem.new(configName, customMt)
+    return VariableBunkerServiceConfigurationItem:superClass()
+        .new(configName, customMt or VariableBunkerServiceConfigurationItem_mt)
+end
+
+function VariableBunkerServiceConfigurationItem:loadFromXML(
+    xmlFile,
+    baseKey,
+    configKey,
+    baseDirectory,
+    customEnvironment
+)
+    if
+        not VariableBunkerServiceConfigurationItem:superClass()
+            .loadFromXML(self, xmlFile, baseKey, configKey, baseDirectory, customEnvironment)
+    then
+        return false
+    end
+    self.variableBunkerBaseSelectable = self.isSelectable ~= false
+    self.isSelectable = self.variableBunkerBaseSelectable
+        and (Bunker.settings.allowCompactionService ~= false or self.saveId == "off")
+    return true
+end
+
+function VariableBunkerServiceConfigurationItem.registerXMLPaths(schema, rootPath, configPath)
+    VariableBunkerServiceConfigurationItem:superClass().registerXMLPaths(schema, rootPath, configPath)
+end
+
 local function registerConfigurationTypes()
     if g_placeableConfigurationManager == nil then
         return
@@ -642,7 +709,11 @@ local function registerConfigurationTypes()
     addConfigType(Bunker.CONFIG_FLOOR, "configuration_VariableBunkerFloor", PlaceableConfigurationItem)
     addConfigType(Bunker.CONFIG_INPUT, "configuration_VariableBunkerInput", VariableBunkerStationConfigurationItem)
     addConfigType(Bunker.CONFIG_OUTPUT, "configuration_VariableBunkerOutput", VariableBunkerStationConfigurationItem)
-    addConfigType(Bunker.CONFIG_COMPACTION, "configuration_VariableBunkerCompaction", PlaceableConfigurationItem)
+    addConfigType(
+        Bunker.CONFIG_COMPACTION,
+        "configuration_VariableBunkerCompaction",
+        VariableBunkerServiceConfigurationItem
+    )
     addConfigType(
         Bunker.CONFIG_AUTODRIVE,
         "configuration_VariableBunkerAutoDrive",
