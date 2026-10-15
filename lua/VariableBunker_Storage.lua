@@ -451,7 +451,8 @@ function VariableBunkerStorage:fillBandsToWallHeight(liters, fillTypeIndex)
         index = index % bandCount + 1
     end
     self.inputBandIndex = index
-    self.fillExhausted = moved < 0.001 and liters >= MAX_PENDING_LITERS
+    local remaining = liters - moved
+    self.fillExhausted = remaining >= MAX_PENDING_LITERS and moved < remaining
     return moved
 end
 
@@ -892,16 +893,9 @@ function Bunker.showCompactionDialog(placeable)
     )
 end
 
-local function getInteractorPosition()
+local function getPlayerOnFootPosition()
     local player = g_localPlayer
-    if player == nil then
-        return nil
-    end
-    if player:getIsInVehicle() then
-        local vehicle = player:getCurrentVehicle()
-        if vehicle ~= nil and vehicle.rootNode ~= nil then
-            return getWorldTranslation(vehicle.rootNode)
-        end
+    if player == nil or player:getIsInVehicle() then
         return nil
     end
     return player:getPosition()
@@ -934,7 +928,7 @@ function CompactionActivatable:getIsActivatable()
     if Bunker.getCompactionRemainingLiters(placeable) < MIN_REMAINING_LITERS then
         return false
     end
-    local x, y, z = getInteractorPosition()
+    local x, y, z = getPlayerOnFootPosition()
     if x == nil then
         return false
     end
