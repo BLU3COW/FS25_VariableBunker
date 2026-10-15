@@ -187,6 +187,11 @@
             <VariableBunkerOutputConfiguration name="$l10n_option_VariableBunkerStationFront" side="front" saveId="front" />
         </VariableBunkerOutputConfigurations>
 
+        <VariableBunkerCompactionConfigurations title="$l10n_configuration_VariableBunkerCompaction">
+            <VariableBunkerCompactionConfiguration name="$l10n_option_VariableBunkerCompactionOff" isDefault="true" saveId="off" />
+            <VariableBunkerCompactionConfiguration name="$l10n_option_VariableBunkerCompactionOn" saveId="on" />
+        </VariableBunkerCompactionConfigurations>
+
         <VariableBunkerAutoDriveConfigurations title="$l10n_configuration_VariableBunkerAutoDrive">
             <VariableBunkerAutoDriveConfiguration name="$l10n_option_VariableBunkerAutoDriveOff" isDefault="true" saveId="off" />
             <VariableBunkerAutoDriveConfiguration name="$l10n_option_VariableBunkerAutoDriveOn" saveId="on" />

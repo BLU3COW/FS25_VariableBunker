@@ -23,6 +23,11 @@
         <text name="option_VariableBunkerStationFront" text="Avant" />
         <text name="station_VariableBunkerInput" text="Remplissage VariableBunker" />
         <text name="station_VariableBunkerOutput" text="Prélèvement VariableBunker" />
+        <text name="configuration_VariableBunkerCompaction" text="Service de compactage" />
+        <text name="option_VariableBunkerCompactionOff" text="Désactivé" />
+        <text name="option_VariableBunkerCompactionOn" text="Activé" />
+        <text name="action_VariableBunkerCompaction" text="Faire compacter le silo" />
+        <text name="dialog_VariableBunkerCompaction" text="Reste : %s, travail : env. %s h, coût : %s. Faire compacter le silo maintenant ?" />
         <text name="info_VariableBunkerFillLevel" text="Niveau" />
         <text name="info_VariableBunkerCompaction" text="Compactage" />
         <text name="info_VariableBunkerFermentation" text="Fermentation" />

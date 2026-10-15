@@ -12,6 +12,7 @@ Bunker.CONFIG_FLOOR = "VariableBunkerFloor"
 Bunker.CONFIG_AUTODRIVE = "VariableBunkerAutoDrive"
 Bunker.CONFIG_INPUT = "VariableBunkerInput"
 Bunker.CONFIG_OUTPUT = "VariableBunkerOutput"
+Bunker.CONFIG_COMPACTION = "VariableBunkerCompaction"
 
 VariableBunkerDimensionConfigurationItem = {}
 local VariableBunkerDimensionConfigurationItem_mt =
@@ -156,6 +157,7 @@ local function registerConfigurationTypes()
     addConfigType(Bunker.CONFIG_FLOOR, "configuration_VariableBunkerFloor", PlaceableConfigurationItem)
     addConfigType(Bunker.CONFIG_INPUT, "configuration_VariableBunkerInput", VariableBunkerStationConfigurationItem)
     addConfigType(Bunker.CONFIG_OUTPUT, "configuration_VariableBunkerOutput", VariableBunkerStationConfigurationItem)
+    addConfigType(Bunker.CONFIG_COMPACTION, "configuration_VariableBunkerCompaction", PlaceableConfigurationItem)
     addConfigType(
         Bunker.CONFIG_AUTODRIVE,
         "configuration_VariableBunkerAutoDrive",

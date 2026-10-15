@@ -9,6 +9,8 @@ local ROOT_KEY_TYPE = Bunker.CONFIG_TYPE or "VariableBunkerType"
 local ROOT_KEY_FLOOR = Bunker.CONFIG_FLOOR or "VariableBunkerFloor"
 local ROOT_KEY_INPUT = Bunker.CONFIG_INPUT or "VariableBunkerInput"
 local ROOT_KEY_OUTPUT = Bunker.CONFIG_OUTPUT or "VariableBunkerOutput"
+local ROOT_KEY_COMPACTION = Bunker.CONFIG_COMPACTION or "VariableBunkerCompaction"
+local COMPACTION_CONFIGURATION_ON = 2
 local DEFAULT_WIDTH = 40
 local DEFAULT_LENGTH = 60
 local DEFAULT_HEIGHT = 4
@@ -394,6 +396,11 @@ function Bunker.registerFunctions(placeableType)
     SpecializationUtil.registerFunction(placeableType, "VariableBunkerHasRearWall", Bunker.VariableBunkerHasRearWall)
     SpecializationUtil.registerFunction(
         placeableType,
+        "VariableBunkerGetCompactionConfiguration",
+        Bunker.VariableBunkerGetCompactionConfiguration
+    )
+    SpecializationUtil.registerFunction(
+        placeableType,
         "VariableBunkerHasAutoDriveCourse",
         Bunker.VariableBunkerHasAutoDriveCourse
     )
@@ -454,6 +461,7 @@ function Bunker:onLoad(savegame)
     spec.outputSide = outputItem ~= nil and outputItem.side or "off"
     spec.hasInputStation = spec.inputSide ~= "off"
     spec.hasOutputStation = spec.outputSide ~= "off"
+    spec.hasCompactionService = self:VariableBunkerGetCompactionConfiguration() == COMPACTION_CONFIGURATION_ON
 
     self:VariableBunkerApplyDimensions()
 
@@ -546,6 +554,9 @@ function Bunker:onDelete()
         end
         spec.inputStorage = nil
         spec.outputStorage = nil
+        if Bunker.VariableBunkerDeleteCompaction ~= nil then
+            Bunker.VariableBunkerDeleteCompaction(self)
+        end
     end
     Bunker.activeSilos[self] = nil
 end
@@ -582,6 +593,17 @@ function Bunker:VariableBunkerGetTypeConfiguration()
         end
     end
     return configId or TYPE_CONFIGURATION_BUNKER
+end
+
+function Bunker:VariableBunkerGetCompactionConfiguration()
+    local configId = self.configurations ~= nil and self.configurations[ROOT_KEY_COMPACTION] or nil
+    if configId == nil and g_storeManager ~= nil then
+        local storeItem = g_storeManager:getItemByXMLFilename(self.configFileName)
+        if storeItem ~= nil and storeItem.defaultConfigurationIds ~= nil then
+            configId = storeItem.defaultConfigurationIds[ROOT_KEY_COMPACTION]
+        end
+    end
+    return configId or 1
 end
 
 function Bunker:VariableBunkerHasRearWall()
@@ -647,6 +669,9 @@ function Bunker.VariableBunkerFinalizeStations(self)
     end
     spec.stationsFinalized = true
     self:VariableBunkerRefreshStationState()
+    if Bunker.VariableBunkerFinalizeCompaction ~= nil then
+        Bunker.VariableBunkerFinalizeCompaction(self)
+    end
 end
 
 function Bunker:onReadStream(streamId, connection)

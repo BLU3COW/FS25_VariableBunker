@@ -12,7 +12,15 @@ Bunker.settings = Bunker.settings
         allowWallHeightsAboveFourMeters = true,
         allowInputStation = true,
         allowOutputStation = true,
+        compactionPriceFactor = 1,
     }
+
+local MIN_COMPACTION_PRICE_FACTOR = 0
+local MAX_COMPACTION_PRICE_FACTOR = 10
+
+local function getCompactionPriceFactor(value)
+    return math.clamp(tonumber(value) or 1, MIN_COMPACTION_PRICE_FACTOR, MAX_COMPACTION_PRICE_FACTOR)
+end
 
 local function getSettingsFilename()
     if getUserProfileAppPath == nil then
@@ -36,7 +44,7 @@ local function writeSettingsFile(filename)
         return false
     end
 
-    setXMLInt(xmlFile, SETTINGS_ROOT .. "#version", 2)
+    setXMLInt(xmlFile, SETTINGS_ROOT .. "#version", 3)
     setXMLBool(
         xmlFile,
         SETTINGS_KEY .. "#allowWallHeightsAboveFourMeters",
@@ -44,6 +52,7 @@ local function writeSettingsFile(filename)
     )
     setXMLBool(xmlFile, SETTINGS_KEY .. "#allowInputStation", Bunker.settings.allowInputStation == true)
     setXMLBool(xmlFile, SETTINGS_KEY .. "#allowOutputStation", Bunker.settings.allowOutputStation == true)
+    setXMLFloat(xmlFile, SETTINGS_KEY .. "#compactionPriceFactor", Bunker.settings.compactionPriceFactor)
     saveXMLFile(xmlFile)
     delete(xmlFile)
     return true
@@ -101,6 +110,7 @@ function Bunker.applySettings(settings)
         and settings.allowWallHeightsAboveFourMeters == true
     Bunker.settings.allowInputStation = settings == nil or settings.allowInputStation ~= false
     Bunker.settings.allowOutputStation = settings == nil or settings.allowOutputStation ~= false
+    Bunker.settings.compactionPriceFactor = getCompactionPriceFactor(settings ~= nil and settings.compactionPriceFactor)
     Bunker.applyHeightSettingToStoreItems()
     Bunker.applyStationSettingsToStoreItems()
     if Bunker.activeSilos ~= nil then
@@ -122,6 +132,7 @@ function Bunker.loadSettings()
         allowWallHeightsAboveFourMeters = true,
         allowInputStation = true,
         allowOutputStation = true,
+        compactionPriceFactor = 1,
     })
     if fileExists == nil or not fileExists(filename) then
         return writeSettingsFile(filename)
@@ -136,11 +147,13 @@ function Bunker.loadSettings()
     local allowHigherWalls = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowWallHeightsAboveFourMeters")
     local allowInputStation = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowInputStation")
     local allowOutputStation = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowOutputStation")
+    local compactionPriceFactor = getXMLFloat(xmlFile, SETTINGS_KEY .. "#compactionPriceFactor")
     delete(xmlFile)
     Bunker.applySettings({
         allowWallHeightsAboveFourMeters = allowHigherWalls == nil or allowHigherWalls == true,
         allowInputStation = allowInputStation == nil or allowInputStation == true,
         allowOutputStation = allowOutputStation == nil or allowOutputStation == true,
+        compactionPriceFactor = compactionPriceFactor,
     })
     if not writeSettingsFile(filename) then
         Logging.warning("[VariableBunker] Could not update modSettings file '%s'", filename)
@@ -162,6 +175,7 @@ function VariableBunkerSettingsEvent.new(settings)
     self.allowWallHeightsAboveFourMeters = settings.allowWallHeightsAboveFourMeters == true
     self.allowInputStation = settings.allowInputStation == true
     self.allowOutputStation = settings.allowOutputStation == true
+    self.compactionPriceFactor = settings.compactionPriceFactor or 1
     return self
 end
 
@@ -169,6 +183,7 @@ function VariableBunkerSettingsEvent:readStream(streamId, connection)
     self.allowWallHeightsAboveFourMeters = streamReadBool(streamId)
     self.allowInputStation = streamReadBool(streamId)
     self.allowOutputStation = streamReadBool(streamId)
+    self.compactionPriceFactor = streamReadFloat32(streamId)
     self:run(connection)
 end
 
@@ -176,6 +191,7 @@ function VariableBunkerSettingsEvent:writeStream(streamId, _connection)
     streamWriteBool(streamId, self.allowWallHeightsAboveFourMeters)
     streamWriteBool(streamId, self.allowInputStation)
     streamWriteBool(streamId, self.allowOutputStation)
+    streamWriteFloat32(streamId, self.compactionPriceFactor)
 end
 
 function VariableBunkerSettingsEvent:run(connection)
@@ -184,6 +200,7 @@ function VariableBunkerSettingsEvent:run(connection)
             allowWallHeightsAboveFourMeters = self.allowWallHeightsAboveFourMeters,
             allowInputStation = self.allowInputStation,
             allowOutputStation = self.allowOutputStation,
+            compactionPriceFactor = self.compactionPriceFactor,
         })
     end
 end
