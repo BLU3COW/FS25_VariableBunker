@@ -20,8 +20,9 @@ Describe what changed and why. | Beschreiben Sie, was sich geändert hat und war
 - [ ] `xml/VariableBunker.xml` (placeable / configurations)
 - [ ] `i3d/VariableBunker.i3d` / geometry | Geometrie
 - [ ] `lua/VariableBunker.lua`
-- [ ] `lua/VariableBunkerRegister.lua`
-- [ ] `lua/VariableBunkerAutoDrive.lua`
+- [ ] `lua/VariableBunker_AutoDrive.lua`
+- [ ] `lua/VariableBunker_Register.lua` (settings, construction menu, info box)
+- [ ] `lua/VariableBunker_Storage.lua` (stations, compaction service)
 - [ ] Localization in `l10n/` | Lokalisierung
 - [ ] Mod icon `icon_VariableBunker.dds` / store assets in `dds/`
 - [ ] README / documentation | README / Dokumentation

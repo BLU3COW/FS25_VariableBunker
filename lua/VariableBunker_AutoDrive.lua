@@ -1,7 +1,6 @@
 VariableBunker = VariableBunker or {}
 
 local Bunker = VariableBunker
-local CONFIG_NAME = "VariableBunkerAutoDrive"
 local ENABLED_CONFIGURATION = 2
 local LANE_WIDTH = 5
 local FRONT_APPROACH = 27
@@ -241,9 +240,7 @@ local function createDriveThroughCourse(placeable, autoDrive, graphManager, widt
 end
 
 function Bunker:VariableBunkerHasAutoDriveCourse()
-    local configName = Bunker.CONFIG_AUTODRIVE or CONFIG_NAME
-    local configId = self.configurations ~= nil and self.configurations[configName] or nil
-    return configId == ENABLED_CONFIGURATION
+    return self:VariableBunkerGetConfigurationId(Bunker.CONFIG_AUTODRIVE) == ENABLED_CONFIGURATION
 end
 
 function Bunker:VariableBunkerGetAutoDriveCourseBounds()

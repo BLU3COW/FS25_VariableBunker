@@ -1,15 +1,27 @@
 VariableBunker = VariableBunker or {}
 
 local Bunker = VariableBunker
+
+Bunker.CONFIG_WIDTH = "VariableBunkerWidth"
+Bunker.CONFIG_LENGTH = "VariableBunkerLength"
+Bunker.CONFIG_HEIGHT = "VariableBunkerHeight"
+Bunker.CONFIG_TYPE = "VariableBunkerType"
+Bunker.CONFIG_FLOOR = "VariableBunkerFloor"
+Bunker.CONFIG_AUTODRIVE = "VariableBunkerAutoDrive"
+Bunker.CONFIG_INPUT = "VariableBunkerInput"
+Bunker.CONFIG_OUTPUT = "VariableBunkerOutput"
+Bunker.CONFIG_COMPACTION = "VariableBunkerCompaction"
+
 local BASE_KEY = "placeable.VariableBunker"
-local ROOT_KEY_WIDTH = Bunker.CONFIG_WIDTH or "VariableBunkerWidth"
-local ROOT_KEY_LENGTH = Bunker.CONFIG_LENGTH or "VariableBunkerLength"
-local ROOT_KEY_HEIGHT = Bunker.CONFIG_HEIGHT or "VariableBunkerHeight"
-local ROOT_KEY_TYPE = Bunker.CONFIG_TYPE or "VariableBunkerType"
-local ROOT_KEY_FLOOR = Bunker.CONFIG_FLOOR or "VariableBunkerFloor"
-local ROOT_KEY_INPUT = Bunker.CONFIG_INPUT or "VariableBunkerInput"
-local ROOT_KEY_OUTPUT = Bunker.CONFIG_OUTPUT or "VariableBunkerOutput"
-local ROOT_KEY_COMPACTION = Bunker.CONFIG_COMPACTION or "VariableBunkerCompaction"
+local ROOT_KEY_WIDTH = Bunker.CONFIG_WIDTH
+local ROOT_KEY_LENGTH = Bunker.CONFIG_LENGTH
+local ROOT_KEY_HEIGHT = Bunker.CONFIG_HEIGHT
+local ROOT_KEY_TYPE = Bunker.CONFIG_TYPE
+local ROOT_KEY_FLOOR = Bunker.CONFIG_FLOOR
+local ROOT_KEY_INPUT = Bunker.CONFIG_INPUT
+local ROOT_KEY_OUTPUT = Bunker.CONFIG_OUTPUT
+local ROOT_KEY_COMPACTION = Bunker.CONFIG_COMPACTION
+local COMPACTION_CONFIGURATION_OFF = 1
 local COMPACTION_CONFIGURATION_ON = 2
 local DEFAULT_WIDTH = 40
 local DEFAULT_LENGTH = 60
@@ -365,6 +377,11 @@ end
 function Bunker.registerFunctions(placeableType)
     SpecializationUtil.registerFunction(
         placeableType,
+        "VariableBunkerGetConfigurationId",
+        Bunker.VariableBunkerGetConfigurationId
+    )
+    SpecializationUtil.registerFunction(
+        placeableType,
         "VariableBunkerGetConfigurationItem",
         Bunker.VariableBunkerGetConfigurationItem
     )
@@ -561,7 +578,7 @@ function Bunker:onDelete()
     Bunker.activeSilos[self] = nil
 end
 
-function Bunker:VariableBunkerGetConfigurationItem(configName)
+function Bunker:VariableBunkerGetConfigurationId(configName)
     local configId = self.configurations ~= nil and self.configurations[configName] or nil
     if configId == nil and g_storeManager ~= nil then
         local storeItem = g_storeManager:getItemByXMLFilename(self.configFileName)
@@ -569,41 +586,24 @@ function Bunker:VariableBunkerGetConfigurationItem(configName)
             configId = storeItem.defaultConfigurationIds[configName]
         end
     end
+    return configId
+end
+
+function Bunker:VariableBunkerGetConfigurationItem(configName)
+    local configId = self:VariableBunkerGetConfigurationId(configName)
     return ConfigurationUtil.getConfigItemByConfigId(self.configFileName, configName, configId)
 end
 
 function Bunker:VariableBunkerGetFloorPlateConfiguration()
-    local configName = Bunker.CONFIG_FLOOR or ROOT_KEY_FLOOR
-    local configId = self.configurations ~= nil and self.configurations[configName] or nil
-    if configId == nil and g_storeManager ~= nil then
-        local storeItem = g_storeManager:getItemByXMLFilename(self.configFileName)
-        if storeItem ~= nil and storeItem.defaultConfigurationIds ~= nil then
-            configId = storeItem.defaultConfigurationIds[configName]
-        end
-    end
-    return configId or FLOOR_CONFIGURATION_NONE
+    return self:VariableBunkerGetConfigurationId(ROOT_KEY_FLOOR) or FLOOR_CONFIGURATION_NONE
 end
 
 function Bunker:VariableBunkerGetTypeConfiguration()
-    local configId = self.configurations ~= nil and self.configurations[ROOT_KEY_TYPE] or nil
-    if configId == nil and g_storeManager ~= nil then
-        local storeItem = g_storeManager:getItemByXMLFilename(self.configFileName)
-        if storeItem ~= nil and storeItem.defaultConfigurationIds ~= nil then
-            configId = storeItem.defaultConfigurationIds[ROOT_KEY_TYPE]
-        end
-    end
-    return configId or TYPE_CONFIGURATION_BUNKER
+    return self:VariableBunkerGetConfigurationId(ROOT_KEY_TYPE) or TYPE_CONFIGURATION_BUNKER
 end
 
 function Bunker:VariableBunkerGetCompactionConfiguration()
-    local configId = self.configurations ~= nil and self.configurations[ROOT_KEY_COMPACTION] or nil
-    if configId == nil and g_storeManager ~= nil then
-        local storeItem = g_storeManager:getItemByXMLFilename(self.configFileName)
-        if storeItem ~= nil and storeItem.defaultConfigurationIds ~= nil then
-            configId = storeItem.defaultConfigurationIds[ROOT_KEY_COMPACTION]
-        end
-    end
-    return configId or 1
+    return self:VariableBunkerGetConfigurationId(ROOT_KEY_COMPACTION) or COMPACTION_CONFIGURATION_OFF
 end
 
 function Bunker:VariableBunkerHasRearWall()
