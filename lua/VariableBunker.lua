@@ -300,12 +300,6 @@ local function applyStationLayout(self, halfLength)
     setStationAreaNodes(spec, "output", spec.hasOutputStation and not combined)
 end
 
-local function getIsDischarging(vehicle)
-    return vehicle ~= nil
-        and vehicle.getDischargeState ~= nil
-        and vehicle:getDischargeState() ~= Dischargeable.DISCHARGE_STATE_OFF
-end
-
 local function addFillLevelWithRollback(
     station,
     fillableObject,
@@ -315,9 +309,6 @@ local function addFillLevelWithRollback(
     fillInfo,
     toolType
 )
-    if getIsDischarging(fillableObject) then
-        return 0
-    end
     local oldFillLevel = fillableObject:getFillUnitFillLevel(fillUnitIndex)
     local transferred = LoadingStation.addFillLevelToFillableObject(
         station,
@@ -349,12 +340,7 @@ local function getIsLoadTriggerFillableObjectAvailable(loadTrigger, superFunc)
     end
     local fillableObject = loadTrigger.validFillableObject
     local fillUnitIndex = loadTrigger.validFillableFillUnitIndex
-    if
-        fillableObject == nil
-        or fillUnitIndex == nil
-        or loadTrigger.source == nil
-        or getIsDischarging(fillableObject)
-    then
+    if fillableObject == nil or fillUnitIndex == nil or loadTrigger.source == nil then
         return false
     end
     local fillLevels = loadTrigger.source:getAllFillLevels(g_currentMission:getFarmId())

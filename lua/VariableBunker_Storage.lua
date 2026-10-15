@@ -224,7 +224,6 @@ function VariableBunkerStorage.new(placeable, mode, customMt)
     if mode == MODE_INPUT then
         self.fillTypes[FillType.CHAFF] = true
     else
-        self.fillTypes[FillType.CHAFF] = true
         self.fillTypes[FillType.SILAGE] = true
     end
     return self
@@ -254,7 +253,7 @@ function VariableBunkerStorage:getSupportedFillTypes()
 end
 
 function VariableBunkerStorage:getIsFillTypeAvailable(bunkerSilo, fillTypeIndex)
-    if fillTypeIndex == FillType.CHAFF then
+    if self.mode == MODE_INPUT and fillTypeIndex == FillType.CHAFF then
         return bunkerSilo.state == BunkerSilo.STATE_FILL
     end
     if self.mode == MODE_OUTPUT and fillTypeIndex == FillType.SILAGE then
