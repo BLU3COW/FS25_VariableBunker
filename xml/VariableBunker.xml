@@ -96,7 +96,8 @@
                     outputMarkerNode="outputMarker" inputBaleTriggerNode="inputBaleTrigger"
                     outputClearAreaStartNode="outputClearAreaStart" outputClearAreaWidthNode="outputClearAreaWidth" outputClearAreaHeightNode="outputClearAreaHeight"
                     outputLevelAreaStartNode="outputLevelAreaStart" outputLevelAreaWidthNode="outputLevelAreaWidth" outputLevelAreaHeightNode="outputLevelAreaHeight"
-                    outputTestAreaStartNode="outputTestAreaStart" outputTestAreaEndNode="outputTestAreaEnd">
+                    outputTestAreaStartNode="outputTestAreaStart" outputTestAreaEndNode="outputTestAreaEnd"
+                    compactionMarkerNode="compactionMarker">
         <VariableBunkerWidthConfigurations title="$l10n_configuration_VariableBunkerWidth">
             <VariableBunkerWidthConfiguration name="6 m" meters="6" saveId="6m" />
             <VariableBunkerWidthConfiguration name="7 m" meters="7" saveId="7m" />
@@ -220,6 +221,7 @@
     <triggerMarkers>
         <triggerMarker node="inputMarker" filename="$data/shared/assets/marker/markerIconUnload.i3d" />
         <triggerMarker node="outputMarker" filename="$data/shared/assets/marker/markerIconLoad.i3d" />
+        <triggerMarker node="compactionMarker" filename="$data/shared/assets/marker/markerIconWrench.i3d" />
     </triggerMarkers>
 
     <bunkerSilo isExtendable="false" acceptedFillTypes="chaff grass_windrow dryGrass_windrow" inputFillType="chaff" outputFillType="silage" distanceToCompactedFillLevel="100" openingLength="5">
@@ -304,5 +306,6 @@
         <i3dMapping id="outputTestAreaStart" node="0>7|1|4" />
         <i3dMapping id="outputTestAreaEnd" node="0>7|1|4|0" />
         <i3dMapping id="outputDischargeNode" node="0>7|1|5" />
+        <i3dMapping id="compactionMarker" node="0>7|2" />
     </i3dMappings>
 </placeable>

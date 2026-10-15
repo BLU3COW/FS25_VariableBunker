@@ -46,6 +46,9 @@ local SCALE_EPSILON = 0.0001
 local STATION_HALF_WIDTH = 4.5
 local STATION_HALF_DEPTH = 3
 local STATION_FRONT_OFFSET = 4
+local MARKER_HEIGHT = 0.05
+local MARKER_SIDE_OFFSET = 1.5
+local MARKER_SERVICE_OFFSET = 2.5
 
 Bunker.activeSilos = Bunker.activeSilos or {}
 
@@ -205,6 +208,7 @@ local NODE_ATTRIBUTES = {
     "outputLevelAreaHeightNode",
     "outputTestAreaStartNode",
     "outputTestAreaEndNode",
+    "compactionMarkerNode",
 }
 
 local function setPhysicsNodeTransform(node, tx, ty, tz, sx, sy, sz)
@@ -283,8 +287,15 @@ local function applyStationLayout(self, halfLength)
     setStationRootTransform(spec.inputStationRootNode, halfLength)
     setStationRootTransform(spec.outputStationRootNode, halfLength)
     local combined = spec.hasInputStation and spec.hasOutputStation
-    setNodeTranslation(spec.inputMarkerNode, combined and -1.5 or 0, 0.05, 0)
-    setNodeTranslation(spec.outputMarkerNode, combined and 1.5 or 0, 0.05, 0)
+    local inputMarkerX, outputMarkerX = 0, 0
+    if spec.hasCompactionService then
+        inputMarkerX, outputMarkerX = -MARKER_SERVICE_OFFSET, MARKER_SERVICE_OFFSET
+    elseif combined then
+        inputMarkerX, outputMarkerX = -MARKER_SIDE_OFFSET, MARKER_SIDE_OFFSET
+    end
+    setNodeTranslation(spec.inputMarkerNode, inputMarkerX, MARKER_HEIGHT, 0)
+    setNodeTranslation(spec.outputMarkerNode, outputMarkerX, MARKER_HEIGHT, 0)
+    setNodeTranslation(spec.compactionMarkerNode, 0, MARKER_HEIGHT, -halfLength - STATION_FRONT_OFFSET)
     setStationAreaNodes(spec, "input", spec.hasInputStation)
     setStationAreaNodes(spec, "output", spec.hasOutputStation and not combined)
 end
@@ -618,8 +629,12 @@ function Bunker:VariableBunkerRefreshStationState()
     local settings = Bunker.settings or {}
     local inputActive = spec.hasInputStation and settings.allowInputStation ~= false
     local outputActive = spec.hasOutputStation and settings.allowOutputStation ~= false
+    local serviceActive = spec.hasCompactionService and settings.allowCompactionService ~= false
     setVisibility(spec.inputStationRootNode, inputActive)
     setVisibility(spec.outputStationRootNode, outputActive)
+    if spec.compactionMarkerNode ~= nil then
+        setVisibility(spec.compactionMarkerNode, serviceActive)
+    end
     setPhysicsNodeEnabled(spec.inputExactFillRootNode, inputActive)
     disableTriggerNode(spec.inputBaleTriggerNode, inputActive)
     disableTriggerNode(spec.outputLoadTriggerNode, outputActive)
@@ -752,6 +767,12 @@ function Bunker:setShowMarkers(superFunc, doShow)
     end
     if not spec.hasOutputStation or settings.allowOutputStation == false then
         local marker = markerSpec.triggerMarkers[2]
+        if marker ~= nil then
+            g_currentMission:removeTriggerMarker(marker.node)
+        end
+    end
+    if not spec.hasCompactionService or settings.allowCompactionService == false then
+        local marker = markerSpec.triggerMarkers[3]
         if marker ~= nil then
             g_currentMission:removeTriggerMarker(marker.node)
         end

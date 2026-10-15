@@ -130,6 +130,7 @@
           </TransformGroup>
           <TransformGroup name="outputDischargeNode" translation="0 5 0" nodeId="99"/>
         </TransformGroup>
+        <TransformGroup name="compactionMarker" translation="0 0.05 0" visibility="false" nodeId="100"/>
       </TransformGroup>
     </TransformGroup>
   </Scene>
