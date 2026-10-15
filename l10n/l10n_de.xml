@@ -23,5 +23,17 @@
         <text name="option_VariableBunkerStationFront" text="Vorne" />
         <text name="station_VariableBunkerInput" text="VariableBunker Befüllung" />
         <text name="station_VariableBunkerOutput" text="VariableBunker Entnahme" />
+        <text name="info_VariableBunkerFillLevel" text="Füllstand" />
+        <text name="info_VariableBunkerCompaction" text="Verdichtung" />
+        <text name="info_VariableBunkerFermentation" text="Gärung" />
+        <text name="info_VariableBunkerStatus" text="Status" />
+        <text name="info_VariableBunkerRemainingHours" text="noch %d h" />
+        <text name="info_VariableBunkerRemainingDays" text="noch %d T %d h" />
+        <text name="status_VariableBunkerFill" text="Befüllen" />
+        <text name="status_VariableBunkerCompact" text="Verdichten" />
+        <text name="status_VariableBunkerCover" text="Abdecken" />
+        <text name="status_VariableBunkerFermenting" text="Gärt" />
+        <text name="status_VariableBunkerOpen" text="Öffnen" />
+        <text name="status_VariableBunkerDrain" text="Entnehmen" />
     </texts>
 </l10n>

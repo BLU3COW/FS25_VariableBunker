@@ -23,5 +23,17 @@
         <text name="option_VariableBunkerStationFront" text="Avant" />
         <text name="station_VariableBunkerInput" text="Remplissage VariableBunker" />
         <text name="station_VariableBunkerOutput" text="Prélèvement VariableBunker" />
+        <text name="info_VariableBunkerFillLevel" text="Niveau" />
+        <text name="info_VariableBunkerCompaction" text="Compactage" />
+        <text name="info_VariableBunkerFermentation" text="Fermentation" />
+        <text name="info_VariableBunkerStatus" text="État" />
+        <text name="info_VariableBunkerRemainingHours" text="encore %d h" />
+        <text name="info_VariableBunkerRemainingDays" text="encore %d j %d h" />
+        <text name="status_VariableBunkerFill" text="Remplir" />
+        <text name="status_VariableBunkerCompact" text="Compacter" />
+        <text name="status_VariableBunkerCover" text="Couvrir" />
+        <text name="status_VariableBunkerFermenting" text="Fermente" />
+        <text name="status_VariableBunkerOpen" text="Ouvrir" />
+        <text name="status_VariableBunkerDrain" text="Prélever" />
     </texts>
 </l10n>

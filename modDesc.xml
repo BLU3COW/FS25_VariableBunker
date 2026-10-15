@@ -143,6 +143,7 @@ Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25
         <sourceFile filename="lua/VariableBunker.lua" />
         <sourceFile filename="lua/VariableBunkerAutoDrive.lua" />
         <sourceFile filename="lua/VariableBunkerGui.lua" />
+        <sourceFile filename="lua/VariableBunkerInfo.lua" />
         <sourceFile filename="lua/VariableBunkerRegister.lua" />
     </extraSourceFiles>
 

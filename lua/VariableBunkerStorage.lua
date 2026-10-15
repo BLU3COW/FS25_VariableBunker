@@ -84,6 +84,10 @@ local function getEstimatedCapacity(placeable)
     return math.max(volume * 1000, 0)
 end
 
+function VariableBunkerStorage.getEstimatedCapacity(placeable)
+    return getEstimatedCapacity(placeable)
+end
+
 local function createBands(placeable)
     local spec = placeable.spec_VariableBunker
     local rootNode = placeable.rootNode
