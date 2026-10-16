@@ -5,6 +5,26 @@ local Bunker = VariableBunker
 local SETTINGS_ROOT = "VariableBunkerSettings"
 local SETTINGS_KEY = SETTINGS_ROOT .. ".construction"
 local DISPLAY_KEY = SETTINGS_ROOT .. ".display"
+local DEBUG_KEY = SETTINGS_ROOT .. ".debug"
+local SETTINGS_VERSION = 6
+
+local DEBUG_SETTINGS = {
+    { key = "enabled", attribute = "enabled", default = false },
+    { key = "extraction", attribute = "logExtraction", default = true },
+    { key = "filling", attribute = "logFilling", default = true },
+    { key = "stations", attribute = "logStations", default = true },
+    { key = "compaction", attribute = "logCompaction", default = true },
+    { key = "dump", attribute = "heightDumps", default = true },
+    { key = "overlay", attribute = "showOverlay", default = true },
+}
+
+local function getDefaultDebugSettings()
+    local debugOutput = {}
+    for _, entry in ipairs(DEBUG_SETTINGS) do
+        debugOutput[entry.key] = entry.default
+    end
+    return debugOutput
+end
 
 Bunker.settings = Bunker.settings
     or {
@@ -14,7 +34,17 @@ Bunker.settings = Bunker.settings
         allowCompactionService = true,
         compactionPriceFactor = 1,
         showInfoBox = true,
+        debugOutput = getDefaultDebugSettings(),
     }
+
+function Bunker.getIsDebugActive(category)
+    local debugOutput = Bunker.settings.debugOutput
+    return debugOutput ~= nil and debugOutput.enabled == true and (category == nil or debugOutput[category] ~= false)
+end
+
+function Bunker.debugLog(category, text, ...)
+    Logging.info("[VariableBunker][Debug][%s] " .. text, category, ...)
+end
 
 local MIN_COMPACTION_PRICE_FACTOR = 0
 local MAX_COMPACTION_PRICE_FACTOR = 10
@@ -45,7 +75,7 @@ local function writeSettingsFile(filename)
         return false
     end
 
-    setXMLInt(xmlFile, SETTINGS_ROOT .. "#version", 5)
+    setXMLInt(xmlFile, SETTINGS_ROOT .. "#version", SETTINGS_VERSION)
     setXMLBool(
         xmlFile,
         SETTINGS_KEY .. "#allowWallHeightsAboveFourMeters",
@@ -60,6 +90,9 @@ local function writeSettingsFile(filename)
         math.floor(Bunker.settings.compactionPriceFactor * 100 + 0.5)
     )
     setXMLBool(xmlFile, DISPLAY_KEY .. "#showInfoBox", Bunker.settings.showInfoBox == true)
+    for _, entry in ipairs(DEBUG_SETTINGS) do
+        setXMLBool(xmlFile, DEBUG_KEY .. "#" .. entry.attribute, Bunker.settings.debugOutput[entry.key] == true)
+    end
     saveXMLFile(xmlFile)
     delete(xmlFile)
     return true
@@ -133,6 +166,14 @@ function Bunker.applySettings(settings)
     if settings ~= nil and settings.showInfoBox ~= nil then
         Bunker.settings.showInfoBox = settings.showInfoBox == true
     end
+    if settings ~= nil and settings.debugOutput ~= nil then
+        Bunker.settings.debugOutput = getDefaultDebugSettings()
+        for _, entry in ipairs(DEBUG_SETTINGS) do
+            if settings.debugOutput[entry.key] ~= nil then
+                Bunker.settings.debugOutput[entry.key] = settings.debugOutput[entry.key] == true
+            end
+        end
+    end
     Bunker.applyHeightSettingToStoreItems()
     Bunker.applyStationSettingsToStoreItems()
     if Bunker.activeSilos ~= nil then
@@ -157,6 +198,7 @@ function Bunker.loadSettings()
         allowCompactionService = true,
         compactionPriceFactor = 1,
         showInfoBox = true,
+        debugOutput = getDefaultDebugSettings(),
     })
     if fileExists == nil or not fileExists(filename) then
         return writeSettingsFile(filename)
@@ -178,6 +220,10 @@ function Bunker.loadSettings()
         compactionPriceFactor = compactionPricePercent / 100
     end
     local showInfoBox = getXMLBool(xmlFile, DISPLAY_KEY .. "#showInfoBox")
+    local debugOutput = {}
+    for _, entry in ipairs(DEBUG_SETTINGS) do
+        debugOutput[entry.key] = getXMLBool(xmlFile, DEBUG_KEY .. "#" .. entry.attribute)
+    end
     delete(xmlFile)
     Bunker.applySettings({
         allowWallHeightsAboveFourMeters = allowHigherWalls == nil or allowHigherWalls == true,
@@ -186,7 +232,17 @@ function Bunker.loadSettings()
         allowCompactionService = allowCompactionService == nil or allowCompactionService == true,
         compactionPriceFactor = compactionPriceFactor,
         showInfoBox = showInfoBox == nil or showInfoBox == true,
+        debugOutput = debugOutput,
     })
+    if Bunker.getIsDebugActive() then
+        local categories = {}
+        for _, entry in ipairs(DEBUG_SETTINGS) do
+            if entry.key ~= "enabled" and Bunker.settings.debugOutput[entry.key] then
+                table.insert(categories, entry.key)
+            end
+        end
+        Bunker.debugLog("settings", "debug output enabled: %s", table.concat(categories, ", "))
+    end
     if not writeSettingsFile(filename) then
         Logging.warning("[VariableBunker] Could not update modSettings file '%s'", filename)
         return false
@@ -492,6 +548,39 @@ local function getInfoPlaceable()
     return nil
 end
 
+local function addDebugInfoLines(box, placeable, bunkerSilo)
+    local spec = placeable.spec_VariableBunker
+    box:addLine(
+        "Debug state",
+        string.format("%s, compacted %.0f l", tostring(bunkerSilo.state), bunkerSilo.compactedFillLevel or 0)
+    )
+    local inputStorage = spec ~= nil and spec.inputStorage or nil
+    if inputStorage ~= nil then
+        local layer = inputStorage.layerHeight ~= nil and string.format("%.1f m", inputStorage.layerHeight) or "-"
+        box:addLine(
+            "Debug input",
+            string.format(
+                "band %s, layer %s, credit %.0f l",
+                tostring(inputStorage.inputBandIndex),
+                layer,
+                inputStorage.pendingLiters or 0
+            )
+        )
+        box:addLine("Debug grid", tostring(inputStorage.debugFreeCapacityReason or "-"))
+    end
+    local outputStorage = spec ~= nil and spec.outputStorage or nil
+    if outputStorage ~= nil then
+        box:addLine(
+            "Debug output",
+            string.format(
+                "band %s, buffer %.0f l",
+                tostring(outputStorage.outputBandIndex),
+                outputStorage.outputBuffers[FillType.SILAGE] or 0
+            )
+        )
+    end
+end
+
 local infoListener = {}
 
 function infoListener:getBox()
@@ -527,6 +616,9 @@ function infoListener:update(_dt)
     end
     local statusKey, needsAction = getStatus(bunkerSilo)
     box:addLine(getInfoText(placeable, "info_VariableBunkerStatus"), getInfoText(placeable, statusKey), needsAction)
+    if Bunker.getIsDebugActive("overlay") then
+        addDebugInfoLines(box, placeable, bunkerSilo)
+    end
     box:showNextFrame()
 end
 
@@ -538,6 +630,118 @@ function infoListener:deleteMap()
 end
 
 addModEventListener(infoListener)
+
+local DEBUG_SETTLE_TIME = 3000
+local DEBUG_DUMP_MIN_CHANGE = 1000
+local DEBUG_OVERLAY_DISTANCE = 150
+
+local function dumpSilo(placeable, reason)
+    if Bunker.getIsDebugActive("dump") then
+        VariableBunkerStorage.debugDump(placeable, reason)
+    end
+end
+
+local debugListener = { silos = {} }
+
+function debugListener:trackSilo(placeable, bunkerSilo, time)
+    local fillLevel = bunkerSilo.fillLevel or 0
+    local data = self.silos[placeable]
+    if data == nil then
+        self.silos[placeable] = {
+            state = bunkerSilo.state,
+            fillLevel = fillLevel,
+            dumpedFillLevel = fillLevel,
+        }
+        Bunker.debugLog(
+            "silo",
+            "tracking '%s', state %s, fill level %.0f l",
+            tostring(placeable:getName()),
+            tostring(bunkerSilo.state),
+            fillLevel
+        )
+        if fillLevel >= 1 then
+            dumpSilo(placeable, "silo loaded")
+        end
+        return
+    end
+    if bunkerSilo.state ~= data.state then
+        Bunker.debugLog(
+            "silo",
+            "'%s' state %s -> %s at %.0f l",
+            tostring(placeable:getName()),
+            tostring(data.state),
+            tostring(bunkerSilo.state),
+            fillLevel
+        )
+        dumpSilo(placeable, string.format("state %s -> %s", tostring(data.state), tostring(bunkerSilo.state)))
+        data.state = bunkerSilo.state
+        data.dumpedFillLevel = fillLevel
+        data.changeTime = nil
+    end
+    if math.abs(fillLevel - data.fillLevel) >= 1 then
+        data.fillLevel = fillLevel
+        data.changeTime = time
+    elseif data.changeTime ~= nil and time - data.changeTime >= DEBUG_SETTLE_TIME then
+        data.changeTime = nil
+        local change = fillLevel - data.dumpedFillLevel
+        if math.abs(change) >= DEBUG_DUMP_MIN_CHANGE then
+            Bunker.debugLog(
+                "silo",
+                "'%s' fill level settled at %.0f l (%+.0f l since the last dump)",
+                tostring(placeable:getName()),
+                fillLevel,
+                change
+            )
+            dumpSilo(placeable, string.format("fill level settled, %+.0f l", change))
+            data.dumpedFillLevel = fillLevel
+        end
+    end
+end
+
+function debugListener:update(_dt)
+    if not Bunker.getIsDebugActive() or g_currentMission == nil or Bunker.activeSilos == nil then
+        return
+    end
+    for placeable in pairs(self.silos) do
+        if Bunker.activeSilos[placeable] == nil then
+            self.silos[placeable] = nil
+        end
+    end
+    local time = g_currentMission.time or 0
+    for placeable in pairs(Bunker.activeSilos) do
+        local bunkerSilo = getInfoBunkerSilo(placeable)
+        if bunkerSilo ~= nil and not placeable.isDeleted and placeable.isServer then
+            self:trackSilo(placeable, bunkerSilo, time)
+        end
+    end
+end
+
+function debugListener:draw()
+    if not Bunker.getIsDebugActive("overlay") or Bunker.activeSilos == nil or getCamera == nil then
+        return
+    end
+    local camera = getCamera()
+    if camera == nil or camera == 0 then
+        return
+    end
+    local cameraX, _, cameraZ = getWorldTranslation(camera)
+    for placeable in pairs(Bunker.activeSilos) do
+        local spec = placeable.spec_VariableBunker
+        if spec ~= nil and not placeable.isDeleted and placeable.rootNode ~= nil then
+            local x, _, z = getWorldTranslation(placeable.rootNode)
+            local reach = DEBUG_OVERLAY_DISTANCE + math.max(spec.widthMeters or 0, spec.lengthMeters or 0) * 0.5
+            if MathUtil.vector2Length(x - cameraX, z - cameraZ) <= reach then
+                VariableBunkerStorage.debugDraw(placeable)
+            end
+        end
+    end
+end
+
+function debugListener:deleteMap()
+    self.silos = {}
+end
+
+addModEventListener(debugListener)
 
 local modDirectory = g_currentModDirectory or ""
 local AUTODRIVE_MOD_NAME = "FS25_AutoDrive"

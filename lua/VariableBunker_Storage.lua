@@ -16,9 +16,30 @@ local FULL_HEIGHT_TOLERANCE = 0.15
 local FULL_RELEASE_LITERS = 1000
 local FULL_RELEASE_SHARE = 0.002
 local SURFACE_ANGLE = math.rad(40)
+local DEBUG_DUMP_CELL = 0.5
+local DEBUG_DUMP_CHARS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+local DEBUG_LABEL_STEP = 10
 
 VariableBunkerStorage.MODE_INPUT = MODE_INPUT
 VariableBunkerStorage.MODE_OUTPUT = MODE_OUTPUT
+
+local function isDebug(category)
+    local bunker = VariableBunker
+    return bunker ~= nil and bunker.getIsDebugActive ~= nil and bunker.getIsDebugActive(category)
+end
+
+local function debugLog(category, text, ...)
+    if isDebug(category) then
+        VariableBunker.debugLog(category, text, ...)
+    end
+end
+
+local function debugNumber(value)
+    if value == nil then
+        return "nil"
+    end
+    return string.format("%.3f", value)
+end
 
 local function getBunkerSilo(placeable)
     local spec = placeable ~= nil and placeable.spec_bunkerSilo or nil
@@ -118,6 +139,8 @@ local function createBands(placeable)
         local endZ = startZ - bandLength
         local centerZ = (startZ + endZ) * 0.5
         local band = {
+            index = index,
+            centerZ = centerZ,
             length = bandLength,
             radius = radius,
             inputOffsetKey = "input_" .. index,
@@ -192,6 +215,228 @@ local function moveAtArea(storage, area, liters, fillTypeIndex, offsetKey, addMa
     )
     storage.lineOffsets[offsetKey] = lineOffset
     return math.abs(moved)
+end
+
+local function getDebugCellChar(thickness)
+    local decimeters = math.floor((thickness or 0) * 10 + 0.5)
+    if decimeters <= 0 then
+        return "."
+    end
+    if decimeters > #DEBUG_DUMP_CHARS then
+        return "#"
+    end
+    return string.sub(DEBUG_DUMP_CHARS, decimeters, decimeters)
+end
+
+local function getDebugFillTypes(bunkerSilo)
+    local fillTypes = {}
+    local seen = {}
+    for _, fillType in ipairs({ bunkerSilo.inputFillType, bunkerSilo.fermentingFillType, bunkerSilo.outputFillType }) do
+        if fillType ~= nil and fillType ~= FillType.UNKNOWN and not seen[fillType] then
+            seen[fillType] = true
+            table.insert(fillTypes, fillType)
+        end
+    end
+    return fillTypes
+end
+
+local function getDebugBandLevel(bunkerSilo, band)
+    local level = 0
+    for _, fillType in ipairs(getDebugFillTypes(bunkerSilo)) do
+        level = level + getAreaFillLevel(band, fillType)
+    end
+    return level
+end
+
+local function getDebugStorages(placeable)
+    local spec = placeable.spec_VariableBunker
+    if spec == nil then
+        return nil, nil
+    end
+    return spec.inputStorage, spec.outputStorage
+end
+
+local function getDebugBands(placeable)
+    local inputStorage, outputStorage = getDebugStorages(placeable)
+    local storage = outputStorage or inputStorage
+    if storage ~= nil then
+        return getBands(storage)
+    end
+    return createBands(placeable)
+end
+
+local function getDebugOutputOffset(outputStorage, band)
+    if outputStorage == nil then
+        return nil
+    end
+    local offsetKey = band.outputOffsetKeys[FillType.SILAGE]
+    return offsetKey ~= nil and outputStorage.lineOffsets[offsetKey] or nil
+end
+
+function VariableBunkerStorage.debugDump(placeable, reason)
+    local spec = placeable ~= nil and placeable.spec_VariableBunker or nil
+    local bunkerSilo = getBunkerSilo(placeable)
+    local rootNode = placeable ~= nil and placeable.rootNode or nil
+    if spec == nil or bunkerSilo == nil or rootNode == nil then
+        return
+    end
+    local width = spec.widthMeters or 0
+    local halfWidth = width * 0.5
+    local inputStorage, outputStorage = getDebugStorages(placeable)
+    local bands = getDebugBands(placeable)
+    local inputBand = inputStorage ~= nil and inputStorage.inputBandIndex or nil
+    local outputBand = outputStorage ~= nil and outputStorage.outputBandIndex or nil
+    local x, _, z = getWorldTranslation(rootNode)
+    VariableBunker.debugLog(
+        "dump",
+        "begin (%s) '%s' at %.1f %.1f, %s %sx%sx%s m, state %s, fill level %.0f l, compacted %.0f l, bands %d",
+        tostring(reason),
+        tostring(placeable:getName()),
+        x,
+        z,
+        spec.hasRearWall and "bunker" or "drive-through",
+        tostring(spec.widthMeters),
+        tostring(spec.lengthMeters),
+        tostring(spec.heightMeters),
+        tostring(bunkerSilo.state),
+        bunkerSilo.fillLevel or 0,
+        bunkerSilo.compactedFillLevel or 0,
+        #bands
+    )
+    if inputStorage ~= nil then
+        VariableBunker.debugLog(
+            "dump",
+            "input: band %s, layer %s m, pending %.0f l, full latch %s, exhausted %s",
+            tostring(inputBand),
+            debugNumber(inputStorage.layerHeight),
+            inputStorage.pendingLiters or 0,
+            debugNumber(inputStorage.fullFillLevel),
+            tostring(inputStorage.fillExhausted)
+        )
+    end
+    if outputStorage ~= nil then
+        VariableBunker.debugLog(
+            "dump",
+            "output: band %s, silage buffer %.0f l",
+            tostring(outputBand),
+            outputStorage.outputBuffers[FillType.SILAGE] or 0
+        )
+    end
+    VariableBunker.debugLog(
+        "dump",
+        "rows from band 1 (rear wall or exit) to the entrance, columns from the left to the right wall seen from the entrance, %.1f m cells",
+        DEBUG_DUMP_CELL
+    )
+    VariableBunker.debugLog(
+        "dump",
+        "thickness in dm: . = 0, 1-9, A-Z = 10-35, a-z = 36-61, # = more; > input band, < output band"
+    )
+    local columns = math.max(math.floor(width / DEBUG_DUMP_CELL + 0.5), 1)
+    local length = spec.lengthMeters or 0
+    for index, band in ipairs(bands) do
+        local rows = math.max(math.floor(band.length / DEBUG_DUMP_CELL + 0.5), 1)
+        local startZ = length * 0.5 - (index - 1) * band.length
+        local marker = (index == inputBand and ">" or " ") .. (index == outputBand and "<" or " ")
+        local offsetText = debugNumber(getDebugOutputOffset(outputStorage, band))
+        for row = 1, rows do
+            local cellZ = startZ - (row - 0.5) * band.length / rows
+            local cells = {}
+            for column = 1, columns do
+                local cellX = halfWidth - (column - 0.5) * width / columns
+                local wx, wy, wz = localToWorld(rootNode, cellX, 0, cellZ)
+                local _, thickness = DensityMapHeightUtil.getHeightAtWorldPos(wx, wy, wz)
+                cells[column] = getDebugCellChar(thickness)
+            end
+            if row == 1 then
+                VariableBunker.debugLog(
+                    "dump",
+                    "b%03d%s offset %9s |%s| %.0f l",
+                    index,
+                    marker,
+                    offsetText,
+                    table.concat(cells),
+                    getDebugBandLevel(bunkerSilo, band)
+                )
+            else
+                VariableBunker.debugLog("dump", "%s|%s|", string.rep(" ", 23), table.concat(cells))
+            end
+        end
+    end
+    VariableBunker.debugLog("dump", "end")
+end
+
+local function drawDebugBandLine(rootNode, band, halfWidth, y, red, green, blue)
+    local x1, y1, z1 = localToWorld(rootNode, halfWidth, y, band.centerZ)
+    local x2, y2, z2 = localToWorld(rootNode, -halfWidth, y, band.centerZ)
+    drawDebugLine(x1, y1, z1, red, green, blue, x2, y2, z2, red, green, blue)
+    return x1, y1, z1, x2, y2, z2
+end
+
+function VariableBunkerStorage.debugDraw(placeable)
+    local spec = placeable ~= nil and placeable.spec_VariableBunker or nil
+    local rootNode = placeable ~= nil and placeable.rootNode or nil
+    if spec == nil or rootNode == nil or drawDebugLine == nil then
+        return
+    end
+    local halfWidth = (spec.widthMeters or 0) * 0.5
+    local halfLength = (spec.lengthMeters or 0) * 0.5
+    local top = (spec.heightMeters or 0) + 0.3
+    local corners = {
+        { halfWidth, halfLength },
+        { -halfWidth, halfLength },
+        { -halfWidth, -halfLength },
+        { halfWidth, -halfLength },
+    }
+    for index, corner in ipairs(corners) do
+        local nextCorner = corners[index % #corners + 1]
+        local x1, y1, z1 = localToWorld(rootNode, corner[1], top, corner[2])
+        local x2, y2, z2 = localToWorld(rootNode, nextCorner[1], top, nextCorner[2])
+        drawDebugLine(x1, y1, z1, 1, 1, 1, x2, y2, z2, 1, 1, 1)
+    end
+    local bands = getDebugBands(placeable)
+    for index, band in ipairs(bands) do
+        if index == 1 or index == #bands or index % DEBUG_LABEL_STEP == 0 then
+            local x, y, z = localToWorld(rootNode, halfWidth, top, band.centerZ)
+            Utils.renderTextAtWorldPosition(x, y, z, string.format("b%d", index), 0.015, 0)
+        end
+    end
+    local inputStorage, outputStorage = getDebugStorages(placeable)
+    local inputBand = inputStorage ~= nil and bands[inputStorage.inputBandIndex or 0] or nil
+    if inputBand ~= nil then
+        local lineHeight = spec.hasRearWall and (spec.heightMeters or 0) or (inputStorage.layerHeight or LAYER_STEP)
+        local x, y, z = drawDebugBandLine(rootNode, inputBand, halfWidth, lineHeight, 0, 1, 0)
+        Utils.renderTextAtWorldPosition(
+            x,
+            y + 0.5,
+            z,
+            string.format("IN b%d %.1f m", inputBand.index, lineHeight),
+            0.015,
+            0
+        )
+    end
+    local outputBand = outputStorage ~= nil and bands[outputStorage.outputBandIndex or 0] or nil
+    if outputBand ~= nil then
+        local x1, y1, z1, x2, y2, z2 = drawDebugBandLine(rootNode, outputBand, halfWidth, top + 0.2, 1, 0, 0)
+        local offset = getDebugOutputOffset(outputStorage, outputBand)
+        Utils.renderTextAtWorldPosition(
+            x2,
+            y2 + 0.5,
+            z2,
+            string.format("OUT b%d offset %s", outputBand.index, debugNumber(offset)),
+            0.015,
+            0
+        )
+        if offset ~= nil then
+            local lineLength = MathUtil.vector3Length(x2 - x1, y2 - y1, z2 - z1)
+            if lineLength > 0.001 then
+                local share = math.clamp(offset / lineLength, 0, 1)
+                local px = x1 + (x2 - x1) * share
+                local py = y1 + (y2 - y1) * share
+                local pz = z1 + (z2 - z1) * share
+                drawDebugLine(px, py - top - 0.2, pz, 1, 1, 0, px, py + 1, pz, 1, 1, 0)
+            end
+        end
+    end
 end
 
 function VariableBunkerStorage.new(placeable, mode, customMt)
@@ -385,6 +630,14 @@ function VariableBunkerStorage:getIsGeometricallyFull()
     return isFull
 end
 
+local function reportFreeCapacity(storage, reason, freeCapacity)
+    if storage.debugFreeCapacityReason ~= reason then
+        storage.debugFreeCapacityReason = reason
+        debugLog("stations", "unloading station capacity: %s", reason)
+    end
+    return freeCapacity
+end
+
 function VariableBunkerStorage:getFreeCapacity(fillTypeIndex)
     if self.mode ~= MODE_INPUT or not self:getIsInputEnabled() or fillTypeIndex ~= FillType.CHAFF then
         return 0
@@ -392,26 +645,26 @@ function VariableBunkerStorage:getFreeCapacity(fillTypeIndex)
     local bunkerSilo = getBunkerSilo(self.placeable)
     if bunkerSilo == nil or bunkerSilo.state ~= BunkerSilo.STATE_FILL then
         self.fullFillLevel = nil
-        return 0
+        return reportFreeCapacity(self, "closed, silo is not in the fill state", 0)
     end
     if self.fullFillLevel ~= nil then
         local releaseLiters = math.max(FULL_RELEASE_LITERS, self.fullFillLevel * FULL_RELEASE_SHARE)
         if getCurrentFillLevel(bunkerSilo) > self.fullFillLevel - releaseLiters then
-            return 0
+            return reportFreeCapacity(self, string.format("closed, full latch at %.0f l", self.fullFillLevel), 0)
         end
         self.fullFillLevel = nil
     end
     local missionTime = getMissionTime()
     if self.fullUntilTime ~= nil then
         if missionTime ~= nil and missionTime < self.fullUntilTime then
-            return 0
+            return reportFreeCapacity(self, "closed, retry block after a failed placement", 0)
         end
         self.fullUntilTime = nil
     end
     if self:getIsGeometricallyFull() then
-        return 0
+        return reportFreeCapacity(self, "closed, every band is geometrically full", 0)
     end
-    return math.huge
+    return reportFreeCapacity(self, "open", math.huge)
 end
 
 local function getInitialLayerHeight(bunkerSilo)
@@ -444,8 +697,13 @@ function VariableBunkerStorage:fillBandsToWallHeight(liters, fillTypeIndex)
     local wallHeight = self.placeable.spec_VariableBunker.heightMeters
     local moved = 0
     local index = math.min(self.inputBandIndex, bandCount)
+    local touched = isDebug("filling") and {} or nil
     for _ = 1, bandCount do
-        moved = moved + self:fillBand(bands, index, liters - moved, fillTypeIndex, wallHeight)
+        local added = self:fillBand(bands, index, liters - moved, fillTypeIndex, wallHeight)
+        moved = moved + added
+        if touched ~= nil and added >= 0.001 then
+            table.insert(touched, string.format("b%d:%.0f", index, added))
+        end
         if liters - moved < 0.001 then
             break
         end
@@ -453,6 +711,17 @@ function VariableBunkerStorage:fillBandsToWallHeight(liters, fillTypeIndex)
     end
     self.inputBandIndex = index
     self.fillExhausted = liters - moved >= MAX_PENDING_LITERS
+    if touched ~= nil then
+        debugLog(
+            "filling",
+            "to wall height: request %.0f, placed %.0f, next band %d, exhausted %s, bands %s",
+            liters,
+            moved,
+            index,
+            tostring(self.fillExhausted),
+            table.concat(touched, " ")
+        )
+    end
     return moved
 end
 
@@ -493,12 +762,17 @@ function VariableBunkerStorage:fillBandsInLayers(bunkerSilo, liters, fillTypeInd
     local moved = 0
     local passes = 0
     local index = math.min(self.inputBandIndex, bandCount)
+    local touched = isDebug("filling") and {} or nil
+    local startLayerHeight = self.layerHeight
     while liters - moved >= 0.001 do
         local movedInPass = 0
         for _ = 1, bandCount do
             local added = self:fillBand(bands, index, liters - moved, fillTypeIndex, self.layerHeight)
             moved = moved + added
             movedInPass = movedInPass + added
+            if touched ~= nil and added >= 0.001 then
+                table.insert(touched, string.format("b%d:%.0f", index, added))
+            end
             if liters - moved < 0.001 then
                 break
             end
@@ -522,9 +796,30 @@ function VariableBunkerStorage:fillBandsInLayers(bunkerSilo, liters, fillTypeInd
             end
             self.layerHeight = math.min(self.layerHeight + LAYER_STEP, maxHeight)
             passes = 0
+            debugLog(
+                "filling",
+                "layer raised to %.1f m (complete %s, left %.0f l)",
+                self.layerHeight,
+                tostring(isLayerComplete),
+                liters - moved
+            )
         end
     end
     self.inputBandIndex = index
+    if touched ~= nil then
+        debugLog(
+            "filling",
+            "in layers: request %.0f, placed %.0f, layer %.1f -> %.1f m, passes %d, next band %d, exhausted %s, bands %s",
+            liters,
+            moved,
+            startLayerHeight or 0,
+            self.layerHeight or 0,
+            passes,
+            index,
+            tostring(self.fillExhausted),
+            table.concat(touched, " ")
+        )
+    end
     return moved
 end
 
@@ -540,6 +835,9 @@ function VariableBunkerStorage:addMaterial(liters, fillTypeIndex)
         return 0
     end
     if (bunkerSilo.fillLevel or 0) < 1 then
+        if self.inputBandIndex ~= 1 or self.layerHeight ~= nil then
+            debugLog("filling", "empty silo, filling starts again at band 1")
+        end
         self.inputBandIndex = 1
         self.layerHeight = nil
     end
@@ -557,6 +855,7 @@ local function openFermentedBand(bunkerSilo, band)
     local x, y, z = getBandCenter(band)
     bunkerSilo:onChangedFillLevelCallback(nil, -1, bunkerSilo.outputFillType, x, y, z)
     if getAreaFillLevel(band, fermentingFillType) > 0.001 then
+        debugLog("extraction", "band %d still covered, converting it to silage", band.index)
         DensityMapHeightUtil.changeFillTypeAtArea(
             band.sx,
             band.sz,
@@ -596,6 +895,7 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
     end
     local index = math.min(self.outputBandIndex or bandCount, bandCount)
     local moved = 0
+    local debugExtraction = isDebug("extraction")
     for _ = 1, bandCount do
         local band = bands[index]
         if fillTypeIndex == FillType.SILAGE then
@@ -606,7 +906,22 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
             offsetKey = string.format("output_%d_%d", fillTypeIndex, index)
             band.outputOffsetKeys[fillTypeIndex] = offsetKey
         end
-        moved = moved + moveAtArea(self, band, liters - moved, fillTypeIndex, offsetKey, false)
+        local offsetBefore = self.lineOffsets[offsetKey]
+        local request = liters - moved
+        local removed = moveAtArea(self, band, request, fillTypeIndex, offsetKey, false)
+        moved = moved + removed
+        if debugExtraction then
+            debugLog(
+                "extraction",
+                "band %d: request %.0f, removed %.0f, offset %s -> %s, left in band %.0f l",
+                index,
+                request,
+                removed,
+                debugNumber(offsetBefore),
+                debugNumber(self.lineOffsets[offsetKey]),
+                getDebugBandLevel(bunkerSilo, band)
+            )
+        end
         if liters - moved < 0.001 then
             break
         end
@@ -639,10 +954,26 @@ function VariableBunkerStorage:addFromStation(bunkerSilo, liters, fillTypeIndex)
         missing = MAX_PENDING_LITERS
         local missionTime = getMissionTime()
         self.fullUntilTime = missionTime ~= nil and missionTime + FULL_RETRY_TIME or nil
+        debugLog(
+            "stations",
+            "unloading: %.0f l could not be placed, blocking for %d ms",
+            request - placed,
+            FULL_RETRY_TIME
+        )
     end
     if self.fillExhausted then
         self.fullFillLevel = getCurrentFillLevel(bunkerSilo)
+        debugLog("stations", "unloading: silo full, latched at %.0f l", self.fullFillLevel)
     end
+    debugLog(
+        "stations",
+        "unloading: delivered %.0f, with credit %.0f, placed %.0f, accepted %.0f, credit now %.0f",
+        liters,
+        request,
+        placed,
+        accepted,
+        missing
+    )
     self.pendingLiters = missing
     if placed > 0 then
         updateMeasuredFillLevel(bunkerSilo)
@@ -669,10 +1000,22 @@ function VariableBunkerStorage:takeForStation(bunkerSilo, liters, fillTypeIndex)
                 getCurrentFillLevel(bunkerSilo),
                 bunkerSilo.state or -1
             )
+            if isDebug("dump") then
+                VariableBunkerStorage.debugDump(self.placeable, "extraction failed")
+            end
         end
     end
     local delivered = fromBuffer + math.min(removed, missing)
     self.outputBuffers[fillTypeIndex] = buffer + math.max(removed - missing, 0)
+    debugLog(
+        "stations",
+        "loading: request %.0f, from buffer %.0f, removed %.0f, delivered %.0f, buffer now %.0f",
+        liters,
+        fromBuffer,
+        removed,
+        delivered,
+        self.outputBuffers[fillTypeIndex]
+    )
     return delivered, removed
 end
 
@@ -773,6 +1116,16 @@ function Bunker.getCompactionOffer(placeable, remaining)
     end
     local hourlyCost = (getWagePerHour() + WEAR_COST_PER_HOUR) * costMultiplier + DIESEL_LITERS_PER_HOUR * dieselPrice
     local factor = Bunker.settings ~= nil and Bunker.settings.compactionPriceFactor or 1
+    debugLog(
+        "compaction",
+        "offer: %.0f l, %.2f h, hourly cost %.0f (cost multiplier %.2f, diesel %.2f/l), price factor %.2f",
+        remaining,
+        hours,
+        hourlyCost,
+        costMultiplier,
+        dieselPrice,
+        factor
+    )
     return math.ceil(hours * hourlyCost * factor), hours
 end
 
@@ -789,17 +1142,29 @@ function Bunker.executeCompaction(placeable)
         return false
     end
     bunkerSilo:updateFillLevel()
-    local price = Bunker.getCompactionOffer(placeable, Bunker.getCompactionRemainingLiters(placeable))
+    local remaining = Bunker.getCompactionRemainingLiters(placeable)
+    local price, hours = Bunker.getCompactionOffer(placeable, remaining)
+    debugLog(
+        "compaction",
+        "service requested: fill level %.0f l, compacted %.0f l, remaining %.0f l, %.2f h, price %.0f",
+        bunkerSilo.fillLevel or 0,
+        bunkerSilo.compactedFillLevel or 0,
+        remaining,
+        hours or 0,
+        price
+    )
     if price <= 0 then
         return false
     end
     local farmId = placeable:getOwnerFarmId()
     local farm = g_farmManager:getFarmById(farmId)
     if farm == nil or farm:getBalance() < price then
+        debugLog("compaction", "service refused: farm %s cannot pay %.0f", tostring(farmId), price)
         return false
     end
     g_currentMission:addMoney(-price, farmId, MoneyType.AI, true, true)
     bunkerSilo:updateCompacting(bunkerSilo.fillLevel)
+    debugLog("compaction", "service done: farm %s paid %.0f", tostring(farmId), price)
     return true
 end
 
