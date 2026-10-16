@@ -721,8 +721,7 @@ end
 VariableBunker = VariableBunker or {}
 
 local Bunker = VariableBunker
-local REFERENCE_MASS = 15
-local REFERENCE_DISTANCE_PER_HOUR = 8000
+local COMPACTION_LITERS_PER_HOUR = 300000
 local DIESEL_LITERS_PER_HOUR = 20
 local WEAR_COST_PER_HOUR = 40
 local DEFAULT_WAGE_PER_MS = 0.0005
@@ -765,14 +764,7 @@ function Bunker.getCompactionOffer(placeable, remaining)
     if bunkerSilo == nil or remaining < MIN_REMAINING_LITERS then
         return 0, 0
     end
-    local litersPerMeter = REFERENCE_MASS
-        / BunkerSilo.COMPACTING_BASE_MASS
-        * (bunkerSilo.distanceToCompactedFillLevel or 0)
-    local litersPerHour = litersPerMeter * REFERENCE_DISTANCE_PER_HOUR
-    if litersPerHour <= 0 then
-        return 0, 0
-    end
-    local hours = remaining / litersPerHour
+    local hours = remaining / COMPACTION_LITERS_PER_HOUR
     local costMultiplier = EconomyManager.getCostMultiplier() or 1
     local dieselPrice = 0
     local economyManager = g_currentMission.economyManager
