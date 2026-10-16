@@ -633,6 +633,7 @@ addModEventListener(infoListener)
 
 local DEBUG_SETTLE_TIME = 3000
 local DEBUG_DUMP_MIN_CHANGE = 1000
+local DEBUG_PROGRESS_SHARE = 0.1
 local DEBUG_OVERLAY_DISTANCE = 150
 
 local function dumpSilo(placeable, reason)
@@ -681,6 +682,12 @@ function debugListener:trackSilo(placeable, bunkerSilo, time)
     if math.abs(fillLevel - data.fillLevel) >= 1 then
         data.fillLevel = fillLevel
         data.changeTime = time
+        local capacity = VariableBunkerStorage.getEstimatedCapacity(placeable)
+        local change = fillLevel - data.dumpedFillLevel
+        if capacity > 0 and math.abs(change) >= capacity * DEBUG_PROGRESS_SHARE then
+            dumpSilo(placeable, string.format("progress, %+.0f l", change))
+            data.dumpedFillLevel = fillLevel
+        end
     elseif data.changeTime ~= nil and time - data.changeTime >= DEBUG_SETTLE_TIME then
         data.changeTime = nil
         local change = fillLevel - data.dumpedFillLevel
