@@ -16,6 +16,7 @@ local FULL_HEIGHT_TOLERANCE = 0.15
 local FULL_RELEASE_LITERS = 1000
 local FULL_RELEASE_SHARE = 0.002
 local SURFACE_ANGLE = math.rad(40)
+local RESIDUE_CELL_WIDTH = 1
 local DEBUG_DUMP_CELL = 0.5
 local DEBUG_DUMP_CHARS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 local DEBUG_LABEL_STEP = 10
@@ -39,6 +40,20 @@ local function debugNumber(value)
         return "nil"
     end
     return string.format("%.3f", value)
+end
+
+local function debugOffset(value)
+    if value == nil then
+        return "-"
+    end
+    return string.format("%.0f", value)
+end
+
+local function getMinRemovableLiters(fillTypeIndex)
+    if g_densityMapHeightManager == nil or g_densityMapHeightManager.getMinValidLiterValue == nil then
+        return 0
+    end
+    return g_densityMapHeightManager:getMinValidLiterValue(fillTypeIndex) or 0
 end
 
 local function getBunkerSilo(placeable)
@@ -141,6 +156,9 @@ local function createBands(placeable)
         local band = {
             index = index,
             centerZ = centerZ,
+            startZ = startZ,
+            endZ = endZ,
+            halfWidth = halfWidth,
             length = bandLength,
             radius = radius,
             inputOffsetKey = "input_" .. index,
@@ -871,6 +889,7 @@ end
 
 function VariableBunkerStorage:openFermentedSide(bunkerSilo)
     if bunkerSilo.state == BunkerSilo.STATE_FERMENTED then
+        self.residueBandIndex = nil
         local area = bunkerSilo.bunkerSiloArea
         bunkerSilo:openSilo(area.hx + area.dwx * 0.5, area.hy + area.dwy * 0.5, area.hz + area.dwz * 0.5)
     end
@@ -893,11 +912,16 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
     if bandCount == 0 then
         return 0
     end
-    local index = math.min(self.outputBandIndex or bandCount, bandCount)
+    local startIndex = math.min(self.outputBandIndex or bandCount, bandCount)
+    local index = startIndex
     local moved = 0
-    local debugExtraction = isDebug("extraction")
+    local minRemovable = getMinRemovableLiters(fillTypeIndex)
+    local delivered = isDebug("extraction") and {} or nil
+    local walked = 0
+    local stoppedBelowMinimum = false
     for _ = 1, bandCount do
         local band = bands[index]
+        walked = walked + 1
         if fillTypeIndex == FillType.SILAGE then
             openFermentedBand(bunkerSilo, band)
         end
@@ -907,19 +931,18 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
             band.outputOffsetKeys[fillTypeIndex] = offsetKey
         end
         local offsetBefore = self.lineOffsets[offsetKey]
-        local request = liters - moved
-        local removed = moveAtArea(self, band, request, fillTypeIndex, offsetKey, false)
+        local removed = moveAtArea(self, band, liters - moved, fillTypeIndex, offsetKey, false)
         moved = moved + removed
-        if debugExtraction then
-            debugLog(
-                "extraction",
-                "band %d: request %.0f, removed %.0f, offset %s -> %s, left in band %.0f l",
-                index,
-                request,
-                removed,
-                debugNumber(offsetBefore),
-                debugNumber(self.lineOffsets[offsetKey]),
-                getDebugBandLevel(bunkerSilo, band)
+        if delivered ~= nil and removed >= 0.001 then
+            table.insert(
+                delivered,
+                string.format(
+                    "b%d:%.0f(%s>%s)",
+                    index,
+                    removed,
+                    debugOffset(offsetBefore),
+                    debugOffset(self.lineOffsets[offsetKey])
+                )
             )
         end
         if liters - moved < 0.001 then
@@ -929,8 +952,82 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
         if index < 1 then
             index = bandCount
         end
+        if moved >= 0.001 and liters - moved < minRemovable then
+            stoppedBelowMinimum = true
+            index = startIndex
+            break
+        end
     end
     self.outputBandIndex = index
+    local residue = 0
+    if moved < 0.001 then
+        residue = self:removeResidue(bunkerSilo, bands, liters, fillTypeIndex)
+        moved = residue
+    end
+    if delivered ~= nil and (moved >= 0.001 or not self.debugFruitlessLogged) then
+        self.debugFruitlessLogged = moved < 0.001
+        debugLog(
+            "extraction",
+            "request %.0f, removed %.0f (line %.0f, residue %.0f), band %d -> %d, %d bands walked%s, delivered by %s",
+            liters,
+            moved,
+            moved - residue,
+            residue,
+            startIndex,
+            index,
+            walked,
+            stoppedBelowMinimum and string.format(", stopped below %.0f l", minRemovable) or "",
+            #delivered > 0 and table.concat(delivered, " ") or "-"
+        )
+    end
+    return moved
+end
+
+function VariableBunkerStorage:removeResidue(bunkerSilo, bands, liters, fillTypeIndex)
+    local rootNode = self.placeable.rootNode
+    local fermentingFillType = fillTypeIndex == FillType.SILAGE and bunkerSilo.fermentingFillType or nil
+    local moved = 0
+    local cleared = 0
+    local index = math.min(self.residueBandIndex or #bands, #bands)
+    while index >= 1 do
+        local band = bands[index]
+        local hasMaterial = getAreaFillLevel(band, fillTypeIndex) >= 0.001
+            or (fermentingFillType ~= nil and getAreaFillLevel(band, fermentingFillType) >= 0.001)
+        if hasMaterial then
+            if fermentingFillType ~= nil then
+                openFermentedBand(bunkerSilo, band)
+            end
+            local cellCount = math.max(math.ceil(band.halfWidth * 2 / RESIDUE_CELL_WIDTH), 1)
+            local cellWidth = band.halfWidth * 2 / cellCount
+            for cell = 1, cellCount do
+                local x0 = band.halfWidth - (cell - 1) * cellWidth
+                local x1 = x0 - cellWidth
+                local sx, _, sz = localToWorld(rootNode, x0, 0, band.startZ)
+                local wx, _, wz = localToWorld(rootNode, x1, 0, band.startZ)
+                local hx, _, hz = localToWorld(rootNode, x0, 0, band.endZ)
+                if DensityMapHeightUtil.getFillLevelAtArea(fillTypeIndex, sx, sz, wx, wz, hx, hz) >= 0.001 then
+                    moved = moved + DensityMapHeightUtil.removeFromGroundByArea(sx, sz, wx, wz, hx, hz, fillTypeIndex)
+                    cleared = cleared + 1
+                    if liters - moved < 0.001 then
+                        self.residueBandIndex = index
+                        debugLog(
+                            "extraction",
+                            "residue: band %d, %d cells cleared, %.0f l removed",
+                            index,
+                            cleared,
+                            moved
+                        )
+                        return moved
+                    end
+                end
+            end
+        end
+        index = index - 1
+    end
+    self.residueBandIndex = nil
+    if cleared > 0 then
+        debugLog("extraction", "residue: last cells cleared (%d), %.0f l removed", cleared, moved)
+    end
     return moved
 end
 

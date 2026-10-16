@@ -46,6 +46,7 @@ local SCALE_EPSILON = 0.0001
 local STATION_HALF_WIDTH = 4.5
 local STATION_HALF_DEPTH = 3
 local STATION_FRONT_OFFSET = 4
+local LOAD_TRIGGER_REACH = 20
 local MARKER_HEIGHT = 0.05
 local MARKER_SIDE_OFFSET = 1.5
 local MARKER_SERVICE_OFFSET = 2.5
@@ -331,7 +332,60 @@ local function addFillLevelWithRollback(
     return transferred
 end
 
+local function logStationDebug(text, ...)
+    if Bunker.getIsDebugActive ~= nil and Bunker.getIsDebugActive("stations") then
+        Bunker.debugLog("stations", text, ...)
+    end
+end
+
+local function releaseDistantFillableObjects(loadTrigger)
+    local fillableObjects = loadTrigger.fillableObjects
+    if fillableObjects == nil or loadTrigger.triggerNode == nil or next(fillableObjects) == nil then
+        return
+    end
+    local triggerX, _, triggerZ = getWorldTranslation(loadTrigger.triggerNode)
+    for otherId, entry in pairs(fillableObjects) do
+        local isNear = false
+        if entityExists(otherId) then
+            local x, _, z = getWorldTranslation(otherId)
+            isNear = MathUtil.vector2Length(x - triggerX, z - triggerZ) <= LOAD_TRIGGER_REACH
+        end
+        if not isNear then
+            fillableObjects[otherId] = nil
+            local object = entry.object
+            if object ~= nil then
+                if object.removeDeleteListener ~= nil then
+                    object:removeDeleteListener(loadTrigger)
+                end
+                if object.setFillUnitInTriggerRange ~= nil and entry.fillUnitIndex ~= nil then
+                    object:setFillUnitInTriggerRange(entry.fillUnitIndex, false)
+                end
+                if loadTrigger.isLoading and loadTrigger.currentFillableObject == object then
+                    loadTrigger:setIsLoading(false)
+                end
+                if loadTrigger.validFillableObject == object then
+                    loadTrigger.validFillableObject = nil
+                    loadTrigger.validFillableFillUnitIndex = nil
+                end
+            end
+            logStationDebug("loading point released a vehicle that is no longer at this silo")
+        end
+    end
+    if next(fillableObjects) == nil and loadTrigger.activatable ~= nil and g_currentMission ~= nil then
+        g_currentMission.activatableObjectsSystem:removeActivatable(loadTrigger.activatable)
+    end
+end
+
+local function getLoadTriggerDistance(loadTrigger, x, y, z)
+    if loadTrigger.triggerNode == nil or x == nil then
+        return math.huge
+    end
+    local triggerX, triggerY, triggerZ = getWorldTranslation(loadTrigger.triggerNode)
+    return MathUtil.vector3Length(x - triggerX, y - triggerY, z - triggerZ)
+end
+
 local function getIsLoadTriggerFillableObjectAvailable(loadTrigger, superFunc)
+    releaseDistantFillableObjects(loadTrigger)
     if not superFunc(loadTrigger) then
         return false
     end
@@ -545,6 +599,11 @@ function Bunker:onLoad(savegame)
                 local superFunc = loadTrigger.getIsFillableObjectAvailable
                 loadTrigger.getIsFillableObjectAvailable = function(trigger)
                     return getIsLoadTriggerFillableObjectAvailable(trigger, superFunc)
+                end
+                if loadTrigger.activatable ~= nil then
+                    loadTrigger.activatable.getDistance = function(_activatable, x, y, z)
+                        return getLoadTriggerDistance(loadTrigger, x, y, z)
+                    end
                 end
             end
         end
