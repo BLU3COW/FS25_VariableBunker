@@ -47,7 +47,7 @@ The selected dimensions are applied to the walls, collisions, silo area, placeme
 The estimated capacity is shown live while configuring the silo. An optional AutoDrive course can be generated during placement, with a visual preview before purchase. Its lanes and waypoints automatically adapt to the selected width and length. AutoDrive is required to use this option. Selling the silo removes all AutoDrive waypoints in the silo area, including the floor slab and the generated course. A modSettings option can limit newly built silos to a maximum wall height of 4 meters.
 
 An optional floor grid in front of the entrance fills the real silo material. A loading point at the same spot fills vehicles directly from the silo; with AdjustSuite its loading rate can be set via ADR-P. Filling and extraction can be disabled separately in modSettings. The stations do not create AutoDrive routes or targets.
-An info box shows fill level, compaction, fermentation and the next step while you are at the silo. With the optional compaction service, you can have the silo compacted at the grid for a fee that is based on the remaining material and matches the wage, diesel and wear of compacting it yourself (price factor in modSettings).
+An info box shows fill level, compaction, fermentation and the next step while you are at the silo. With the optional compaction service, you can have the silo compacted at the grid for a fee that is based on the remaining material and covers a contractor's wage, diesel and wear (price factor in modSettings).
 
 Source code, help and issue reports: https://github.com/BLU3COW/FS25_VariableBunker]]></en>
         <de><![CDATA[VariableBunker
@@ -89,7 +89,7 @@ Die gewählten Abmessungen werden auf Wände, Kollisionen, Silobereich, Platzier
 Das geschätzte Fassungsvermögen wird während der Konfiguration direkt angezeigt. Beim Platzieren kann optional ein AutoDrive-Kurs mit visueller Vorschau vor dem Kauf erzeugt werden. Fahrspuren und Wegpunkte passen sich automatisch an die gewählte Breite und Länge an. Für diese Option wird AutoDrive benötigt. Beim Verkauf des Silos werden alle AutoDrive-Wegpunkte im Silobereich entfernt, einschließlich Bodenplatte und erzeugtem Kurs. Über eine modSettings-Option lassen sich neu gebaute Silos auf maximal 4 Meter Wandhöhe begrenzen.
 
 Über ein optionales Bodengitter vor der Einfahrt wird echtes Silomaterial eingefüllt. Eine Ladestelle an derselben Stelle belädt Fahrzeuge direkt aus dem Silo; mit AdjustSuite lässt sich ihre Laderate über ADR-P einstellen. Befüllen und Entnehmen lassen sich in den modSettings getrennt deaktivieren. Die Stationen erzeugen keine AutoDrive-Kurse oder Ziele.
-Am Silo zeigt eine Infobox Füllstand, Verdichtung, Gärung und den nächsten Schritt. Mit dem optionalen Verdichtungsservice lässt sich das Silo am Gitter gegen Bezahlung verdichten. Der Preis richtet sich nach der Restmenge und entspricht Lohn, Diesel und Verschleiß beim Selbstverdichten (Preisfaktor in den modSettings).
+Am Silo zeigt eine Infobox Füllstand, Verdichtung, Gärung und den nächsten Schritt. Mit dem optionalen Verdichtungsservice lässt sich das Silo am Gitter gegen Bezahlung verdichten. Der Preis richtet sich nach der Restmenge und deckt Lohn, Diesel und Verschleiß eines Lohnunternehmers (Preisfaktor in den modSettings).
 
 Quellcode, Hilfe und Fehlermeldungen: https://github.com/BLU3COW/FS25_VariableBunker]]></de>
         <fr><![CDATA[VariableBunker
@@ -131,7 +131,7 @@ Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la 
 La capacité estimée est affichée directement pendant la configuration. Un parcours AutoDrive peut être généré en option lors du placement, avec un aperçu visuel avant l'achat. Ses voies et points de passage s'adaptent automatiquement à la largeur et à la longueur sélectionnées. AutoDrive est requis pour utiliser cette option. La vente du silo supprime tous les points de passage AutoDrive de la zone du silo, dalle de sol et parcours généré compris. Une option modSettings peut limiter les nouveaux silos à une hauteur maximale de 4 mètres.
 
 Une grille au sol optionnelle devant l'entrée permet de remplir le matériau réel du silo. Un point de chargement au même endroit remplit les véhicules directement depuis le silo ; avec AdjustSuite, son débit peut être réglé via ADR-P. Le remplissage et le prélèvement peuvent être désactivés séparément dans les modSettings. Les stations ne créent aucun parcours ni cible AutoDrive.
-Une fenêtre d'information affiche le niveau, le compactage, la fermentation et la prochaine étape lorsque vous êtes au silo. Avec le service de compactage optionnel, le silo peut être compacté contre paiement à la grille. Le prix dépend du reste à compacter et correspond au salaire, au diesel et à l'usure d'un compactage manuel (facteur de prix dans les modSettings).
+Une fenêtre d'information affiche le niveau, le compactage, la fermentation et la prochaine étape lorsque vous êtes au silo. Avec le service de compactage optionnel, le silo peut être compacté contre paiement à la grille. Le prix dépend du reste à compacter et couvre le salaire, le diesel et l'usure d'un entrepreneur (facteur de prix dans les modSettings).
 
 Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25_VariableBunker]]></fr>
     </description>
