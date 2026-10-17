@@ -29,7 +29,6 @@ local DEFAULT_HEIGHT = 4
 local WALL_THICKNESS = 0.4
 local WALL_BASE_HEIGHT = 1.5
 local WALL_SLOPE_PER_METER = 0.25
-local INNER_MARGIN = 0.25
 local LEVEL_MARGIN = 1
 local TRIGGER_MARGIN = 1
 local FLOOR_FRONT_EXTENSION = 30
@@ -912,7 +911,9 @@ function Bunker:VariableBunkerApplyDimensions()
     local sideOuterCenter = rearWallExtension * 0.5
     local footprintStart = -length * 0.5 - floorFrontExtension
     local footprintLength = length + rearOuterExtension + floorFrontExtension
-    local innerWidth = math.max(width - INNER_MARGIN * 2, 0.5)
+    local areaHalfWidth = width * 0.5 + WALL_THICKNESS
+    spec.wallCoreThickness = WALL_THICKNESS
+    local areaRearZ = length * 0.5 + rearWallExtension
     local wallOffset = width * 0.5 + WALL_THICKNESS * 0.5
     local rearWallOffset = length * 0.5 + WALL_THICKNESS * 0.5
     local sideBaseOffset = width * 0.5 + WALL_THICKNESS + slopeRun * 0.5
@@ -1124,12 +1125,12 @@ function Bunker:VariableBunkerApplyDimensions()
         length + TRIGGER_MARGIN * 2
     )
 
-    setNodeTranslation(spec.siloAreaStartNode, width * 0.5, 0, length * 0.5)
-    setNodeTranslation(spec.siloAreaWidthNode, -width * 0.5, 0, length * 0.5)
-    setNodeTranslation(spec.siloAreaHeightNode, width * 0.5, 0, -length * 0.5)
-    setNodeTranslation(spec.innerAreaStartNode, innerWidth * 0.5, 0, length * 0.5 - INNER_MARGIN)
-    setNodeTranslation(spec.innerAreaWidthNode, -innerWidth * 0.5, 0, length * 0.5 - INNER_MARGIN)
-    setNodeTranslation(spec.innerAreaHeightNode, innerWidth * 0.5, 0, -length * 0.5 + INNER_MARGIN)
+    setNodeTranslation(spec.siloAreaStartNode, areaHalfWidth, 0, areaRearZ)
+    setNodeTranslation(spec.siloAreaWidthNode, -areaHalfWidth, 0, areaRearZ)
+    setNodeTranslation(spec.siloAreaHeightNode, areaHalfWidth, 0, -length * 0.5)
+    setNodeTranslation(spec.innerAreaStartNode, areaHalfWidth, 0, areaRearZ)
+    setNodeTranslation(spec.innerAreaWidthNode, -areaHalfWidth, 0, areaRearZ)
+    setNodeTranslation(spec.innerAreaHeightNode, areaHalfWidth, 0, -length * 0.5)
 
     setNodeTranslation(spec.clearAreaStartNode, -baseOuterWidth * 0.5, 0, footprintStart)
     setNodeTranslation(spec.clearAreaWidthNode, 0, 0, footprintLength)

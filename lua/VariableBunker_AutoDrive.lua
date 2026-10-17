@@ -346,6 +346,9 @@ function Bunker:onFinalizePlacement()
     local spec = self.spec_VariableBunker
     Bunker.VariableBunkerFinalizeStations(self)
     self:VariableBunkerUpdateCollisionStates()
+    if self.isServer and VariableBunkerStorage.cleanupLeftovers ~= nil then
+        VariableBunkerStorage.cleanupLeftovers(self)
+    end
     if
         not self.isServer
         or (spec ~= nil and spec.loadedFromSavegame)

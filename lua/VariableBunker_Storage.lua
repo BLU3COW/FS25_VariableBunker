@@ -18,8 +18,9 @@ local FULL_RELEASE_SHARE = 0.002
 local SURFACE_ANGLE = math.rad(40)
 local RESIDUE_CELL_WIDTH = 1
 local PIXEL_MARGIN = 0.01
-local WALL_STRIP_DONE_LITERS_PER_METER = 25
-local WALL_STRIP_BANDS_PER_CALL = 4
+local CLEAR_DONE_LITERS_PER_METER = 25
+local CLEAR_BANDS_PER_CALL = 4
+local DEFAULT_WALL_CORE = 0.4
 local DEBUG_DUMP_CELL = 0.5
 local DEBUG_DUMP_CHARS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 local DEBUG_LABEL_STEP = 10
@@ -59,15 +60,6 @@ local function getMinRemovableLiters(fillTypeIndex)
     return g_densityMapHeightManager:getMinValidLiterValue(fillTypeIndex) or 0
 end
 
-local function getDensityPixelSize()
-    local manager = g_densityMapHeightManager
-    local size = manager ~= nil and manager.densityToWorldMap or nil
-    if size == nil or size <= 0 then
-        return 0.5
-    end
-    return size
-end
-
 local function getLocalArea(rootNode, x0, x1, z0, z1)
     local sx, _, sz = localToWorld(rootNode, x0, 0, z0)
     local wx, _, wz = localToWorld(rootNode, x1, 0, z0)
@@ -84,13 +76,70 @@ local function getLocalAreaFillLevel(rootNode, x0, x1, z0, z1, fillTypes)
     return level
 end
 
+local heapModifiers = nil
+
+local function getHeapModifiers()
+    if heapModifiers == nil and DensityMapHeightUtil.terrainDetailHeightId ~= nil then
+        heapModifiers = {
+            height = DensityMapModifier.new(
+                DensityMapHeightUtil.terrainDetailHeightId,
+                DensityMapHeightUtil.heightFirstChannel,
+                DensityMapHeightUtil.heightNumChannels
+            ),
+            type = DensityMapModifier.new(
+                DensityMapHeightUtil.terrainDetailHeightId,
+                DensityMapHeightUtil.typeFirstChannel,
+                DensityMapHeightUtil.typeNumChannels
+            ),
+            filters = {},
+        }
+    end
+    return heapModifiers
+end
+
+local function removeHeapTypeAtArea(sx, sz, wx, wz, hx, hz, heightTypeIndex)
+    local modifiers = getHeapModifiers()
+    if modifiers == nil then
+        return 0
+    end
+    local filter = modifiers.filters[heightTypeIndex]
+    if filter == nil then
+        filter = DensityMapFilter.new(modifiers.type)
+        filter:setValueCompareParams(DensityValueCompareType.EQUAL, heightTypeIndex)
+        modifiers.filters[heightTypeIndex] = filter
+    end
+    modifiers.height:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
+    modifiers.type:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
+    local density = modifiers.height:executeGet(filter)
+    modifiers.height:executeSet(0, filter)
+    modifiers.type:executeSet(0, filter)
+    return density or 0
+end
+
 local function removeLocalArea(rootNode, x0, x1, z0, z1, fillTypes)
+    if g_densityMapHeightManager == nil then
+        return 0
+    end
     local sx, sz, wx, wz, hx, hz = getLocalArea(rootNode, x0, x1, z0, z1)
     local removed = 0
     for _, fillType in ipairs(fillTypes) do
-        removed = removed + DensityMapHeightUtil.removeFromGroundByArea(sx, sz, wx, wz, hx, hz, fillType)
+        local heightType = g_densityMapHeightManager:getDensityMapHeightTypeByFillTypeIndex(fillType)
+        if heightType ~= nil then
+            local density = removeHeapTypeAtArea(sx, sz, wx, wz, hx, hz, heightType.index)
+            removed = removed + density * g_densityMapHeightManager:getMinValidLiterValue(fillType)
+        end
     end
     return removed
+end
+
+local function removeUntypedHeapAtArea(rootNode, x0, x1, z0, z1)
+    local sx, sz, wx, wz, hx, hz = getLocalArea(rootNode, x0, x1, z0, z1)
+    return removeHeapTypeAtArea(sx, sz, wx, wz, hx, hz, 0)
+end
+
+local function getWallCore(placeable)
+    local spec = placeable.spec_VariableBunker
+    return spec ~= nil and spec.wallCoreThickness or DEFAULT_WALL_CORE
 end
 
 local function getRemovableFillTypes(bunkerSilo, fillTypeIndex)
@@ -402,6 +451,23 @@ function VariableBunkerStorage.debugDump(placeable, reason)
     )
     local columns = math.max(math.floor(width / DEBUG_DUMP_CELL + 0.5), 1)
     local length = spec.lengthMeters or 0
+    local outerX = halfWidth + DEBUG_DUMP_CELL * 0.5
+    local function getCell(cellX, cellZ)
+        local wx, wy, wz = localToWorld(rootNode, cellX, 0, cellZ)
+        local _, thickness = DensityMapHeightUtil.getHeightAtWorldPos(wx, wy, wz)
+        return getDebugCellChar(thickness)
+    end
+    local function getRow(cellZ)
+        local cells = {}
+        for column = 1, columns do
+            cells[column] = getCell(halfWidth - (column - 0.5) * width / columns, cellZ)
+        end
+        return string.format("%s|%s|%s", getCell(outerX, cellZ), table.concat(cells), getCell(-outerX, cellZ))
+    end
+    VariableBunker.debugLog("dump", "outer columns and the rear row lie under the wall core")
+    if spec.hasRearWall then
+        VariableBunker.debugLog("dump", "rear %s %s", string.rep(" ", 18), getRow(length * 0.5 + DEBUG_DUMP_CELL * 0.5))
+    end
     for index, band in ipairs(bands) do
         local rows = math.max(math.floor(band.length / DEBUG_DUMP_CELL + 0.5), 1)
         local startZ = length * 0.5 - (index - 1) * band.length
@@ -409,25 +475,18 @@ function VariableBunkerStorage.debugDump(placeable, reason)
         local offsetText = debugNumber(getDebugOutputOffset(outputStorage, band))
         for row = 1, rows do
             local cellZ = startZ - (row - 0.5) * band.length / rows
-            local cells = {}
-            for column = 1, columns do
-                local cellX = halfWidth - (column - 0.5) * width / columns
-                local wx, wy, wz = localToWorld(rootNode, cellX, 0, cellZ)
-                local _, thickness = DensityMapHeightUtil.getHeightAtWorldPos(wx, wy, wz)
-                cells[column] = getDebugCellChar(thickness)
-            end
             if row == 1 then
                 VariableBunker.debugLog(
                     "dump",
-                    "b%03d%s offset %9s |%s| %.0f l",
+                    "b%03d%s offset %9s %s %.0f l",
                     index,
                     marker,
                     offsetText,
-                    table.concat(cells),
+                    getRow(cellZ),
                     getDebugBandLevel(bunkerSilo, band)
                 )
             else
-                VariableBunker.debugLog("dump", "%s|%s|", string.rep(" ", 23), table.concat(cells))
+                VariableBunker.debugLog("dump", "%s%s", string.rep(" ", 23), getRow(cellZ))
             end
         end
     end
@@ -941,7 +1000,7 @@ end
 function VariableBunkerStorage:openFermentedSide(bunkerSilo)
     if bunkerSilo.state == BunkerSilo.STATE_FERMENTED then
         self.residueBandIndex = nil
-        self.wallBandIndex = nil
+        self.clearBandIndex = nil
         local area = bunkerSilo.bunkerSiloArea
         bunkerSilo:openSilo(area.hx + area.dwx * 0.5, area.hy + area.dwy * 0.5, area.hz + area.dwz * 0.5)
     end
@@ -1016,18 +1075,18 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
         residue = self:removeResidue(bunkerSilo, bands, liters, fillTypeIndex)
         moved = residue
     end
-    local wallStrips = self:removeWallStrips(bunkerSilo, bands, fillTypeIndex)
-    moved = moved + wallStrips
+    local behindFace = self:removeBehindFace(bunkerSilo, bands, fillTypeIndex)
+    moved = moved + behindFace
     if delivered ~= nil and (moved >= 0.001 or not self.debugFruitlessLogged) then
         self.debugFruitlessLogged = moved < 0.001
         debugLog(
             "extraction",
-            "request %.0f, removed %.0f (line %.0f, residue %.0f, walls %.0f), band %d -> %d, %d bands walked%s, delivered by %s",
+            "request %.0f, removed %.0f (line %.0f, residue %.0f, behind face %.0f), band %d -> %d, %d bands walked%s, delivered by %s",
             liters,
             moved,
-            moved - residue - wallStrips,
+            moved - residue - behindFace,
             residue,
-            wallStrips,
+            behindFace,
             startIndex,
             index,
             walked,
@@ -1038,71 +1097,48 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
     return moved
 end
 
-function VariableBunkerStorage:removeWallStrips(bunkerSilo, bands, fillTypeIndex)
+function VariableBunkerStorage:removeBehindFace(bunkerSilo, bands, fillTypeIndex)
     local spec = self.placeable.spec_VariableBunker
     local rootNode = self.placeable.rootNode
     local bandCount = #bands
-    local index = math.min(self.wallBandIndex or bandCount, bandCount)
+    local index = math.min(self.clearBandIndex or bandCount, bandCount)
     if index < 1 then
         return 0
     end
-    local pixel = getDensityPixelSize()
-    local halfPixel = pixel * 0.5 + PIXEL_MARGIN
+    local wallCore = getWallCore(self.placeable)
     local halfWidth = bands[1].halfWidth
+    local centerHalfWidth = halfWidth * 0.5
+    local outerHalfWidth = halfWidth + wallCore + PIXEL_MARGIN
     local fillTypes = getRemovableFillTypes(bunkerSilo, fillTypeIndex)
-    local doneLimit = WALL_STRIP_DONE_LITERS_PER_METER * halfWidth * 2
-    local passed = nil
-    for _ = 1, WALL_STRIP_BANDS_PER_CALL do
+    local doneLimit = CLEAR_DONE_LITERS_PER_METER * centerHalfWidth * 2
+    local removed = 0
+    local cleared = isDebug("extraction") and {} or nil
+    for _ = 1, CLEAR_BANDS_PER_CALL do
         if index < 1 then
             break
         end
         local band = bands[index]
-        local interiorStartZ = band.startZ
-        if index == 1 and spec.hasRearWall then
-            interiorStartZ = band.startZ - pixel
-        end
-        local interior = getLocalAreaFillLevel(
-            rootNode,
-            halfWidth - pixel,
-            -(halfWidth - pixel),
-            interiorStartZ,
-            band.endZ,
-            fillTypes
-        )
-        if interior >= doneLimit then
+        local center =
+            getLocalAreaFillLevel(rootNode, centerHalfWidth, -centerHalfWidth, band.startZ, band.endZ, fillTypes)
+        if center >= doneLimit then
             break
         end
-        passed = index
+        local startZ = band.startZ + PIXEL_MARGIN
+        if index == 1 and spec.hasRearWall then
+            startZ = band.startZ + wallCore + PIXEL_MARGIN
+        end
+        local bandRemoved =
+            removeLocalArea(rootNode, outerHalfWidth, -outerHalfWidth, startZ, band.endZ - PIXEL_MARGIN, fillTypes)
+        removed = removed + bandRemoved
+        if cleared ~= nil then
+            table.insert(cleared, string.format("b%d:%.0f", index, bandRemoved))
+        end
         index = index - 1
     end
-    self.wallBandIndex = index
-    if passed == nil then
-        return 0
+    self.clearBandIndex = index
+    if cleared ~= nil and #cleared > 0 then
+        debugLog("extraction", "behind face: bands cleared wall to wall %s", table.concat(cleared, " "))
     end
-    local rearZ = bands[passed].startZ + halfPixel
-    local frontZ = -(spec.lengthMeters or 0) * 0.5 - halfPixel
-    local removed = removeLocalArea(rootNode, halfWidth + halfPixel, halfWidth - halfPixel, rearZ, frontZ, fillTypes)
-    removed = removed
-        + removeLocalArea(rootNode, -halfWidth + halfPixel, -halfWidth - halfPixel, rearZ, frontZ, fillTypes)
-    if passed == 1 and spec.hasRearWall then
-        local rearWallZ = bands[1].startZ
-        removed = removed
-            + removeLocalArea(
-                rootNode,
-                halfWidth + halfPixel,
-                -halfWidth - halfPixel,
-                rearWallZ + halfPixel,
-                rearWallZ - halfPixel,
-                fillTypes
-            )
-    end
-    debugLog(
-        "extraction",
-        "walls: face passed band %d, wall pixels up to there cleared, %.0f l removed (pixel %.2f m)",
-        passed,
-        removed,
-        pixel
-    )
     return removed
 end
 
@@ -1111,7 +1147,7 @@ function VariableBunkerStorage:removeResidue(bunkerSilo, bands, liters, fillType
     local rootNode = self.placeable.rootNode
     local fermentingFillType = fillTypeIndex == FillType.SILAGE and bunkerSilo.fermentingFillType or nil
     local fillTypes = getRemovableFillTypes(bunkerSilo, fillTypeIndex)
-    local halfPixel = getDensityPixelSize() * 0.5 + PIXEL_MARGIN
+    local wallCore = getWallCore(self.placeable)
     local moved = 0
     local cleared = 0
     local index = math.min(self.residueBandIndex or #bands, #bands)
@@ -1123,10 +1159,10 @@ function VariableBunkerStorage:removeResidue(bunkerSilo, bands, liters, fillType
             if fermentingFillType ~= nil then
                 openFermentedBand(bunkerSilo, band)
             end
-            local outerHalfWidth = band.halfWidth + halfPixel
+            local outerHalfWidth = band.halfWidth + wallCore + PIXEL_MARGIN
             local startZ = band.startZ + PIXEL_MARGIN
             if index == 1 and spec.hasRearWall then
-                startZ = band.startZ + halfPixel
+                startZ = band.startZ + wallCore + PIXEL_MARGIN
             end
             local endZ = band.endZ - PIXEL_MARGIN
             local cellCount = math.max(math.ceil(outerHalfWidth * 2 / RESIDUE_CELL_WIDTH), 1)
@@ -1287,25 +1323,52 @@ function VariableBunkerStorage:removeLoadingStation(station)
     self.loadingStations[station] = nil
 end
 
-local function clearEmptiedSilo(placeable, bunkerSilo)
+local function getFootprintArea(placeable)
     local spec = placeable.spec_VariableBunker
+    local wallCore = getWallCore(placeable)
+    local outerHalfWidth = (spec.widthMeters or 0) * 0.5 + wallCore + PIXEL_MARGIN
+    local halfLength = (spec.lengthMeters or 0) * 0.5
+    local rearZ = halfLength + (spec.hasRearWall and wallCore or 0) + PIXEL_MARGIN
+    return outerHalfWidth, -outerHalfWidth, rearZ, -halfLength - PIXEL_MARGIN
+end
+
+local function clearEmptiedSilo(placeable)
     local rootNode = placeable.rootNode
-    if spec == nil or rootNode == nil then
+    if placeable.spec_VariableBunker == nil or rootNode == nil then
         return
     end
-    local halfPixel = getDensityPixelSize() * 0.5 + PIXEL_MARGIN
-    local outerHalfWidth = (spec.widthMeters or 0) * 0.5 + halfPixel
-    local halfLength = (spec.lengthMeters or 0) * 0.5
-    local rearZ = halfLength + (spec.hasRearWall and halfPixel or PIXEL_MARGIN)
+    local x0, x1, z0, z1 = getFootprintArea(placeable)
+    local sx, sz, wx, wz, hx, hz = getLocalArea(rootNode, x0, x1, z0, z1)
+    DensityMapHeightUtil.clearArea(sx, sz, wx, wz, hx, hz)
+    debugLog("extraction", "silo emptied by the base game, everything left inside the walls cleared")
+end
+
+function VariableBunkerStorage.cleanupLeftovers(placeable)
+    local bunkerSilo = getBunkerSilo(placeable)
+    local rootNode = placeable.rootNode
+    if bunkerSilo == nil or rootNode == nil or placeable.spec_VariableBunker == nil then
+        return
+    end
+    if bunkerSilo.state ~= BunkerSilo.STATE_FILL then
+        return
+    end
+    local x0, x1, z0, z1 = getFootprintArea(placeable)
     local fillTypes = {}
     for _, fillType in ipairs({ bunkerSilo.fermentingFillType, bunkerSilo.outputFillType }) do
-        if fillType ~= nil and fillType ~= FillType.UNKNOWN then
+        if fillType ~= nil and fillType ~= FillType.UNKNOWN and fillType ~= bunkerSilo.inputFillType then
             table.insert(fillTypes, fillType)
         end
     end
-    local removed =
-        removeLocalArea(rootNode, outerHalfWidth, -outerHalfWidth, rearZ, -halfLength - PIXEL_MARGIN, fillTypes)
-    debugLog("extraction", "silo emptied by the base game, %.0f l left at the walls removed", removed)
+    local removed = removeLocalArea(rootNode, x0, x1, z0, z1, fillTypes)
+    local untyped = removeUntypedHeapAtArea(rootNode, x0, x1, z0, z1)
+    if removed > 0 or untyped > 0 then
+        debugLog(
+            "extraction",
+            "leftovers of an earlier extraction cleared: %.0f l covered or silage, %d untyped height units",
+            removed,
+            untyped
+        )
+    end
 end
 
 local function setBunkerSiloState(bunkerSilo, superFunc, state, ...)
@@ -1320,7 +1383,7 @@ local function setBunkerSiloState(bunkerSilo, superFunc, state, ...)
     then
         for placeable in pairs(VariableBunker.activeSilos) do
             if getBunkerSilo(placeable) == bunkerSilo then
-                clearEmptiedSilo(placeable, bunkerSilo)
+                clearEmptiedSilo(placeable)
                 break
             end
         end
