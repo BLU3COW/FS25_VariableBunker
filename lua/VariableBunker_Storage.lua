@@ -22,6 +22,7 @@ local DEFAULT_PIXEL_SIZE = 0.5
 local FACE_APRON = 1
 local FACE_HEIGHT_MARGIN = 0.5
 local FACE_MAX_STEPS = 40
+local FACE_MAX_EMPTY_STEPS = 1000
 local DEBUG_DUMP_CELL = 0.5
 local DEBUG_DUMP_CHARS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 local DEBUG_LABEL_STEP = 10
@@ -1113,7 +1114,11 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
     local step = 1 / unitsPerMeter / geometry.slope
     local removed = 0
     local steps = 0
-    while removed < liters and self.faceZ < endZ and steps < FACE_MAX_STEPS do
+    while
+        removed < liters
+        and self.faceZ < endZ
+        and (steps < FACE_MAX_STEPS or (removed < 0.001 and steps < FACE_MAX_EMPTY_STEPS))
+    do
         self.faceZ = math.min(self.faceZ + step, endZ)
         removed = removed + self:cutFaceWindow(geometry, heightTypes, unitsPerMeter)
         steps = steps + 1
