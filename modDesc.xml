@@ -9,7 +9,7 @@
 
     <description>
         <en><![CDATA[VariableBunker
-With VariableBunker, you get a single silo that adapts to your farm instead of the other way around. Choose a Bunker silo with a rear wall or a Drive-through silo open at both ends, and set the interior width, length and wall height freely in construction mode. Walls, collisions, the silo area and all placement areas follow the selected dimensions, while the purchase price stays the same. The estimated capacity is shown live while you configure the silo.
+With VariableBunker, you get a single silo that adapts to your farm instead of the other way around. Choose a Bunker silo with a rear wall or a Drive-through silo open at both ends, and set the interior width, length and wall height freely in construction mode. Walls, collisions, the silo area and all placement areas follow the selected dimensions, and the purchase price grows with the size. The estimated capacity is shown live while you configure the silo.
 
 Dimensions:
 - Interior width: 6–100 meters
@@ -36,6 +36,8 @@ Approximate capacity of the Drive-through silo (4 m / 8 m fill height):
 - 50 × 150 m: 29,000,000 l / 56,000,000 l
 - 100 × 200 m: 78,000,000 l / 152,000,000 l
 
+Price: 100 € per square meter of interior floor with 4 meter walls; every meter of wall height above or below changes the price by 12.5 %. A 40 × 60 m silo with 4 meter walls costs 240,000 €. The silo type and the floor slab are free, the floor grid and the loading point cost 10,000 € each, the compaction service and the AutoDrive course 5,000 € each. As with the base game silos, the daily upkeep is one thousandth of the price.
+
 Options:
 - Concrete floor slab: flush with the silo or with an extended apron
 - Floor grid in front of the entrance: takes chaff, grass and hay while the silo is open (grass and hay become chaff liter for liter)
@@ -45,13 +47,13 @@ Options:
 
 While you are at the silo, an info box shows the fill level, compaction, fermentation and the next step.
 
-The settings file modSettings/FS25_VariableBunker.xml is created after the first start. It can limit new silos to 4 meter walls, switch the floor grid, the loading point and the compaction service on or off, set the compaction price in percent and hide the info box. In multiplayer, the host settings apply.
+The settings file modSettings/FS25_VariableBunker.xml is created after the first start. It can limit new silos to 4 meter walls, switch the floor grid, the loading point and the compaction service on or off, set the compaction price in percent and the silo price per square meter, and hide the info box. In multiplayer, the host settings apply.
 
 VariableBunker is compatible with AutoDrive and AdjustSuite.
 
 Source code, help and issue reports: https://github.com/BLU3COW/FS25_VariableBunker]]></en>
         <de><![CDATA[VariableBunker
-Mit VariableBunker bekommst du ein einziges Silo, das sich deinem Hof anpasst und nicht umgekehrt. Wähle ein Bunkersilo mit Rückwand oder ein Fahrsilo, das an beiden Enden offen ist, und stelle Innenbreite, Länge und Wandhöhe im Baumodus frei ein. Wände, Kollisionen, Silobereich und alle Platzierungsflächen folgen den gewählten Abmessungen, der Kaufpreis bleibt gleich. Das geschätzte Fassungsvermögen wird schon während der Konfiguration angezeigt.
+Mit VariableBunker bekommst du ein einziges Silo, das sich deinem Hof anpasst und nicht umgekehrt. Wähle ein Bunkersilo mit Rückwand oder ein Fahrsilo, das an beiden Enden offen ist, und stelle Innenbreite, Länge und Wandhöhe im Baumodus frei ein. Wände, Kollisionen, Silobereich und alle Platzierungsflächen folgen den gewählten Abmessungen, der Kaufpreis wächst mit der Größe. Das geschätzte Fassungsvermögen wird schon während der Konfiguration angezeigt.
 
 Abmessungen:
 - Innenbreite: 6–100 Meter
@@ -78,6 +80,8 @@ Ungefähres Fassungsvermögen Fahrsilo (4 m / 8 m Füllhöhe):
 - 50 × 150 m: 29.000.000 l / 56.000.000 l
 - 100 × 200 m: 78.000.000 l / 152.000.000 l
 
+Preis: 100 € je Quadratmeter Innenfläche bei 4 Meter Wandhöhe; jeder Meter Wandhöhe mehr oder weniger ändert den Preis um 12,5 %. Ein Silo mit 40 × 60 m und 4 Meter Wänden kostet 240.000 €. Bauart und Bodenplatte kosten nichts, Bodengitter und Ladestelle je 10.000 €, Verdichtungsservice und AutoDrive-Kurs je 5.000 €. Wie bei den Silos aus dem Basisspiel beträgt der tägliche Unterhalt ein Tausendstel des Preises.
+
 Optionen:
 - Beton-Bodenplatte: bündig mit dem Silo oder mit verlängertem Vorplatz
 - Bodengitter vor der Einfahrt: nimmt im offenen Silo Häckselgut, Gras und Heu an (Gras und Heu werden Liter für Liter zu Häckselgut)
@@ -87,13 +91,13 @@ Optionen:
 
 Am Silo zeigt eine Infobox Füllstand, Verdichtung, Gärung und den nächsten Schritt.
 
-Die Einstellungsdatei modSettings/FS25_VariableBunker.xml wird nach dem ersten Start erstellt. Darin lassen sich neue Silos auf 4 Meter Wandhöhe begrenzen, Bodengitter, Ladestelle und Verdichtungsservice ein- oder ausschalten, der Preis des Verdichtungsservice in Prozent festlegen und die Infobox ausblenden. Im Mehrspieler gelten die Einstellungen des Hosts.
+Die Einstellungsdatei modSettings/FS25_VariableBunker.xml wird nach dem ersten Start erstellt. Darin lassen sich neue Silos auf 4 Meter Wandhöhe begrenzen, Bodengitter, Ladestelle und Verdichtungsservice ein- oder ausschalten, der Preis des Verdichtungsservice in Prozent sowie der Silopreis je Quadratmeter festlegen und die Infobox ausblenden. Im Mehrspieler gelten die Einstellungen des Hosts.
 
 VariableBunker ist kompatibel mit AutoDrive und AdjustSuite.
 
 Quellcode, Hilfe und Fehlermeldungen: https://github.com/BLU3COW/FS25_VariableBunker]]></de>
         <fr><![CDATA[VariableBunker
-Avec VariableBunker, vous obtenez un seul silo qui s'adapte à votre ferme, et non l'inverse. Choisissez un Silo bunker avec mur arrière ou un Silo traversant ouvert aux deux extrémités, et réglez librement la largeur intérieure, la longueur et la hauteur des murs en mode construction. Les murs, les collisions, la zone du silo et toutes les zones de placement suivent les dimensions choisies, le prix d'achat reste le même. La capacité estimée s'affiche dès la configuration.
+Avec VariableBunker, vous obtenez un seul silo qui s'adapte à votre ferme, et non l'inverse. Choisissez un Silo bunker avec mur arrière ou un Silo traversant ouvert aux deux extrémités, et réglez librement la largeur intérieure, la longueur et la hauteur des murs en mode construction. Les murs, les collisions, la zone du silo et toutes les zones de placement suivent les dimensions choisies, et le prix d'achat augmente avec la taille. La capacité estimée s'affiche dès la configuration.
 
 Dimensions :
 - Largeur intérieure : 6 à 100 mètres
@@ -120,6 +124,8 @@ Capacité approximative du Silo traversant (hauteur de remplissage 4 m / 8 m) :
 - 50 × 150 m : 29 000 000 l / 56 000 000 l
 - 100 × 200 m : 78 000 000 l / 152 000 000 l
 
+Prix : 100 € par mètre carré de surface intérieure avec des murs de 4 mètres ; chaque mètre de hauteur de mur en plus ou en moins modifie le prix de 12,5 %. Un silo de 40 × 60 m avec des murs de 4 mètres coûte 240 000 €. Le type de silo et la dalle sont gratuits, la grille et le point de chargement coûtent 10 000 € chacun, le service de compactage et le parcours AutoDrive 5 000 € chacun. Comme pour les silos du jeu de base, l'entretien journalier représente un millième du prix.
+
 Options :
 - Dalle en béton : au ras du silo ou avec une aire prolongée
 - Grille au sol devant l'entrée : accepte la paille hachée, l'herbe et le foin tant que le silo est ouvert (l'herbe et le foin deviennent de la paille hachée litre pour litre)
@@ -129,7 +135,7 @@ Options :
 
 Lorsque vous êtes au silo, une fenêtre d'information affiche le niveau, le compactage, la fermentation et la prochaine étape.
 
-Le fichier de réglages modSettings/FS25_VariableBunker.xml est créé après le premier démarrage. Il permet de limiter les nouveaux silos à des murs de 4 mètres, d'activer ou de désactiver la grille, le point de chargement et le service de compactage, de fixer le prix du compactage en pourcentage et de masquer la fenêtre d'information. En multijoueur, les réglages de l'hôte s'appliquent.
+Le fichier de réglages modSettings/FS25_VariableBunker.xml est créé après le premier démarrage. Il permet de limiter les nouveaux silos à des murs de 4 mètres, d'activer ou de désactiver la grille, le point de chargement et le service de compactage, de fixer le prix du compactage en pourcentage et le prix du silo au mètre carré et de masquer la fenêtre d'information. En multijoueur, les réglages de l'hôte s'appliquent.
 
 VariableBunker est compatible avec AutoDrive et AdjustSuite.
 

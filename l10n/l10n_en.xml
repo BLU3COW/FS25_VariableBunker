@@ -16,6 +16,7 @@
         <text name="option_VariableBunkerAutoDriveOff" text="Off" />
         <text name="option_VariableBunkerAutoDriveOn" text="Generate automatically" />
         <text name="configuration_VariableBunkerEstimatedCapacity" text="Estimated capacity" />
+        <text name="configuration_VariableBunkerTotalPrice" text="Total price" />
         <text name="capacity_VariableBunkerMapLimit" text="map limit %s m" />
         <text name="configuration_VariableBunkerInput" text="Unloading" />
         <text name="configuration_VariableBunkerOutput" text="Loading" />

@@ -6,7 +6,10 @@ local SETTINGS_ROOT = "VariableBunkerSettings"
 local SETTINGS_KEY = SETTINGS_ROOT .. ".construction"
 local DISPLAY_KEY = SETTINGS_ROOT .. ".display"
 local DEBUG_KEY = SETTINGS_ROOT .. ".debug"
-local SETTINGS_VERSION = 6
+local SETTINGS_VERSION = 7
+local DEFAULT_PRICE_PER_SQUARE_METER = 100
+local MIN_PRICE_PER_SQUARE_METER = 0
+local MAX_PRICE_PER_SQUARE_METER = 10000
 
 local DEBUG_SETTINGS = {
     { key = "enabled", attribute = "enabled", default = false },
@@ -33,6 +36,7 @@ Bunker.settings = Bunker.settings
         allowOutputStation = true,
         allowCompactionService = true,
         compactionPriceFactor = 1,
+        pricePerSquareMeter = DEFAULT_PRICE_PER_SQUARE_METER,
         showInfoBox = true,
         debugOutput = getDefaultDebugSettings(),
     }
@@ -51,6 +55,14 @@ local MAX_COMPACTION_PRICE_FACTOR = 10
 
 local function getCompactionPriceFactor(value)
     return math.clamp(tonumber(value) or 1, MIN_COMPACTION_PRICE_FACTOR, MAX_COMPACTION_PRICE_FACTOR)
+end
+
+local function getPricePerSquareMeter(value)
+    return math.clamp(
+        math.floor((tonumber(value) or DEFAULT_PRICE_PER_SQUARE_METER) + 0.5),
+        MIN_PRICE_PER_SQUARE_METER,
+        MAX_PRICE_PER_SQUARE_METER
+    )
 end
 
 local function getSettingsFilename()
@@ -89,6 +101,7 @@ local function writeSettingsFile(filename)
         SETTINGS_KEY .. "#compactionPricePercent",
         math.floor(Bunker.settings.compactionPriceFactor * 100 + 0.5)
     )
+    setXMLInt(xmlFile, SETTINGS_KEY .. "#pricePerSquareMeter", Bunker.settings.pricePerSquareMeter)
     setXMLBool(xmlFile, DISPLAY_KEY .. "#showInfoBox", Bunker.settings.showInfoBox == true)
     for _, entry in ipairs(DEBUG_SETTINGS) do
         setXMLBool(xmlFile, DEBUG_KEY .. "#" .. entry.attribute, Bunker.settings.debugOutput[entry.key] == true)
@@ -156,6 +169,144 @@ function Bunker.applyStationSettingsToStoreItems()
     end
 end
 
+local PRICE_REFERENCE_WALL_HEIGHT = 4
+local PRICE_HEIGHT_BASE_SHARE = 0.5
+local PRICE_ROUNDING = 100
+local DAILY_UPKEEP_PER_PRICE = 0.001
+local DIMENSION_CONFIGURATIONS = {
+    [Bunker.CONFIG_WIDTH] = true,
+    [Bunker.CONFIG_LENGTH] = true,
+    [Bunker.CONFIG_HEIGHT] = true,
+}
+
+local function isVariableBunkerStoreItem(storeItem)
+    local configurations = storeItem ~= nil and storeItem.configurations or nil
+    return configurations ~= nil
+        and configurations[Bunker.CONFIG_WIDTH] ~= nil
+        and configurations[Bunker.CONFIG_LENGTH] ~= nil
+        and configurations[Bunker.CONFIG_HEIGHT] ~= nil
+        and configurations[Bunker.CONFIG_TYPE] ~= nil
+end
+
+local function getStoreConfigurationItem(storeItem, configurations, configName)
+    local items = storeItem.configurations[configName]
+    if items == nil then
+        return nil
+    end
+    local configId = configurations ~= nil and configurations[configName] or nil
+    if configId == nil and storeItem.defaultConfigurationIds ~= nil then
+        configId = storeItem.defaultConfigurationIds[configName]
+    end
+    for _, item in ipairs(items) do
+        if item.index == configId then
+            return item
+        end
+    end
+    return items[configId or 1]
+end
+
+local function getConfiguredMeters(storeItem, configurations, configName, fallback)
+    local item = getStoreConfigurationItem(storeItem, configurations, configName)
+    return tonumber(item ~= nil and item.meters) or fallback
+end
+
+function Bunker.getDimensionPrice(storeItem, configurations)
+    local width = getConfiguredMeters(storeItem, configurations, Bunker.CONFIG_WIDTH, 40)
+    local length = getConfiguredMeters(storeItem, configurations, Bunker.CONFIG_LENGTH, 60)
+    local height = getConfiguredMeters(storeItem, configurations, Bunker.CONFIG_HEIGHT, PRICE_REFERENCE_WALL_HEIGHT)
+    local heightFactor = PRICE_HEIGHT_BASE_SHARE + (1 - PRICE_HEIGHT_BASE_SHARE) * height / PRICE_REFERENCE_WALL_HEIGHT
+    local price = width * length * Bunker.settings.pricePerSquareMeter * heightFactor
+    return math.floor(price / PRICE_ROUNDING + 0.5) * PRICE_ROUNDING
+end
+
+local function getOptionPrice(storeItem, configurations)
+    local price = 0
+    if configurations == nil then
+        return price
+    end
+    for configName in pairs(configurations) do
+        if not DIMENSION_CONFIGURATIONS[configName] then
+            local item = getStoreConfigurationItem(storeItem, configurations, configName)
+            price = price + (tonumber(item ~= nil and item.price) or 0)
+        end
+    end
+    return price
+end
+
+function Bunker.getTotalPrice(storeItem, configurations)
+    return Bunker.getDimensionPrice(storeItem, configurations) + getOptionPrice(storeItem, configurations)
+end
+
+local function applyStoreItemPrice(storeItem)
+    local price = Bunker.getDimensionPrice(storeItem, nil)
+    storeItem.price = price
+    storeItem.dailyUpkeep = math.floor(price * DAILY_UPKEEP_PER_PRICE + 0.5)
+end
+
+function Bunker.applyPriceSettingToStoreItems()
+    if g_storeManager == nil or g_storeManager.getItems == nil then
+        return
+    end
+    for _, storeItem in ipairs(g_storeManager:getItems()) do
+        if isVariableBunkerStoreItem(storeItem) then
+            applyStoreItemPrice(storeItem)
+        end
+    end
+end
+
+local function getBuyPriceWithDimensions(economyManager, superFunc, storeItem, configurations, saleItem)
+    local price, upgradePrice = superFunc(economyManager, storeItem, configurations, saleItem)
+    if saleItem == nil and isVariableBunkerStoreItem(storeItem) then
+        price = price - (storeItem.price or 0) + Bunker.getDimensionPrice(storeItem, configurations)
+    end
+    return price, upgradePrice
+end
+
+local function getDailyUpkeepWithDimensions(storeItem, superFunc, configurations)
+    if isVariableBunkerStoreItem(storeItem) then
+        return math.floor(Bunker.getTotalPrice(storeItem, configurations) * DAILY_UPKEEP_PER_PRICE + 0.5)
+    end
+    return superFunc(storeItem, configurations)
+end
+
+local function getBrushPriceWithConfigurations(brush, superFunc)
+    if isVariableBunkerStoreItem(brush.storeItem) then
+        local economyManager = g_currentMission.economyManager
+        return economyManager:getBuyPrice(brush.storeItem, brush.configurations) + brush:getDisplacementCost()
+    end
+    return superFunc(brush)
+end
+
+local function addStoreItemWithDimensionPrice(storeManager, superFunc, storeItem, ...)
+    if isVariableBunkerStoreItem(storeItem) then
+        applyStoreItemPrice(storeItem)
+    end
+    return superFunc(storeManager, storeItem, ...)
+end
+
+local function installPriceHooks()
+    if Bunker.priceHooksInstalled or Utils == nil then
+        return
+    end
+    if EconomyManager ~= nil then
+        EconomyManager.getBuyPrice = Utils.overwrittenFunction(EconomyManager.getBuyPrice, getBuyPriceWithDimensions)
+    end
+    if StoreItemUtil ~= nil then
+        StoreItemUtil.getDailyUpkeep =
+            Utils.overwrittenFunction(StoreItemUtil.getDailyUpkeep, getDailyUpkeepWithDimensions)
+    end
+    if ConstructionBrushPlaceable ~= nil then
+        ConstructionBrushPlaceable.getPrice =
+            Utils.overwrittenFunction(ConstructionBrushPlaceable.getPrice, getBrushPriceWithConfigurations)
+    end
+    if StoreManager ~= nil then
+        StoreManager.addItem = Utils.overwrittenFunction(StoreManager.addItem, addStoreItemWithDimensionPrice)
+    end
+    Bunker.priceHooksInstalled = true
+end
+
+installPriceHooks()
+
 function Bunker.applySettings(settings)
     Bunker.settings.allowWallHeightsAboveFourMeters = settings ~= nil
         and settings.allowWallHeightsAboveFourMeters == true
@@ -163,6 +314,7 @@ function Bunker.applySettings(settings)
     Bunker.settings.allowOutputStation = settings == nil or settings.allowOutputStation ~= false
     Bunker.settings.allowCompactionService = settings == nil or settings.allowCompactionService ~= false
     Bunker.settings.compactionPriceFactor = getCompactionPriceFactor(settings ~= nil and settings.compactionPriceFactor)
+    Bunker.settings.pricePerSquareMeter = getPricePerSquareMeter(settings ~= nil and settings.pricePerSquareMeter)
     if settings ~= nil and settings.showInfoBox ~= nil then
         Bunker.settings.showInfoBox = settings.showInfoBox == true
     end
@@ -176,6 +328,7 @@ function Bunker.applySettings(settings)
     end
     Bunker.applyHeightSettingToStoreItems()
     Bunker.applyStationSettingsToStoreItems()
+    Bunker.applyPriceSettingToStoreItems()
     if Bunker.activeSilos ~= nil then
         for placeable in pairs(Bunker.activeSilos) do
             if placeable.VariableBunkerRefreshStationState ~= nil then
@@ -197,6 +350,7 @@ function Bunker.loadSettings()
         allowOutputStation = true,
         allowCompactionService = true,
         compactionPriceFactor = 1,
+        pricePerSquareMeter = DEFAULT_PRICE_PER_SQUARE_METER,
         showInfoBox = true,
         debugOutput = getDefaultDebugSettings(),
     })
@@ -219,6 +373,7 @@ function Bunker.loadSettings()
     if compactionPricePercent ~= nil then
         compactionPriceFactor = compactionPricePercent / 100
     end
+    local pricePerSquareMeter = getXMLInt(xmlFile, SETTINGS_KEY .. "#pricePerSquareMeter")
     local showInfoBox = getXMLBool(xmlFile, DISPLAY_KEY .. "#showInfoBox")
     local debugOutput = {}
     for _, entry in ipairs(DEBUG_SETTINGS) do
@@ -231,6 +386,7 @@ function Bunker.loadSettings()
         allowOutputStation = allowOutputStation == nil or allowOutputStation == true,
         allowCompactionService = allowCompactionService == nil or allowCompactionService == true,
         compactionPriceFactor = compactionPriceFactor,
+        pricePerSquareMeter = pricePerSquareMeter,
         showInfoBox = showInfoBox == nil or showInfoBox == true,
         debugOutput = debugOutput,
     })
@@ -265,6 +421,7 @@ function VariableBunkerSettingsEvent.new(settings)
     self.allowOutputStation = settings.allowOutputStation == true
     self.allowCompactionService = settings.allowCompactionService == true
     self.compactionPriceFactor = settings.compactionPriceFactor or 1
+    self.pricePerSquareMeter = settings.pricePerSquareMeter or DEFAULT_PRICE_PER_SQUARE_METER
     return self
 end
 
@@ -274,6 +431,7 @@ function VariableBunkerSettingsEvent:readStream(streamId, connection)
     self.allowOutputStation = streamReadBool(streamId)
     self.allowCompactionService = streamReadBool(streamId)
     self.compactionPriceFactor = streamReadFloat32(streamId)
+    self.pricePerSquareMeter = streamReadInt32(streamId)
     self:run(connection)
 end
 
@@ -283,6 +441,7 @@ function VariableBunkerSettingsEvent:writeStream(streamId, _connection)
     streamWriteBool(streamId, self.allowOutputStation)
     streamWriteBool(streamId, self.allowCompactionService)
     streamWriteFloat32(streamId, self.compactionPriceFactor)
+    streamWriteInt32(streamId, self.pricePerSquareMeter)
 end
 
 function VariableBunkerSettingsEvent:run(connection)
@@ -293,6 +452,7 @@ function VariableBunkerSettingsEvent:run(connection)
             allowOutputStation = self.allowOutputStation,
             allowCompactionService = self.allowCompactionService,
             compactionPriceFactor = self.compactionPriceFactor,
+            pricePerSquareMeter = self.pricePerSquareMeter,
         })
     end
 end
@@ -315,15 +475,6 @@ initSettings()
 
 local CONFIG_LOADING_RATE = "ADRP"
 local DRIVE_THROUGH_CONFIGURATION = 2
-
-local function isVariableBunkerStoreItem(storeItem)
-    local configurations = storeItem ~= nil and storeItem.configurations or nil
-    return configurations ~= nil
-        and configurations[Bunker.CONFIG_WIDTH] ~= nil
-        and configurations[Bunker.CONFIG_LENGTH] ~= nil
-        and configurations[Bunker.CONFIG_HEIGHT] ~= nil
-        and configurations[Bunker.CONFIG_TYPE] ~= nil
-end
 
 local function getConfigurationItem(screen, storeItem, configName)
     local configId = screen.configurations ~= nil and screen.configurations[configName] or nil
@@ -363,29 +514,58 @@ local function getCapacityText(screen, storeItem)
     return text
 end
 
+local function getTotalPriceText(screen, storeItem)
+    local price = Bunker.getTotalPrice(storeItem, screen.configurations)
+    return g_i18n:formatMoney(price, 0, true, true)
+end
+
+local function addInfoRow(screen, titleKey, text)
+    local item = screen:getOrCreateConfigItem("option")
+    item:getDescendantByName("option"):setVisible(false)
+    item:getDescendantByName("title"):setText(g_i18n:getText(titleKey))
+    item:getDescendantByName("price"):setText(text)
+    FocusManager:removeElement(item)
+    return item
+end
+
 local function addCapacityDisplay(screen, storeItem)
     screen.variableBunkerCapacityElement = nil
+    screen.variableBunkerPriceElement = nil
     if not isVariableBunkerStoreItem(storeItem) then
         return
     end
 
     local current = FocusManager.currentGui
     FocusManager:setGui("ConstructionScreen")
-    local item = screen:getOrCreateConfigItem("option")
-    item:getDescendantByName("option"):setVisible(false)
-    item:getDescendantByName("title"):setText(g_i18n:getText("configuration_VariableBunkerEstimatedCapacity"))
-    item:getDescendantByName("price"):setText(getCapacityText(screen, storeItem))
-    FocusManager:removeElement(item)
-    screen.variableBunkerCapacityElement = item
+    screen.variableBunkerCapacityElement =
+        addInfoRow(screen, "configuration_VariableBunkerEstimatedCapacity", getCapacityText(screen, storeItem))
+    screen.variableBunkerPriceElement =
+        addInfoRow(screen, "configuration_VariableBunkerTotalPrice", getTotalPriceText(screen, storeItem))
     screen.configurationLayout:invalidateLayout()
     FocusManager:setGui(current)
 end
 
 local function updateCapacityDisplay(screen, storeItem)
-    local item = screen.variableBunkerCapacityElement
-    if item ~= nil and isVariableBunkerStoreItem(storeItem) then
-        item:getDescendantByName("price"):setText(getCapacityText(screen, storeItem))
+    if not isVariableBunkerStoreItem(storeItem) then
+        return
     end
+    local capacityItem = screen.variableBunkerCapacityElement
+    if capacityItem ~= nil then
+        capacityItem:getDescendantByName("price"):setText(getCapacityText(screen, storeItem))
+    end
+    local priceItem = screen.variableBunkerPriceElement
+    if priceItem ~= nil then
+        priceItem:getDescendantByName("price"):setText(getTotalPriceText(screen, storeItem))
+    end
+end
+
+local function setConfigPriceWithoutDimensions(screen, superFunc, configName, configIndex, priceTextElement, ...)
+    local storeItem = screen.brush ~= nil and screen.brush.storeItem or nil
+    if DIMENSION_CONFIGURATIONS[configName] and isVariableBunkerStoreItem(storeItem) then
+        priceTextElement:setText("")
+        return
+    end
+    return superFunc(screen, configName, configIndex, priceTextElement, ...)
 end
 
 local function getIsLoadingRateHidden(screen, storeItem)
@@ -461,6 +641,8 @@ local function installHooks()
     ConstructionScreen.loadCurrentConfiguration =
         Utils.appendedFunction(ConstructionScreen.loadCurrentConfiguration, refreshConfigurationDisplay)
     ConstructionScreen.draw = Utils.appendedFunction(ConstructionScreen.draw, drawAutoDrivePreview)
+    ConstructionScreen.setConfigPrice =
+        Utils.overwrittenFunction(ConstructionScreen.setConfigPrice, setConfigPriceWithoutDimensions)
     Bunker.constructionScreenHooksInstalled = true
 end
 

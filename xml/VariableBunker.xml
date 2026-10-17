@@ -3,11 +3,11 @@
     <storeData>
         <name>VariableBunker</name>
         <image>dds/store_VariableBunker.dds</image>
-        <price>60000</price>
+        <price>240000</price>
         <functions>
             <function>$l10n_function_VariableBunker</function>
         </functions>
-        <dailyUpkeep>60</dailyUpkeep>
+        <dailyUpkeep>240</dailyUpkeep>
         <lifetime>1000</lifetime>
         <rotation>0</rotation>
         <brand>NONE</brand>
@@ -180,22 +180,22 @@
 
         <VariableBunkerInputConfigurations title="$l10n_configuration_VariableBunkerInput">
             <VariableBunkerInputConfiguration name="$l10n_option_VariableBunkerStationOff" side="off" isDefault="true" saveId="off" />
-            <VariableBunkerInputConfiguration name="$l10n_option_VariableBunkerStationOn" side="front" saveId="front" />
+            <VariableBunkerInputConfiguration name="$l10n_option_VariableBunkerStationOn" side="front" price="10000" saveId="front" />
         </VariableBunkerInputConfigurations>
 
         <VariableBunkerOutputConfigurations title="$l10n_configuration_VariableBunkerOutput">
             <VariableBunkerOutputConfiguration name="$l10n_option_VariableBunkerStationOff" side="off" isDefault="true" saveId="off" />
-            <VariableBunkerOutputConfiguration name="$l10n_option_VariableBunkerStationOn" side="front" saveId="front" />
+            <VariableBunkerOutputConfiguration name="$l10n_option_VariableBunkerStationOn" side="front" price="10000" saveId="front" />
         </VariableBunkerOutputConfigurations>
 
         <VariableBunkerCompactionConfigurations title="$l10n_configuration_VariableBunkerCompaction">
             <VariableBunkerCompactionConfiguration name="$l10n_option_VariableBunkerCompactionOff" isDefault="true" saveId="off" />
-            <VariableBunkerCompactionConfiguration name="$l10n_option_VariableBunkerCompactionOn" saveId="on" />
+            <VariableBunkerCompactionConfiguration name="$l10n_option_VariableBunkerCompactionOn" price="5000" saveId="on" />
         </VariableBunkerCompactionConfigurations>
 
         <VariableBunkerAutoDriveConfigurations title="$l10n_configuration_VariableBunkerAutoDrive">
             <VariableBunkerAutoDriveConfiguration name="$l10n_option_VariableBunkerAutoDriveOff" isDefault="true" saveId="off" />
-            <VariableBunkerAutoDriveConfiguration name="$l10n_option_VariableBunkerAutoDriveOn" saveId="on" />
+            <VariableBunkerAutoDriveConfiguration name="$l10n_option_VariableBunkerAutoDriveOn" price="5000" saveId="on" />
         </VariableBunkerAutoDriveConfigurations>
 
         <inputStation node="inputStationRoot" stationName="$l10n_station_VariableBunkerInput" supportsExtension="false">

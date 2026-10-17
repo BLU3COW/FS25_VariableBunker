@@ -16,6 +16,7 @@
         <text name="option_VariableBunkerAutoDriveOff" text="Aus" />
         <text name="option_VariableBunkerAutoDriveOn" text="Automatisch erzeugen" />
         <text name="configuration_VariableBunkerEstimatedCapacity" text="Geschätzte Kapazität" />
+        <text name="configuration_VariableBunkerTotalPrice" text="Gesamtpreis" />
         <text name="capacity_VariableBunkerMapLimit" text="Kartenlimit %s m" />
         <text name="configuration_VariableBunkerInput" text="Abladestelle" />
         <text name="configuration_VariableBunkerOutput" text="Ladestelle" />
