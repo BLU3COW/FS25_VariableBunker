@@ -20,6 +20,7 @@ local RESIDUE_CELL_WIDTH = 1
 local PIXEL_MARGIN = 0.01
 local CLEAR_DONE_LITERS_PER_METER = 25
 local CLEAR_BANDS_PER_CALL = 4
+local STRANDED_CHECKS_PER_CALL = 16
 local DEFAULT_WALL_CORE = 0.4
 local DEBUG_DUMP_CELL = 0.5
 local DEBUG_DUMP_CHARS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -1030,6 +1031,8 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
     local delivered = isDebug("extraction") and {} or nil
     local walked = 0
     local stoppedBelowMinimum = false
+    local passedOver = {}
+    local wrapped = false
     for _ = 1, bandCount do
         local band = bands[index]
         walked = walked + 1
@@ -1043,6 +1046,9 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
         end
         local offsetBefore = self.lineOffsets[offsetKey]
         local removed = moveAtArea(self, band, liters - moved, fillTypeIndex, offsetKey, false)
+        if removed < 0.001 and moved < 0.001 and not wrapped then
+            table.insert(passedOver, index)
+        end
         moved = moved + removed
         if delivered ~= nil and removed >= 0.001 then
             table.insert(
@@ -1062,6 +1068,7 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
         index = index - 1
         if index < 1 then
             index = bandCount
+            wrapped = true
         end
         if moved >= 0.001 and liters - moved < minRemovable then
             stoppedBelowMinimum = true
@@ -1070,12 +1077,16 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
         end
     end
     self.outputBandIndex = index
+    local lineMoved = moved
     local residue = 0
     if moved < 0.001 then
         residue = self:removeResidue(bunkerSilo, bands, liters, fillTypeIndex)
         moved = residue
     end
     local behindFace = self:removeBehindFace(bunkerSilo, bands, fillTypeIndex)
+    if lineMoved >= 0.001 then
+        behindFace = behindFace + self:removeStrandedBand(bunkerSilo, bands, passedOver, fillTypeIndex)
+    end
     moved = moved + behindFace
     if delivered ~= nil and (moved >= 0.001 or not self.debugFruitlessLogged) then
         self.debugFruitlessLogged = moved < 0.001
@@ -1140,6 +1151,41 @@ function VariableBunkerStorage:removeBehindFace(bunkerSilo, bands, fillTypeIndex
         debugLog("extraction", "behind face: bands cleared wall to wall %s", table.concat(cleared, " "))
     end
     return removed
+end
+
+function VariableBunkerStorage:removeStrandedBand(bunkerSilo, bands, passedOver, fillTypeIndex)
+    if #passedOver == 0 then
+        return 0
+    end
+    local spec = self.placeable.spec_VariableBunker
+    local rootNode = self.placeable.rootNode
+    local wallCore = getWallCore(self.placeable)
+    local fillTypes = getRemovableFillTypes(bunkerSilo, fillTypeIndex)
+    local halfWidth = bands[1].halfWidth
+    local outerHalfWidth = halfWidth + wallCore + PIXEL_MARGIN
+    local doneLimit = CLEAR_DONE_LITERS_PER_METER * halfWidth * 2
+    for checked, index in ipairs(passedOver) do
+        if checked > STRANDED_CHECKS_PER_CALL then
+            break
+        end
+        local band = bands[index]
+        local startZ = band.startZ + PIXEL_MARGIN
+        if index == 1 and spec.hasRearWall then
+            startZ = band.startZ + wallCore + PIXEL_MARGIN
+        end
+        local endZ = band.endZ - PIXEL_MARGIN
+        if getLocalAreaFillLevel(rootNode, outerHalfWidth, -outerHalfWidth, startZ, endZ, fillTypes) >= doneLimit then
+            local removed = removeLocalArea(rootNode, outerHalfWidth, -outerHalfWidth, startZ, endZ, fillTypes)
+            debugLog(
+                "extraction",
+                "stranded: band %d lay in front of the face and gave nothing, cleared wall to wall, %.0f l removed",
+                index,
+                removed
+            )
+            return removed
+        end
+    end
+    return 0
 end
 
 function VariableBunkerStorage:removeResidue(bunkerSilo, bands, liters, fillTypeIndex)
