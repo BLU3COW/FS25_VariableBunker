@@ -117,19 +117,19 @@ Eine optionale Beton-Bodenplatte, eine Abladestelle mit Bodengitter, eine Ladest
 | --- | --- | --- | --- | --- |
 | Interior width | 6 m | 100 m | 1 m up to 20 m, then 5 m | 40 m |
 | Length | 20 m | 200 m | 5 m up to 50 m, then 10 m | 60 m |
-| Wall height | 2 m | 8 m | 1 m | 4 m |
+| Wall height | 2 m | 4 m (8 m when enabled) | 1 m | 4 m |
 
 </div>
 <br>
 
-<div align="center">All dimensions are set in construction mode before the silo is placed. The configuration list shows the estimated capacity and the total price and updates both with every change. The wall insides stay vertical; on the outside, each wall rises vertically for 1.5 m and then slopes inward, so taller walls automatically get a wider base.<br><br><strong>Price:</strong> 100 € per square meter of interior floor with 4 m walls. Each meter of wall height above or below 4 m changes the price by 12.5 % (2 m: 75 %, 8 m: 150 %), so a 40 × 60 m silo with 4 m walls costs 240,000 €. The price per square meter can be changed in the settings. As with the base game silos, the daily upkeep is one thousandth of the price, 240 € per day for the default silo.<br><br><strong>Fill height:</strong> bulk material piles up to the wall height at most, and never higher than the map allows (base game maps: 4 m above the ground). Walls higher than the map limit add no extra volume.</div>
+<div align="center">All dimensions are set in construction mode before the silo is placed. The configuration list shows the estimated capacity and the total price and updates both with every change. The wall insides stay vertical; on the outside, each wall rises vertically for 1.5 m and then slopes inward, so taller walls automatically get a wider base.<br><br><strong>Price:</strong> 100 € per square meter of interior floor with 4 m walls. Each meter of wall height above or below 4 m changes the price by 12.5 % (2 m: 75 %, 8 m: 150 %), so a 40 × 60 m silo with 4 m walls costs 240,000 €. The price per square meter can be changed in the settings. As with the base game silos, the daily upkeep is one thousandth of the price, 240 € per day for the default silo.<br><br><strong>Fill height and map limit:</strong> bulk material piles up to the wall height at most, and never higher than the map allows. Most maps, including all base game maps, limit piles to <strong>4 m</strong> above the ground, so a 5 to 8 m wall would cost more but hold exactly as much as a 4 m wall. Wall heights above 4 m are therefore <strong>switched off by default</strong>. On a map with a higher limit, enable them with <strong>allowWallHeightsAboveFourMeters</strong> in the settings; if the map still caps the selected height, the capacity line in the configuration list names the limit.</div>
 <br>
 <div align="center">
 
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Alle Abmessungen werden im Baumodus vor dem Platzieren eingestellt. Die Konfigurationsliste zeigt das geschätzte Fassungsvermögen und den Gesamtpreis und aktualisiert beides bei jeder Änderung. Die Wandinnenseiten bleiben senkrecht; außen steigt jede Wand 1,5 m senkrecht an und verläuft danach schräg nach innen, sodass höhere Wände automatisch einen breiteren Fuß bekommen.<br><br><strong>Preis:</strong> 100 € je Quadratmeter Innenfläche bei 4 m Wandhöhe. Jeder Meter Wandhöhe mehr oder weniger als 4 m ändert den Preis um 12,5 % (2 m: 75 %, 8 m: 150 %), ein Silo mit 40 × 60 m und 4 m Wänden kostet also 240.000 €. Der Preis je Quadratmeter lässt sich in den Einstellungen ändern. Wie bei den Silos aus dem Basisspiel beträgt der tägliche Unterhalt ein Tausendstel des Preises, beim Standardsilo 240 € pro Tag.<br><br><strong>Füllhöhe:</strong> Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt (Basisspiel-Karten: 4 m über dem Boden). Wände höher als diese Grenze bringen kein zusätzliches Volumen.</div>
+<div align="center">Alle Abmessungen werden im Baumodus vor dem Platzieren eingestellt. Die Konfigurationsliste zeigt das geschätzte Fassungsvermögen und den Gesamtpreis und aktualisiert beides bei jeder Änderung. Die Wandinnenseiten bleiben senkrecht; außen steigt jede Wand 1,5 m senkrecht an und verläuft danach schräg nach innen, sodass höhere Wände automatisch einen breiteren Fuß bekommen.<br><br><strong>Preis:</strong> 100 € je Quadratmeter Innenfläche bei 4 m Wandhöhe. Jeder Meter Wandhöhe mehr oder weniger als 4 m ändert den Preis um 12,5 % (2 m: 75 %, 8 m: 150 %), ein Silo mit 40 × 60 m und 4 m Wänden kostet also 240.000 €. Der Preis je Quadratmeter lässt sich in den Einstellungen ändern. Wie bei den Silos aus dem Basisspiel beträgt der tägliche Unterhalt ein Tausendstel des Preises, beim Standardsilo 240 € pro Tag.<br><br><strong>Füllhöhe und Kartengrenze:</strong> Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt. Die meisten Karten, darunter alle Basisspiel-Karten, begrenzen Schüttungen auf <strong>4 m</strong> über dem Boden; eine 5 bis 8 m hohe Wand würde dort mehr kosten, aber genau so viel fassen wie eine 4-m-Wand. Wandhöhen über 4 m sind deshalb <strong>standardmäßig ausgeschaltet</strong>. Auf einer Karte mit höherer Grenze lassen sie sich mit <strong>allowWallHeightsAboveFourMeters</strong> in den Einstellungen freischalten; begrenzt die Karte die gewählte Höhe trotzdem, nennt die Kapazitätszeile in der Konfigurationsliste die Grenze.</div>
 </details>
 </div>
 <br>
@@ -170,7 +170,7 @@ Eine optionale Beton-Bodenplatte, eine Abladestelle mit Bodengitter, eine Ladest
 </div>
 <br>
 
-<div align="center">The values are approximate and assume a completely filled silo with a flat top at the wall height and a natural slope of 40° at each open end: one slope for the bunker silo, two for the drive-through silo. One cubic meter holds 1,000 liters. Grass and hay are converted to chaff liter for liter when tipped into the silo, so the tables apply to all accepted fill types.<br><br><strong>Map limit:</strong> the columns above 4 m only apply on maps that allow higher piles. Base game maps limit the fill height to 4 m, so there every wall from 4 m upward holds the amount from the 4 m column.</div>
+<div align="center">The values are approximate and assume a completely filled silo with a flat top at the wall height and a natural slope of 40° at each open end: one slope for the bunker silo, two for the drive-through silo. One cubic meter holds 1,000 liters. Grass and hay are converted to chaff liter for liter when tipped into the silo, so the tables apply to all accepted fill types.<br><br><strong>Map limit:</strong> the columns above 4 m only apply on maps that allow higher piles and after enabling wall heights above 4 m in the settings. On base game maps and most other maps, the 4 m column is the maximum.</div>
 <br>
 <div align="center">
 
@@ -204,7 +204,7 @@ Eine optionale Beton-Bodenplatte, eine Abladestelle mit Bodengitter, eine Ladest
 | 50 × 150 m | 15.000.000 | 22.000.000 | 29.000.000 | 36.000.000 | 43.000.000 | 49.000.000 | 56.000.000 |
 | 100 × 200 m | 39.000.000 | 59.000.000 | 78.000.000 | 97.000.000 | 115.000.000 | 133.000.000 | 152.000.000 |
 
-<div align="center">Die Werte sind Näherungen für ein vollständig gefülltes Silo mit ebener Oberfläche auf Wandhöhe und einer natürlichen Böschung von 40° an jedem offenen Ende: eine beim Bunkersilo, zwei beim Fahrsilo. Ein Kubikmeter fasst 1.000 Liter. Gras und Heu werden beim Abkippen ins Silo Liter für Liter in Häckselgut umgewandelt, daher gelten die Tabellen für alle angenommenen Fruchtsorten.<br><br><strong>Kartengrenze:</strong> Die Spalten über 4 m gelten nur auf Karten, die höhere Schüttungen erlauben. Basisspiel-Karten begrenzen die Füllhöhe auf 4 m, dort fasst jede Wand ab 4 m die Menge aus der 4-m-Spalte.</div>
+<div align="center">Die Werte sind Näherungen für ein vollständig gefülltes Silo mit ebener Oberfläche auf Wandhöhe und einer natürlichen Böschung von 40° an jedem offenen Ende: eine beim Bunkersilo, zwei beim Fahrsilo. Ein Kubikmeter fasst 1.000 Liter. Gras und Heu werden beim Abkippen ins Silo Liter für Liter in Häckselgut umgewandelt, daher gelten die Tabellen für alle angenommenen Fruchtsorten.<br><br><strong>Kartengrenze:</strong> Die Spalten über 4 m gelten nur auf Karten, die höhere Schüttungen erlauben, und erst nachdem Wandhöhen über 4 m in den Einstellungen freigeschaltet wurden. Auf Basisspiel-Karten und den meisten anderen Karten ist die 4-m-Spalte das Maximum.</div>
 </details>
 </div>
 <br>
@@ -289,7 +289,7 @@ Die Option <strong>AutoDrive-Kurs</strong> erscheint nur, wenn AutoDrive im Spie
 
 | Setting | English | German | Default |
 | --- | --- | --- | --- |
-| **allowWallHeightsAboveFourMeters** | Wall heights above 4 m | Wandhöhen über 4 m | true |
+| **allowWallHeightsAboveFourMeters** | Wall heights above 4 m (only for maps with a higher fill limit) | Wandhöhen über 4 m (nur für Karten mit höherer Füllgrenze) | false |
 | **allowInputStation** | Filling through the floor grid | Befüllen über das Bodengitter | true |
 | **allowOutputStation** | Loading point | Ladestelle | true |
 | **allowCompactionService** | Compaction service | Verdichtungsservice | true |
@@ -301,7 +301,7 @@ Die Option <strong>AutoDrive-Kurs</strong> erscheint nur, wenn AutoDrive im Spie
 </div>
 <br>
 
-<div align="center">With <strong>allowWallHeightsAboveFourMeters</strong> set to <strong>false</strong>, newly built silos are limited to 4 m walls; existing silos keep their height. <strong>allowInputStation</strong>, <strong>allowOutputStation</strong>, and <strong>allowCompactionService</strong> switch the floor grid, the loading point, and the compaction service on or off. Disabled choices are hidden for new silos and switched off on existing ones without losing their configuration. <strong>compactionPricePercent</strong> scales the compaction price, and <strong>pricePerSquareMeter</strong> sets the purchase price of new silos; silos you already own keep the price you paid.
+<div align="center"><strong>allowWallHeightsAboveFourMeters</strong> is <strong>false</strong> by default because most maps, including all base game maps, limit piles to 4 m; higher walls would only cost more there. Set it to <strong>true</strong> only on a map with a higher fill limit to offer 5 to 8 m walls for new silos. Existing silos keep their height either way. <strong>allowInputStation</strong>, <strong>allowOutputStation</strong>, and <strong>allowCompactionService</strong> switch the floor grid, the loading point, and the compaction service on or off. Disabled choices are hidden for new silos and switched off on existing ones without losing their configuration. <strong>compactionPricePercent</strong> scales the compaction price, and <strong>pricePerSquareMeter</strong> sets the purchase price of new silos; silos you already own keep the price you paid.
 <br><br>
 <strong>display#showInfoBox</strong> and the <strong>debug</strong> settings only apply to your own game. <strong>debug#enabled</strong> writes detailed troubleshooting output to the log. Its sub-switches <strong>logFilling</strong>, <strong>logExtraction</strong>, <strong>logStations</strong>, <strong>logCompaction</strong>, <strong>heightDumps</strong>, and <strong>showOverlay</strong> are on by default and narrow down what is logged or drawn at the silo.
 <br><br>
@@ -312,7 +312,7 @@ Restart the game after editing the file. In multiplayer, the host or dedicated s
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Steht <strong>allowWallHeightsAboveFourMeters</strong> auf <strong>false</strong>, sind neu gebaute Silos auf 4 m Wandhöhe begrenzt; bestehende Silos behalten ihre Höhe. <strong>allowInputStation</strong>, <strong>allowOutputStation</strong> und <strong>allowCompactionService</strong> schalten Bodengitter, Ladestelle und Verdichtungsservice ein oder aus. Deaktivierte Optionen werden bei Neubauten ausgeblendet und an bestehenden Silos abgeschaltet, ohne dass ihre Konfiguration verloren geht. <strong>compactionPricePercent</strong> skaliert den Preis des Verdichtungsservice, <strong>pricePerSquareMeter</strong> legt den Kaufpreis neuer Silos fest; bereits gebaute Silos behalten ihren bezahlten Preis.
+<div align="center"><strong>allowWallHeightsAboveFourMeters</strong> steht standardmäßig auf <strong>false</strong>, weil die meisten Karten, darunter alle Basisspiel-Karten, Schüttungen auf 4 m begrenzen; höhere Wände würden dort nur mehr kosten. Nur auf einer Karte mit höherer Füllgrenze auf <strong>true</strong> setzen, dann stehen für neue Silos 5 bis 8 m zur Wahl. Bestehende Silos behalten ihre Höhe in jedem Fall. <strong>allowInputStation</strong>, <strong>allowOutputStation</strong> und <strong>allowCompactionService</strong> schalten Bodengitter, Ladestelle und Verdichtungsservice ein oder aus. Deaktivierte Optionen werden bei Neubauten ausgeblendet und an bestehenden Silos abgeschaltet, ohne dass ihre Konfiguration verloren geht. <strong>compactionPricePercent</strong> skaliert den Preis des Verdichtungsservice, <strong>pricePerSquareMeter</strong> legt den Kaufpreis neuer Silos fest; bereits gebaute Silos behalten ihren bezahlten Preis.
 <br><br>
 <strong>display#showInfoBox</strong> und die <strong>debug</strong>-Einstellungen gelten nur für das eigene Spiel. <strong>debug#enabled</strong> schreibt ausführliche Ausgaben zur Fehlersuche in die Log. Die Unterschalter <strong>logFilling</strong>, <strong>logExtraction</strong>, <strong>logStations</strong>, <strong>logCompaction</strong>, <strong>heightDumps</strong> und <strong>showOverlay</strong> sind standardmäßig an und grenzen ein, was protokolliert oder am Silo angezeigt wird.
 <br><br>
@@ -335,8 +335,8 @@ The <strong>“FS25_VariableBunker.xml”</strong> file is created automatically
 <br>
 
 ```xml
-<VariableBunkerSettings version="7">
-    <construction allowWallHeightsAboveFourMeters="true" allowInputStation="true" allowOutputStation="true" allowCompactionService="true" compactionPricePercent="100" pricePerSquareMeter="100"/>
+<VariableBunkerSettings version="8">
+    <construction allowWallHeightsAboveFourMeters="false" allowInputStation="true" allowOutputStation="true" allowCompactionService="true" compactionPricePercent="100" pricePerSquareMeter="100"/>
     <display showInfoBox="true"/>
     <debug enabled="false" logExtraction="true" logFilling="true" logStations="true" logCompaction="true" heightDumps="true" showOverlay="true"/>
 </VariableBunkerSettings>

@@ -6,7 +6,8 @@ local SETTINGS_ROOT = "VariableBunkerSettings"
 local SETTINGS_KEY = SETTINGS_ROOT .. ".construction"
 local DISPLAY_KEY = SETTINGS_ROOT .. ".display"
 local DEBUG_KEY = SETTINGS_ROOT .. ".debug"
-local SETTINGS_VERSION = 7
+local SETTINGS_VERSION = 8
+local FIRST_VERSION_WITH_FOUR_METER_DEFAULT = 8
 local DEFAULT_PRICE_PER_SQUARE_METER = 100
 local MIN_PRICE_PER_SQUARE_METER = 0
 local MAX_PRICE_PER_SQUARE_METER = 10000
@@ -31,7 +32,7 @@ end
 
 Bunker.settings = Bunker.settings
     or {
-        allowWallHeightsAboveFourMeters = true,
+        allowWallHeightsAboveFourMeters = false,
         allowInputStation = true,
         allowOutputStation = true,
         allowCompactionService = true,
@@ -345,7 +346,7 @@ function Bunker.loadSettings()
     end
 
     Bunker.applySettings({
-        allowWallHeightsAboveFourMeters = true,
+        allowWallHeightsAboveFourMeters = false,
         allowInputStation = true,
         allowOutputStation = true,
         allowCompactionService = true,
@@ -364,7 +365,11 @@ function Bunker.loadSettings()
         return false
     end
 
+    local version = getXMLInt(xmlFile, SETTINGS_ROOT .. "#version") or 0
     local allowHigherWalls = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowWallHeightsAboveFourMeters")
+    if version < FIRST_VERSION_WITH_FOUR_METER_DEFAULT then
+        allowHigherWalls = false
+    end
     local allowInputStation = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowInputStation")
     local allowOutputStation = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowOutputStation")
     local allowCompactionService = getXMLBool(xmlFile, SETTINGS_KEY .. "#allowCompactionService")
@@ -381,7 +386,7 @@ function Bunker.loadSettings()
     end
     delete(xmlFile)
     Bunker.applySettings({
-        allowWallHeightsAboveFourMeters = allowHigherWalls == nil or allowHigherWalls == true,
+        allowWallHeightsAboveFourMeters = allowHigherWalls == true,
         allowInputStation = allowInputStation == nil or allowInputStation == true,
         allowOutputStation = allowOutputStation == nil or allowOutputStation == true,
         allowCompactionService = allowCompactionService == nil or allowCompactionService == true,
