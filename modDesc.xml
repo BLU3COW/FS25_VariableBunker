@@ -9,12 +9,16 @@
 
     <description>
         <en><![CDATA[VariableBunker
+Category: Grain silos
+Price: $100 per m² of interior floor (40 × 60 × 4 m: $240,000)
+Daily upkeep: 0.1 % of the price (40 × 60 × 4 m: $240)
+
 With VariableBunker, you get a single silo that adapts to your farm instead of the other way around. Choose a Bunker silo with a rear wall or a Drive-through silo open at both ends, and set the interior width, length and wall height freely in construction mode. Walls, collisions, the silo area and all placement areas follow the selected dimensions, and the purchase price grows with the size. The estimated capacity is shown live while you configure the silo.
 
 Dimensions:
 - Interior width: 6–100 meters
 - Length: 20–200 meters
-- Wall height: 2–8 meters
+- Wall height: 2–8 meters (every meter above or below 4 meters changes the price by 12.5 %)
 
 Material piles up to the wall height at most and never higher than the map allows (base game maps: 4 meters). Walls higher than that add no extra volume.
 
@@ -27,14 +31,12 @@ Approximate capacity at 4 m / 8 m fill height, Drive-through silo in brackets:
 - 50 × 150 m: 29,000,000 / 58,000,000 l (29,000,000 / 56,000,000 l)
 - 100 × 200 m: 79,000,000 / 156,000,000 l (78,000,000 / 152,000,000 l)
 
-Price: 100 € per square meter of interior floor with 4 meter walls; every meter of wall height above or below changes the price by 12.5 %. A 40 × 60 m silo with 4 meter walls costs 240,000 €. The silo type and the floor slab are free, the floor grid and the loading point cost 10,000 € each, the compaction service and the AutoDrive course 5,000 € each. As with the base game silos, the daily upkeep is one thousandth of the price.
-
 Options:
-- Concrete floor slab: flush with the silo or with an extended apron
-- Floor grid in front of the entrance: takes chaff, grass and hay while the silo is open (grass and hay become chaff liter for liter)
-- Loading point at the same spot: loads silage after fermentation and cuts it from the entrance as a clean face from wall to wall; its rate can be set with AdjustSuite ADR-P
-- Compaction service at the grid: compacts the remaining material at once for a contractor fee
-- AutoDrive course: generated during placement with a preview beforehand (requires AutoDrive); selling the silo removes its waypoints
+- Concrete floor slab (free): flush with the silo or with an extended apron
+- Floor grid in front of the entrance ($10,000): takes chaff, grass and hay while the silo is open (grass and hay become chaff liter for liter)
+- Loading point at the same spot ($10,000): loads silage after fermentation and cuts it from the entrance as a clean face from wall to wall; its rate can be set with AdjustSuite ADR-P
+- Compaction service at the grid ($5,000): compacts the remaining material at once for a contractor fee
+- AutoDrive course ($5,000): generated during placement with a preview beforehand (requires AutoDrive); selling the silo removes its waypoints
 
 While you are at the silo, an info box shows the fill level, compaction, fermentation and the next step.
 
@@ -44,12 +46,16 @@ VariableBunker is compatible with AutoDrive and AdjustSuite.
 
 Source code, help and issue reports: https://github.com/BLU3COW/FS25_VariableBunker]]></en>
         <de><![CDATA[VariableBunker
+Shopkategorie: Getreidesilos
+Preis: 100€ je m² Innenfläche (40 × 60 × 4 m: 240.000€)
+Täglicher Unterhalt: 0,1 % des Preises (40 × 60 × 4 m: 240€)
+
 Mit VariableBunker bekommst du ein einziges Silo, das sich deinem Hof anpasst und nicht umgekehrt. Wähle ein Bunkersilo mit Rückwand oder ein Fahrsilo, das an beiden Enden offen ist, und stelle Innenbreite, Länge und Wandhöhe im Baumodus frei ein. Wände, Kollisionen, Silobereich und alle Platzierungsflächen folgen den gewählten Abmessungen, der Kaufpreis wächst mit der Größe. Das geschätzte Fassungsvermögen wird schon während der Konfiguration angezeigt.
 
 Abmessungen:
 - Innenbreite: 6–100 Meter
 - Länge: 20–200 Meter
-- Wandhöhe: 2–8 Meter
+- Wandhöhe: 2–8 Meter (jeder Meter mehr oder weniger als 4 Meter ändert den Preis um 12,5 %)
 
 Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt (Basisspiel-Karten: 4 Meter). Höhere Wände bringen darüber hinaus kein zusätzliches Volumen.
 
@@ -62,14 +68,12 @@ Ungefähres Fassungsvermögen bei 4 m / 8 m Füllhöhe, Fahrsilo in Klammern:
 - 50 × 150 m: 29.000.000 / 58.000.000 l (29.000.000 / 56.000.000 l)
 - 100 × 200 m: 79.000.000 / 156.000.000 l (78.000.000 / 152.000.000 l)
 
-Preis: 100 € je Quadratmeter Innenfläche bei 4 Meter Wandhöhe; jeder Meter Wandhöhe mehr oder weniger ändert den Preis um 12,5 %. Ein Silo mit 40 × 60 m und 4 Meter Wänden kostet 240.000 €. Bauart und Bodenplatte kosten nichts, Bodengitter und Ladestelle je 10.000 €, Verdichtungsservice und AutoDrive-Kurs je 5.000 €. Wie bei den Silos aus dem Basisspiel beträgt der tägliche Unterhalt ein Tausendstel des Preises.
-
 Optionen:
-- Beton-Bodenplatte: bündig mit dem Silo oder mit verlängertem Vorplatz
-- Bodengitter vor der Einfahrt: nimmt im offenen Silo Häckselgut, Gras und Heu an (Gras und Heu werden Liter für Liter zu Häckselgut)
-- Ladestelle an derselben Stelle: lädt nach der Gärung Silage und trägt sie von der Einfahrt aus als saubere Anschnittfläche von Wand zu Wand ab; die Laderate lässt sich mit AdjustSuite ADR-P einstellen
-- Verdichtungsservice am Gitter: verdichtet das restliche Material sofort gegen eine Lohnunternehmer-Gebühr
-- AutoDrive-Kurs: wird beim Platzieren erzeugt, vorher mit Vorschau (AutoDrive erforderlich); beim Verkauf des Silos werden seine Wegpunkte entfernt
+- Beton-Bodenplatte (kostenlos): bündig mit dem Silo oder mit verlängertem Vorplatz
+- Bodengitter vor der Einfahrt (10.000€): nimmt im offenen Silo Häckselgut, Gras und Heu an (Gras und Heu werden Liter für Liter zu Häckselgut)
+- Ladestelle an derselben Stelle (10.000€): lädt nach der Gärung Silage und trägt sie von der Einfahrt aus als saubere Anschnittfläche von Wand zu Wand ab; die Laderate lässt sich mit AdjustSuite ADR-P einstellen
+- Verdichtungsservice am Gitter (5.000€): verdichtet das restliche Material sofort gegen eine Lohnunternehmer-Gebühr
+- AutoDrive-Kurs (5.000€): wird beim Platzieren erzeugt, vorher mit Vorschau (AutoDrive erforderlich); beim Verkauf des Silos werden seine Wegpunkte entfernt
 
 Am Silo zeigt eine Infobox Füllstand, Verdichtung, Gärung und den nächsten Schritt.
 
@@ -79,12 +83,16 @@ VariableBunker ist kompatibel mit AutoDrive und AdjustSuite.
 
 Quellcode, Hilfe und Fehlermeldungen: https://github.com/BLU3COW/FS25_VariableBunker]]></de>
         <fr><![CDATA[VariableBunker
+Catégorie: Silos à grains
+Prix: 100€ par m² de surface intérieure (40 × 60 × 4 m : 240 000€)
+Entretien quotidien: 0,1 % du prix (40 × 60 × 4 m : 240€)
+
 Avec VariableBunker, vous obtenez un seul silo qui s'adapte à votre ferme, et non l'inverse. Choisissez un Silo bunker avec mur arrière ou un Silo traversant ouvert aux deux extrémités, et réglez librement la largeur intérieure, la longueur et la hauteur des murs en mode construction. Les murs, les collisions, la zone du silo et toutes les zones de placement suivent les dimensions choisies, et le prix d'achat augmente avec la taille. La capacité estimée s'affiche dès la configuration.
 
 Dimensions :
 - Largeur intérieure : 6 à 100 mètres
 - Longueur : 20 à 200 mètres
-- Hauteur des murs : 2 à 8 mètres
+- Hauteur des murs : 2 à 8 mètres (chaque mètre en plus ou en moins par rapport à 4 mètres modifie le prix de 12,5 %)
 
 Le matériau en vrac s'empile au maximum jusqu'à la hauteur des murs, et jamais plus haut que la carte ne le permet (cartes du jeu de base : 4 mètres). Des murs plus hauts n'ajoutent pas de volume au-delà.
 
@@ -97,14 +105,12 @@ Capacité approximative avec 4 m / 8 m de hauteur de remplissage, Silo traversan
 - 50 × 150 m : 29 000 000 / 58 000 000 l (29 000 000 / 56 000 000 l)
 - 100 × 200 m : 79 000 000 / 156 000 000 l (78 000 000 / 152 000 000 l)
 
-Prix : 100 € par mètre carré de surface intérieure avec des murs de 4 mètres ; chaque mètre de hauteur de mur en plus ou en moins modifie le prix de 12,5 %. Un silo de 40 × 60 m avec des murs de 4 mètres coûte 240 000 €. Le type de silo et la dalle sont gratuits, la grille et le point de chargement coûtent 10 000 € chacun, le service de compactage et le parcours AutoDrive 5 000 € chacun. Comme pour les silos du jeu de base, l'entretien journalier représente un millième du prix.
-
 Options :
-- Dalle en béton : au ras du silo ou avec une aire prolongée
-- Grille au sol devant l'entrée : accepte la paille hachée, l'herbe et le foin tant que le silo est ouvert (l'herbe et le foin deviennent de la paille hachée litre pour litre)
-- Point de chargement au même endroit : charge l'ensilage après la fermentation et l'entame depuis l'entrée en un front net d'un mur à l'autre ; son débit se règle avec AdjustSuite ADR-P
-- Service de compactage à la grille : compacte immédiatement le reste du matériau contre une rémunération d'entrepreneur
-- Parcours AutoDrive : généré lors du placement avec un aperçu préalable (AutoDrive requis) ; la vente du silo supprime ses points de passage
+- Dalle en béton (gratuite) : au ras du silo ou avec une aire prolongée
+- Grille au sol devant l'entrée (10 000€) : accepte la paille hachée, l'herbe et le foin tant que le silo est ouvert (l'herbe et le foin deviennent de la paille hachée litre pour litre)
+- Point de chargement au même endroit (10 000€) : charge l'ensilage après la fermentation et l'entame depuis l'entrée en un front net d'un mur à l'autre ; son débit se règle avec AdjustSuite ADR-P
+- Service de compactage à la grille (5 000€) : compacte immédiatement le reste du matériau contre une rémunération d'entrepreneur
+- Parcours AutoDrive (5 000€) : généré lors du placement avec un aperçu préalable (AutoDrive requis) ; la vente du silo supprime ses points de passage
 
 Lorsque vous êtes au silo, une fenêtre d'information affiche le niveau, le compactage, la fermentation et la prochaine étape.
 
