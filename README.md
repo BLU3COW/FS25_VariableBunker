@@ -248,7 +248,7 @@ Eine optionale Beton-Bodenplatte, zuschaltbare Befüll- und Entnahmestationen un
 
 | Design | Lanes | Lane layout | Destinations |
 | --- | --- | --- | --- |
-| Bunker silo | One per 5 m of width (20 at 100 m) | Two-way, cross connections 4 m and 26 m in front of the silo, turnaround 27 m in front | 3.2 m before the rear wall |
+| Bunker silo | One per 5 m of width (20 at 100 m) | Two-way, cross connections 4 m and 26 m in front of the silo, turnaround 27 m in front | 2 m before the rear wall |
 | Drive-through silo | One per 3.5 m of width | One-way from 5 m before the entry to 19 m beyond the exit | At the end of each lane |
 
 </div>
