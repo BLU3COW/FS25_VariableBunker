@@ -9,18 +9,14 @@
 
     <description>
         <en><![CDATA[VariableBunker
-Category: Silos
-Price: $60,000
-Daily upkeep: $60
-
-A configurable concrete silo in two designs: Bunker silo with a rear wall, or Drive-through silo with both ends open.
+With VariableBunker, you get a single silo that adapts to your farm instead of the other way around. Choose a Bunker silo with a rear wall or a Drive-through silo open at both ends, and set the interior width, length and wall height freely in construction mode. Walls, collisions, the silo area and all placement areas follow the selected dimensions, while the purchase price stays the same. The estimated capacity is shown live while you configure the silo.
 
 Dimensions:
 - Interior width: 6–100 meters
 - Length: 20–200 meters
 - Wall height: 2–8 meters
 
-Fill height: bulk material piles up to the wall height at most, and never higher than the map allows (base game maps: 4 meters above the ground). Walls higher than the map limit add no extra volume.
+Material piles up to the wall height at most and never higher than the map allows (base game maps: 4 meters). Walls higher than that add no extra volume.
 
 Approximate capacity of the Bunker silo (4 m / 8 m fill height):
 - 6 × 20 m: 410,000 l / 710,000 l
@@ -40,29 +36,29 @@ Approximate capacity of the Drive-through silo (4 m / 8 m fill height):
 - 50 × 150 m: 29,000,000 l / 56,000,000 l
 - 100 × 200 m: 78,000,000 l / 152,000,000 l
 
-The 8 meter values only apply on maps that allow piles higher than 4 meters. With a 2 meter wall the silo holds about half, with a 3 meter wall about three quarters of the 4 meter values. Grass and hay are converted to chaff liter for liter, so the values apply to all accepted fill types.
+Options:
+- Concrete floor slab: flush with the silo or with an extended apron
+- Floor grid in front of the entrance: takes chaff, grass and hay while the silo is open (grass and hay become chaff liter for liter)
+- Loading point at the same spot: loads silage after fermentation and cuts it from the entrance as a clean face from wall to wall; its rate can be set with AdjustSuite ADR-P
+- Compaction service at the grid: compacts the remaining material at once for a contractor fee
+- AutoDrive course: generated during placement with a preview beforehand (requires AutoDrive); selling the silo removes its waypoints
 
-The selected dimensions are applied to the walls, collisions, silo area, placement areas and interaction trigger. The wall insides remain vertical while their outer faces slope above a 1.5 meter base. The optional concrete floor slab spans the complete outside width. On the Bunker silo it can extend 30 meters beyond the entrance; on the Drive-through silo it can extend 30 meters in front of the entrance and 20 meters behind the exit. Original GIANTS concrete textures give all visible surfaces a detailed finish. Chaff, grass and hay can be fermented into silage.
+While you are at the silo, an info box shows the fill level, compaction, fermentation and the next step.
 
-The estimated capacity is shown live while configuring the silo. An optional AutoDrive course can be generated during placement, with a visual preview before purchase. Its lanes and waypoints automatically adapt to the selected width and length. AutoDrive is required to use this option. Selling the silo removes all AutoDrive waypoints in the silo area, including the floor slab and the generated course. A modSettings option can limit newly built silos to a maximum wall height of 4 meters.
+The settings file modSettings/FS25_VariableBunker.xml is created after the first start. It can limit new silos to 4 meter walls, switch the floor grid, the loading point and the compaction service on or off, set the compaction price in percent and hide the info box. In multiplayer, the host settings apply.
 
-An optional floor grid in front of the entrance fills the real silo material. A loading point at the same spot fills vehicles directly from the silo; with AdjustSuite its loading rate can be set via ADR-P. Filling and extraction can be disabled separately in modSettings. The stations do not create AutoDrive routes or targets.
-An info box shows fill level, compaction, fermentation and the next step while you are at the silo. With the optional compaction service, you can have the silo compacted at the grid for a fee that is based on the remaining material and covers a contractor's wage, diesel and wear (price factor in modSettings).
+VariableBunker is compatible with AutoDrive and AdjustSuite.
 
 Source code, help and issue reports: https://github.com/BLU3COW/FS25_VariableBunker]]></en>
         <de><![CDATA[VariableBunker
-Shopkategorie: Silos
-Preis: 60.000 €
-Täglicher Unterhalt: 60 €
-
-Ein einstellbares Silo aus Beton in zwei Bauarten: Bunkersilo mit Rückwand oder Fahrsilo mit zwei offenen Stirnseiten.
+Mit VariableBunker bekommst du ein einziges Silo, das sich deinem Hof anpasst und nicht umgekehrt. Wähle ein Bunkersilo mit Rückwand oder ein Fahrsilo, das an beiden Enden offen ist, und stelle Innenbreite, Länge und Wandhöhe im Baumodus frei ein. Wände, Kollisionen, Silobereich und alle Platzierungsflächen folgen den gewählten Abmessungen, der Kaufpreis bleibt gleich. Das geschätzte Fassungsvermögen wird schon während der Konfiguration angezeigt.
 
 Abmessungen:
 - Innenbreite: 6–100 Meter
 - Länge: 20–200 Meter
 - Wandhöhe: 2–8 Meter
 
-Füllhöhe: Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt (Basisspiel-Karten: 4 Meter über dem Boden). Wände höher als diese Grenze bringen kein zusätzliches Volumen.
+Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt (Basisspiel-Karten: 4 Meter). Höhere Wände bringen darüber hinaus kein zusätzliches Volumen.
 
 Ungefähres Fassungsvermögen Bunkersilo (4 m / 8 m Füllhöhe):
 - 6 × 20 m: 410.000 l / 710.000 l
@@ -82,29 +78,29 @@ Ungefähres Fassungsvermögen Fahrsilo (4 m / 8 m Füllhöhe):
 - 50 × 150 m: 29.000.000 l / 56.000.000 l
 - 100 × 200 m: 78.000.000 l / 152.000.000 l
 
-Die Werte für 8 Meter gelten nur auf Karten, die Schüttungen über 4 Meter erlauben. Mit 2 Meter Wandhöhe fasst das Silo etwa die Hälfte, mit 3 Meter etwa drei Viertel der Werte für 4 Meter. Gras und Heu werden Liter für Liter in Häckselgut umgewandelt, daher gelten die Werte für alle angenommenen Fruchtsorten.
+Optionen:
+- Beton-Bodenplatte: bündig mit dem Silo oder mit verlängertem Vorplatz
+- Bodengitter vor der Einfahrt: nimmt im offenen Silo Häckselgut, Gras und Heu an (Gras und Heu werden Liter für Liter zu Häckselgut)
+- Ladestelle an derselben Stelle: lädt nach der Gärung Silage und trägt sie von der Einfahrt aus als saubere Anschnittfläche von Wand zu Wand ab; die Laderate lässt sich mit AdjustSuite ADR-P einstellen
+- Verdichtungsservice am Gitter: verdichtet das restliche Material sofort gegen eine Lohnunternehmer-Gebühr
+- AutoDrive-Kurs: wird beim Platzieren erzeugt, vorher mit Vorschau (AutoDrive erforderlich); beim Verkauf des Silos werden seine Wegpunkte entfernt
 
-Die gewählten Abmessungen werden auf Wände, Kollisionen, Silobereich, Platzierungsflächen und Interaktionstrigger angewendet. Die Wandinnenseiten bleiben senkrecht, während die Außenseiten oberhalb eines 1,5 Meter hohen Sockels schräg verlaufen. Die optionale Beton-Bodenplatte reicht über die gesamte Außenbreite. Beim Bunkersilo kann sie 30 Meter über die Einfahrt hinausragen; beim Fahrsilo 30 Meter vor der Einfahrt und 20 Meter hinter der Ausfahrt. Originale GIANTS-Betontexturen geben allen sichtbaren Flächen eine detaillierte Oberfläche. Häckselgut, Gras und Heu können zu Silage vergoren werden.
+Am Silo zeigt eine Infobox Füllstand, Verdichtung, Gärung und den nächsten Schritt.
 
-Das geschätzte Fassungsvermögen wird während der Konfiguration direkt angezeigt. Beim Platzieren kann optional ein AutoDrive-Kurs mit visueller Vorschau vor dem Kauf erzeugt werden. Fahrspuren und Wegpunkte passen sich automatisch an die gewählte Breite und Länge an. Für diese Option wird AutoDrive benötigt. Beim Verkauf des Silos werden alle AutoDrive-Wegpunkte im Silobereich entfernt, einschließlich Bodenplatte und erzeugtem Kurs. Über eine modSettings-Option lassen sich neu gebaute Silos auf maximal 4 Meter Wandhöhe begrenzen.
+Die Einstellungsdatei modSettings/FS25_VariableBunker.xml wird nach dem ersten Start erstellt. Darin lassen sich neue Silos auf 4 Meter Wandhöhe begrenzen, Bodengitter, Ladestelle und Verdichtungsservice ein- oder ausschalten, der Preis des Verdichtungsservice in Prozent festlegen und die Infobox ausblenden. Im Mehrspieler gelten die Einstellungen des Hosts.
 
-Über ein optionales Bodengitter vor der Einfahrt wird echtes Silomaterial eingefüllt. Eine Ladestelle an derselben Stelle belädt Fahrzeuge direkt aus dem Silo; mit AdjustSuite lässt sich ihre Laderate über ADR-P einstellen. Befüllen und Entnehmen lassen sich in den modSettings getrennt deaktivieren. Die Stationen erzeugen keine AutoDrive-Kurse oder Ziele.
-Am Silo zeigt eine Infobox Füllstand, Verdichtung, Gärung und den nächsten Schritt. Mit dem optionalen Verdichtungsservice lässt sich das Silo am Gitter gegen Bezahlung verdichten. Der Preis richtet sich nach der Restmenge und deckt Lohn, Diesel und Verschleiß eines Lohnunternehmers (Preisfaktor in den modSettings).
+VariableBunker ist kompatibel mit AutoDrive und AdjustSuite.
 
 Quellcode, Hilfe und Fehlermeldungen: https://github.com/BLU3COW/FS25_VariableBunker]]></de>
         <fr><![CDATA[VariableBunker
-Catégorie : Silos
-Prix : 60 000 €
-Entretien quotidien : 60 €
-
-Un silo configurable en béton en deux versions : Silo bunker avec mur arrière ou Silo traversant ouvert aux deux extrémités.
+Avec VariableBunker, vous obtenez un seul silo qui s'adapte à votre ferme, et non l'inverse. Choisissez un Silo bunker avec mur arrière ou un Silo traversant ouvert aux deux extrémités, et réglez librement la largeur intérieure, la longueur et la hauteur des murs en mode construction. Les murs, les collisions, la zone du silo et toutes les zones de placement suivent les dimensions choisies, le prix d'achat reste le même. La capacité estimée s'affiche dès la configuration.
 
 Dimensions :
 - Largeur intérieure : 6 à 100 mètres
 - Longueur : 20 à 200 mètres
 - Hauteur des murs : 2 à 8 mètres
 
-Hauteur de remplissage : le matériau en vrac s'empile au maximum jusqu'à la hauteur des murs, et jamais plus haut que la carte ne le permet (cartes du jeu de base : 4 mètres au-dessus du sol). Des murs plus hauts que cette limite n'ajoutent pas de volume.
+Le matériau en vrac s'empile au maximum jusqu'à la hauteur des murs, et jamais plus haut que la carte ne le permet (cartes du jeu de base : 4 mètres). Des murs plus hauts n'ajoutent pas de volume au-delà.
 
 Capacité approximative du Silo bunker (hauteur de remplissage 4 m / 8 m) :
 - 6 × 20 m : 410 000 l / 710 000 l
@@ -124,14 +120,18 @@ Capacité approximative du Silo traversant (hauteur de remplissage 4 m / 8 m) :
 - 50 × 150 m : 29 000 000 l / 56 000 000 l
 - 100 × 200 m : 78 000 000 l / 152 000 000 l
 
-Les valeurs pour 8 mètres ne s'appliquent que sur les cartes qui autorisent des tas de plus de 4 mètres. Avec des murs de 2 mètres, le silo contient environ la moitié des valeurs pour 4 mètres ; avec 3 mètres, environ les trois quarts. L'herbe et le foin sont convertis en paille hachée litre pour litre, les valeurs s'appliquent donc à tous les produits acceptés.
+Options :
+- Dalle en béton : au ras du silo ou avec une aire prolongée
+- Grille au sol devant l'entrée : accepte la paille hachée, l'herbe et le foin tant que le silo est ouvert (l'herbe et le foin deviennent de la paille hachée litre pour litre)
+- Point de chargement au même endroit : charge l'ensilage après la fermentation et l'entame depuis l'entrée en un front net d'un mur à l'autre ; son débit se règle avec AdjustSuite ADR-P
+- Service de compactage à la grille : compacte immédiatement le reste du matériau contre une rémunération d'entrepreneur
+- Parcours AutoDrive : généré lors du placement avec un aperçu préalable (AutoDrive requis) ; la vente du silo supprime ses points de passage
 
-Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la zone du silo, aux zones de placement et au déclencheur d'interaction. L'intérieur des murs reste vertical tandis que leur face extérieure est inclinée au-dessus d'un socle de 1,5 mètre. La dalle optionnelle couvre toute la largeur extérieure. Pour le Silo bunker, elle peut dépasser l'entrée de 30 mètres ; pour le Silo traversant, elle dépasse de 30 mètres devant l'entrée et de 20 mètres derrière la sortie. Les textures de béton GIANTS donnent un aspect détaillé à toutes les surfaces visibles. La paille hachée, l'herbe et le foin peuvent être fermentés en ensilage.
+Lorsque vous êtes au silo, une fenêtre d'information affiche le niveau, le compactage, la fermentation et la prochaine étape.
 
-La capacité estimée est affichée directement pendant la configuration. Un parcours AutoDrive peut être généré en option lors du placement, avec un aperçu visuel avant l'achat. Ses voies et points de passage s'adaptent automatiquement à la largeur et à la longueur sélectionnées. AutoDrive est requis pour utiliser cette option. La vente du silo supprime tous les points de passage AutoDrive de la zone du silo, dalle de sol et parcours généré compris. Une option modSettings peut limiter les nouveaux silos à une hauteur maximale de 4 mètres.
+Le fichier de réglages modSettings/FS25_VariableBunker.xml est créé après le premier démarrage. Il permet de limiter les nouveaux silos à des murs de 4 mètres, d'activer ou de désactiver la grille, le point de chargement et le service de compactage, de fixer le prix du compactage en pourcentage et de masquer la fenêtre d'information. En multijoueur, les réglages de l'hôte s'appliquent.
 
-Une grille au sol optionnelle devant l'entrée permet de remplir le matériau réel du silo. Un point de chargement au même endroit remplit les véhicules directement depuis le silo ; avec AdjustSuite, son débit peut être réglé via ADR-P. Le remplissage et le prélèvement peuvent être désactivés séparément dans les modSettings. Les stations ne créent aucun parcours ni cible AutoDrive.
-Une fenêtre d'information affiche le niveau, le compactage, la fermentation et la prochaine étape lorsque vous êtes au silo. Avec le service de compactage optionnel, le silo peut être compacté contre paiement à la grille. Le prix dépend du reste à compacter et couvre le salaire, le diesel et l'usure d'un entrepreneur (facteur de prix dans les modSettings).
+VariableBunker est compatible avec AutoDrive et AdjustSuite.
 
 Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25_VariableBunker]]></fr>
     </description>
