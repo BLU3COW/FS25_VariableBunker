@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
     <texts>
-        <text name="function_VariableBunker" text="Einstellbares Bunkersilo zum Vergären von Häckselgut, Gras und Heu zu Silage." />
+        <text name="function_VariableBunker" text="Einstellbares Bunker- oder Fahrsilo zum Vergären von Häckselgut, Gras und Heu zu Silage." />
         <text name="configuration_VariableBunkerWidth" text="Innenbreite" />
         <text name="configuration_VariableBunkerLength" text="Länge" />
         <text name="configuration_VariableBunkerHeight" text="Wandhöhe" />
-        <text name="configuration_VariableBunkerFloor" text="Beton-Bodenplatte" />
-        <text name="option_VariableBunkerFloorOff" text="Ohne Bodenplatte" />
-        <text name="option_VariableBunkerFloorFlush" text="Bis zur Vorderkante" />
-        <text name="option_VariableBunkerFloorExtended" text="Mit 30-m-Vorplatz" />
+        <text name="configuration_VariableBunkerType" text="Silobauart" />
+        <text name="option_VariableBunkerTypeBunker" text="Bunkersilo" />
+        <text name="option_VariableBunkerTypeDriveThrough" text="Fahrsilo" />
+        <text name="configuration_VariableBunkerFloor" text="Bodenplatte" />
+        <text name="option_VariableBunkerFloorOff" text="Ohne" />
+        <text name="option_VariableBunkerFloorFlush" text="Standard" />
+        <text name="option_VariableBunkerFloorExtended" text="Erweitert" />
         <text name="configuration_VariableBunkerAutoDrive" text="AutoDrive-Kurs" />
         <text name="option_VariableBunkerAutoDriveOff" text="Aus" />
         <text name="option_VariableBunkerAutoDriveOn" text="Automatisch erzeugen" />
+        <text name="configuration_VariableBunkerEstimatedCapacity" text="Geschätzte Kapazität" />
+        <text name="configuration_VariableBunkerTotalPrice" text="Gesamtpreis" />
+        <text name="capacity_VariableBunkerMapLimit" text="Kartenlimit %s m" />
+        <text name="configuration_VariableBunkerInput" text="Abladestelle" />
+        <text name="configuration_VariableBunkerOutput" text="Ladestelle" />
+        <text name="option_VariableBunkerStationOff" text="Aus" />
+        <text name="option_VariableBunkerStationOn" text="An" />
+        <text name="station_VariableBunkerInput" text="VariableBunker Befüllung" />
+        <text name="station_VariableBunkerOutput" text="VariableBunker Entnahme" />
+        <text name="configuration_VariableBunkerCompaction" text="Verdichtungsservice" />
+        <text name="option_VariableBunkerCompactionOff" text="Aus" />
+        <text name="option_VariableBunkerCompactionOn" text="An" />
+        <text name="action_VariableBunkerCompaction" text="Silo verdichten lassen" />
+        <text name="dialog_VariableBunkerCompaction" text="Restmenge: %s, Arbeit: ca. %s h, Kosten: %s. Silo jetzt verdichten lassen?" />
+        <text name="info_VariableBunkerFillLevel" text="Füllstand" />
+        <text name="info_VariableBunkerCompaction" text="Verdichtung" />
+        <text name="info_VariableBunkerFermentation" text="Gärung" />
+        <text name="info_VariableBunkerStatus" text="Status" />
+        <text name="info_VariableBunkerRemainingHours" text="noch %d h" />
+        <text name="info_VariableBunkerRemainingDays" text="noch %d T %d h" />
+        <text name="status_VariableBunkerFill" text="Befüllen" />
+        <text name="status_VariableBunkerCompact" text="Verdichten" />
+        <text name="status_VariableBunkerCover" text="Abdecken" />
+        <text name="status_VariableBunkerFermenting" text="Gärt" />
+        <text name="status_VariableBunkerOpen" text="Öffnen" />
+        <text name="status_VariableBunkerDrain" text="Entnehmen" />
     </texts>
 </l10n>

@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <l10n>
     <texts>
-        <text name="function_VariableBunker" text="Silo couloir configurable pour fermenter la paille hachée, l'herbe et le foin en ensilage." />
+        <text name="function_VariableBunker" text="Silo bunker ou traversant configurable pour fermenter la paille hachée, l'herbe et le foin en ensilage." />
         <text name="configuration_VariableBunkerWidth" text="Largeur intérieure" />
         <text name="configuration_VariableBunkerLength" text="Longueur" />
         <text name="configuration_VariableBunkerHeight" text="Hauteur des murs" />
-        <text name="configuration_VariableBunkerFloor" text="Dalle en béton" />
-        <text name="option_VariableBunkerFloorOff" text="Sans dalle" />
-        <text name="option_VariableBunkerFloorFlush" text="Jusqu'au bord avant" />
-        <text name="option_VariableBunkerFloorExtended" text="Avec aire de 30 m" />
+        <text name="configuration_VariableBunkerType" text="Type de silo" />
+        <text name="option_VariableBunkerTypeBunker" text="Silo bunker" />
+        <text name="option_VariableBunkerTypeDriveThrough" text="Silo traversant" />
+        <text name="configuration_VariableBunkerFloor" text="Dalle" />
+        <text name="option_VariableBunkerFloorOff" text="Aucune" />
+        <text name="option_VariableBunkerFloorFlush" text="Standard" />
+        <text name="option_VariableBunkerFloorExtended" text="Étendue" />
         <text name="configuration_VariableBunkerAutoDrive" text="Parcours AutoDrive" />
         <text name="option_VariableBunkerAutoDriveOff" text="Désactivé" />
         <text name="option_VariableBunkerAutoDriveOn" text="Générer automatiquement" />
+        <text name="configuration_VariableBunkerEstimatedCapacity" text="Capacité estimée" />
+        <text name="configuration_VariableBunkerTotalPrice" text="Prix total" />
+        <text name="capacity_VariableBunkerMapLimit" text="limite de carte %s m" />
+        <text name="configuration_VariableBunkerInput" text="Point de déchargement" />
+        <text name="configuration_VariableBunkerOutput" text="Point de chargement" />
+        <text name="option_VariableBunkerStationOff" text="Désactivé" />
+        <text name="option_VariableBunkerStationOn" text="Activé" />
+        <text name="station_VariableBunkerInput" text="Remplissage VariableBunker" />
+        <text name="station_VariableBunkerOutput" text="Prélèvement VariableBunker" />
+        <text name="configuration_VariableBunkerCompaction" text="Service de compactage" />
+        <text name="option_VariableBunkerCompactionOff" text="Désactivé" />
+        <text name="option_VariableBunkerCompactionOn" text="Activé" />
+        <text name="action_VariableBunkerCompaction" text="Faire compacter le silo" />
+        <text name="dialog_VariableBunkerCompaction" text="Reste : %s, travail : env. %s h, coût : %s. Faire compacter le silo maintenant ?" />
+        <text name="info_VariableBunkerFillLevel" text="Niveau" />
+        <text name="info_VariableBunkerCompaction" text="Compactage" />
+        <text name="info_VariableBunkerFermentation" text="Fermentation" />
+        <text name="info_VariableBunkerStatus" text="État" />
+        <text name="info_VariableBunkerRemainingHours" text="encore %d h" />
+        <text name="info_VariableBunkerRemainingDays" text="encore %d j %d h" />
+        <text name="status_VariableBunkerFill" text="Remplir" />
+        <text name="status_VariableBunkerCompact" text="Compacter" />
+        <text name="status_VariableBunkerCover" text="Couvrir" />
+        <text name="status_VariableBunkerFermenting" text="Fermente" />
+        <text name="status_VariableBunkerOpen" text="Ouvrir" />
+        <text name="status_VariableBunkerDrain" text="Prélever" />
     </texts>
 </l10n>

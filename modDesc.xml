@@ -9,66 +9,127 @@
 
     <description>
         <en><![CDATA[VariableBunker
-Category: Silos
-Price: $60,000
-Daily upkeep: $60
+Category: Grain silos
+Price: $100 per m² of interior floor (40 × 60 × 4 m: $240,000)
+Daily upkeep: 0.1 % of the price (40 × 60 × 4 m: $240)
 
-A configurable three-sided bunker silo with concrete side and rear walls. The front remains open.
+With VariableBunker, you get a single silo that adapts to your farm instead of the other way around. Choose a Bunker silo with a rear wall or a Drive-through silo open at both ends, and set the interior width, length and wall height freely in construction mode. Walls, collisions, the silo area and all placement areas follow the selected dimensions, and the purchase price grows with the size. The estimated capacity is shown live while you configure the silo.
 
 Dimensions:
 - Interior width: 6–100 meters
 - Length: 20–200 meters
-- Wall height: 2–8 meters
+- Wall height: 2–4 meters, up to 8 meters after enabling it in the settings (every meter above or below 4 meters changes the price by 12.5 %)
 
-The selected dimensions are applied to the walls, collisions, bunker area, placement areas and interaction trigger. The wall insides remain vertical while their outer faces slope above a 0.5 meter base. The optional concrete floor slab can end at the open front or extend 30 meters beyond it. Chaff, grass and hay can be fermented into silage.
+Material piles up to the wall height at most and never higher than the map allows. Most maps, including all base game maps, stop at 4 meters, so higher walls would only cost more. Wall heights above 4 meters are therefore switched off by default and only worth enabling on maps with a higher fill limit.
 
-An optional AutoDrive course can be generated during placement. Its lanes and waypoints automatically adapt to the selected width and length. AutoDrive is required to use this option.
+Approximate capacity at 4 m / 8 m fill height, Drive-through silo in brackets:
+- 6 × 20 m: 410,000 / 710,000 l (340,000 / 450,000 l)
+- 10 × 40 m: 1,500,000 / 2,800,000 l (1,400,000 / 2,400,000 l)
+- 20 × 60 m: 4,600,000 / 8,800,000 l (4,300,000 / 7,900,000 l)
+- 40 × 60 m: 9,100,000 / 18,000,000 l (8,700,000 / 16,000,000 l)
+- 30 × 100 m: 12,000,000 / 23,000,000 l (11,000,000 / 21,000,000 l)
+- 50 × 150 m: 29,000,000 / 58,000,000 l (29,000,000 / 56,000,000 l)
+- 100 × 200 m: 79,000,000 / 156,000,000 l (78,000,000 / 152,000,000 l)
+
+Options:
+- Concrete floor slab (free): flush with the silo or with an extended apron
+- Floor grid in front of the entrance ($10,000): takes chaff, grass and hay while the silo is open (grass and hay become chaff liter for liter)
+- Loading point at the same spot ($10,000): loads silage after fermentation and cuts it from the entrance as a clean face from wall to wall; its rate can be set with AdjustSuite ADR-P
+- Compaction service at the grid ($5,000): compacts the remaining material at once for a contractor fee
+- AutoDrive course ($5,000): generated during placement with a preview beforehand (requires AutoDrive); selling the silo removes its waypoints
+
+While you are at the silo, an info box shows the fill level, compaction, fermentation and the next step.
+
+The settings file modSettings/FS25_VariableBunker.xml is created after the first start. It can allow wall heights above 4 meters for maps with a higher fill limit, switch the floor grid, the loading point and the compaction service on or off, set the compaction price in percent and the silo price per square meter, and hide the info box. In multiplayer, the host settings apply.
+
+VariableBunker is compatible with AutoDrive and AdjustSuite.
 
 Source code, help and issue reports: https://github.com/BLU3COW/FS25_VariableBunker]]></en>
         <de><![CDATA[VariableBunker
-Shopkategorie: Silos
-Preis: 60.000 €
-Täglicher Unterhalt: 60 €
+Shopkategorie: Getreidesilos
+Preis: 100€ je m² Innenfläche (40 × 60 × 4 m: 240.000€)
+Täglicher Unterhalt: 0,1 % des Preises (40 × 60 × 4 m: 240€)
 
-Ein einstellbares, dreiseitig geschlossenes Bunkersilo mit seitlichen Betonwänden und Rückwand. Die Front bleibt offen.
+Mit VariableBunker bekommst du ein einziges Silo, das sich deinem Hof anpasst und nicht umgekehrt. Wähle ein Bunkersilo mit Rückwand oder ein Fahrsilo, das an beiden Enden offen ist, und stelle Innenbreite, Länge und Wandhöhe im Baumodus frei ein. Wände, Kollisionen, Silobereich und alle Platzierungsflächen folgen den gewählten Abmessungen, der Kaufpreis wächst mit der Größe. Das geschätzte Fassungsvermögen wird schon während der Konfiguration angezeigt.
 
 Abmessungen:
 - Innenbreite: 6–100 Meter
 - Länge: 20–200 Meter
-- Wandhöhe: 2–8 Meter
+- Wandhöhe: 2–4 Meter, nach Freischalten in den Einstellungen bis 8 Meter (jeder Meter mehr oder weniger als 4 Meter ändert den Preis um 12,5 %)
 
-Die gewählten Abmessungen werden auf Wände, Kollisionen, Silobereich, Platzierungsflächen und Interaktionstrigger angewendet. Die Wandinnenseiten bleiben senkrecht, während die Außenseiten oberhalb eines 0,5 Meter hohen Sockels schräg verlaufen. Die optionale Beton-Bodenplatte endet wahlweise an der offenen Front oder reicht 30 Meter darüber hinaus. Häckselgut, Gras und Heu können zu Silage vergoren werden.
+Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt. Die meisten Karten, darunter alle Basisspiel-Karten, enden bei 4 Metern, höhere Wände würden dort nur mehr kosten. Wandhöhen über 4 Meter sind deshalb standardmäßig ausgeschaltet und lohnen sich nur auf Karten mit höherer Füllgrenze.
 
-Beim Platzieren kann optional ein AutoDrive-Kurs erzeugt werden. Fahrspuren und Wegpunkte passen sich automatisch an die gewählte Breite und Länge an. Für diese Option wird AutoDrive benötigt.
+Ungefähres Fassungsvermögen bei 4 m / 8 m Füllhöhe, Fahrsilo in Klammern:
+- 6 × 20 m: 410.000 / 710.000 l (340.000 / 450.000 l)
+- 10 × 40 m: 1.500.000 / 2.800.000 l (1.400.000 / 2.400.000 l)
+- 20 × 60 m: 4.600.000 / 8.800.000 l (4.300.000 / 7.900.000 l)
+- 40 × 60 m: 9.100.000 / 18.000.000 l (8.700.000 / 16.000.000 l)
+- 30 × 100 m: 12.000.000 / 23.000.000 l (11.000.000 / 21.000.000 l)
+- 50 × 150 m: 29.000.000 / 58.000.000 l (29.000.000 / 56.000.000 l)
+- 100 × 200 m: 79.000.000 / 156.000.000 l (78.000.000 / 152.000.000 l)
+
+Optionen:
+- Beton-Bodenplatte (kostenlos): bündig mit dem Silo oder mit verlängertem Vorplatz
+- Bodengitter vor der Einfahrt (10.000€): nimmt im offenen Silo Häckselgut, Gras und Heu an (Gras und Heu werden Liter für Liter zu Häckselgut)
+- Ladestelle an derselben Stelle (10.000€): lädt nach der Gärung Silage und trägt sie von der Einfahrt aus als saubere Anschnittfläche von Wand zu Wand ab; die Laderate lässt sich mit AdjustSuite ADR-P einstellen
+- Verdichtungsservice am Gitter (5.000€): verdichtet das restliche Material sofort gegen eine Lohnunternehmer-Gebühr
+- AutoDrive-Kurs (5.000€): wird beim Platzieren erzeugt, vorher mit Vorschau (AutoDrive erforderlich); beim Verkauf des Silos werden seine Wegpunkte entfernt
+
+Am Silo zeigt eine Infobox Füllstand, Verdichtung, Gärung und den nächsten Schritt.
+
+Die Einstellungsdatei modSettings/FS25_VariableBunker.xml wird nach dem ersten Start erstellt. Darin lassen sich Wandhöhen über 4 Meter für Karten mit höherer Füllgrenze freischalten, Bodengitter, Ladestelle und Verdichtungsservice ein- oder ausschalten, der Preis des Verdichtungsservice in Prozent sowie der Silopreis je Quadratmeter festlegen und die Infobox ausblenden. Im Mehrspieler gelten die Einstellungen des Hosts.
+
+VariableBunker ist kompatibel mit AutoDrive und AdjustSuite.
 
 Quellcode, Hilfe und Fehlermeldungen: https://github.com/BLU3COW/FS25_VariableBunker]]></de>
         <fr><![CDATA[VariableBunker
-Catégorie : Silos
-Prix : 60 000 €
-Entretien quotidien : 60 €
+Catégorie: Silos à grains
+Prix: 100€ par m² de surface intérieure (40 × 60 × 4 m : 240 000€)
+Entretien quotidien: 0,1 % du prix (40 × 60 × 4 m : 240€)
 
-Un silo bunker configurable fermé sur trois côtés par des murs en béton. La façade reste ouverte.
+Avec VariableBunker, vous obtenez un seul silo qui s'adapte à votre ferme, et non l'inverse. Choisissez un Silo bunker avec mur arrière ou un Silo traversant ouvert aux deux extrémités, et réglez librement la largeur intérieure, la longueur et la hauteur des murs en mode construction. Les murs, les collisions, la zone du silo et toutes les zones de placement suivent les dimensions choisies, et le prix d'achat augmente avec la taille. La capacité estimée s'affiche dès la configuration.
 
 Dimensions :
 - Largeur intérieure : 6 à 100 mètres
 - Longueur : 20 à 200 mètres
-- Hauteur des murs : 2 à 8 mètres
+- Hauteur des murs : 2 à 4 mètres, jusqu'à 8 mètres après activation dans les réglages (chaque mètre en plus ou en moins par rapport à 4 mètres modifie le prix de 12,5 %)
 
-Les dimensions sélectionnées sont appliquées aux murs, aux collisions, à la zone du silo, aux zones de placement et au déclencheur d'interaction. L'intérieur des murs reste vertical tandis que leur face extérieure est inclinée au-dessus d'un socle de 0,5 mètre. La dalle en béton optionnelle peut s'arrêter à la façade ouverte ou la dépasser de 30 mètres. La paille hachée, l'herbe et le foin peuvent être fermentés en ensilage.
+Le matériau en vrac s'empile au maximum jusqu'à la hauteur des murs, et jamais plus haut que la carte ne le permet. La plupart des cartes, dont toutes celles du jeu de base, s'arrêtent à 4 mètres, et des murs plus hauts n'y feraient que coûter plus cher. Les hauteurs de mur au-delà de 4 mètres sont donc désactivées par défaut et ne valent la peine que sur les cartes avec une limite de remplissage plus haute.
 
-Un parcours AutoDrive peut être généré en option lors du placement. Ses voies et points de passage s'adaptent automatiquement à la largeur et à la longueur sélectionnées. AutoDrive est requis pour utiliser cette option.
+Capacité approximative avec 4 m / 8 m de hauteur de remplissage, Silo traversant entre parenthèses :
+- 6 × 20 m : 410 000 / 710 000 l (340 000 / 450 000 l)
+- 10 × 40 m : 1 500 000 / 2 800 000 l (1 400 000 / 2 400 000 l)
+- 20 × 60 m : 4 600 000 / 8 800 000 l (4 300 000 / 7 900 000 l)
+- 40 × 60 m : 9 100 000 / 18 000 000 l (8 700 000 / 16 000 000 l)
+- 30 × 100 m : 12 000 000 / 23 000 000 l (11 000 000 / 21 000 000 l)
+- 50 × 150 m : 29 000 000 / 58 000 000 l (29 000 000 / 56 000 000 l)
+- 100 × 200 m : 79 000 000 / 156 000 000 l (78 000 000 / 152 000 000 l)
+
+Options :
+- Dalle en béton (gratuite) : au ras du silo ou avec une aire prolongée
+- Grille au sol devant l'entrée (10 000€) : accepte la paille hachée, l'herbe et le foin tant que le silo est ouvert (l'herbe et le foin deviennent de la paille hachée litre pour litre)
+- Point de chargement au même endroit (10 000€) : charge l'ensilage après la fermentation et l'entame depuis l'entrée en un front net d'un mur à l'autre ; son débit se règle avec AdjustSuite ADR-P
+- Service de compactage à la grille (5 000€) : compacte immédiatement le reste du matériau contre une rémunération d'entrepreneur
+- Parcours AutoDrive (5 000€) : généré lors du placement avec un aperçu préalable (AutoDrive requis) ; la vente du silo supprime ses points de passage
+
+Lorsque vous êtes au silo, une fenêtre d'information affiche le niveau, le compactage, la fermentation et la prochaine étape.
+
+Le fichier de réglages modSettings/FS25_VariableBunker.xml est créé après le premier démarrage. Il permet d'autoriser des murs de plus de 4 mètres pour les cartes avec une limite de remplissage plus haute, d'activer ou de désactiver la grille, le point de chargement et le service de compactage, de fixer le prix du compactage en pourcentage et le prix du silo au mètre carré et de masquer la fenêtre d'information. En multijoueur, les réglages de l'hôte s'appliquent.
+
+VariableBunker est compatible avec AutoDrive et AdjustSuite.
 
 Code source, aide et signalement de problèmes : https://github.com/BLU3COW/FS25_VariableBunker]]></fr>
     </description>
 
-    <iconFilename>dds/icon_VariableBunker.dds</iconFilename>
+    <iconFilename>icon_VariableBunker.dds</iconFilename>
     <multiplayer supported="true" />
     <l10n filenamePrefix="l10n/l10n" />
 
     <extraSourceFiles>
+        <sourceFile filename="lua/VariableBunker_Storage.lua" />
         <sourceFile filename="lua/VariableBunker.lua" />
-        <sourceFile filename="lua/VariableBunkerAutoDrive.lua" />
-        <sourceFile filename="lua/VariableBunkerRegister.lua" />
+        <sourceFile filename="lua/VariableBunker_AutoDrive.lua" />
+        <sourceFile filename="lua/VariableBunker_Register.lua" />
     </extraSourceFiles>
 
     <placeableTypes>

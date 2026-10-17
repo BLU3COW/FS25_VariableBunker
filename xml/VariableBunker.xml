@@ -3,11 +3,11 @@
     <storeData>
         <name>VariableBunker</name>
         <image>dds/store_VariableBunker.dds</image>
-        <price>60000</price>
+        <price>240000</price>
         <functions>
             <function>$l10n_function_VariableBunker</function>
         </functions>
-        <dailyUpkeep>60</dailyUpkeep>
+        <dailyUpkeep>240</dailyUpkeep>
         <lifetime>1000</lifetime>
         <rotation>0</rotation>
         <brand>NONE</brand>
@@ -34,6 +34,8 @@
     <placement useRandomYRotation="false" useManualYRotation="true" placementPositionSnapSize="0.5" placementRotationSnapAngle="90">
         <testAreas>
             <testArea startNode="testAreaStart" endNode="testAreaEnd" />
+            <testArea startNode="inputTestAreaStart" endNode="inputTestAreaEnd" />
+            <testArea startNode="outputTestAreaStart" endNode="outputTestAreaEnd" />
         </testAreas>
         <sounds>
             <place template="medImp" />
@@ -42,11 +44,15 @@
 
     <clearAreas>
         <clearArea startNode="clearAreaStart" widthNode="clearAreaWidth" heightNode="clearAreaHeight" />
+        <clearArea startNode="inputClearAreaStart" widthNode="inputClearAreaWidth" heightNode="inputClearAreaHeight" />
+        <clearArea startNode="outputClearAreaStart" widthNode="outputClearAreaWidth" heightNode="outputClearAreaHeight" />
     </clearAreas>
 
     <leveling requireLeveling="true" maxSmoothDistance="3" maxSlope="75" maxEdgeAngle="30">
         <levelAreas>
             <levelArea startNode="levelAreaStart" widthNode="levelAreaWidth" heightNode="levelAreaHeight" groundType="concrete" />
+            <levelArea startNode="inputLevelAreaStart" widthNode="inputLevelAreaWidth" heightNode="inputLevelAreaHeight" />
+            <levelArea startNode="outputLevelAreaStart" widthNode="outputLevelAreaWidth" heightNode="outputLevelAreaHeight" />
         </levelAreas>
     </leveling>
 
@@ -66,23 +72,38 @@
                     floorPlateNode="floorPlate"
                     leftWallBaseNode="leftWallBase" rightWallBaseNode="rightWallBase" rearWallBaseNode="rearWallBase"
                     leftWallSlopeNode="leftWallSlope" rightWallSlopeNode="rightWallSlope" rearWallSlopeNode="rearWallSlope"
+                    leftCornerBaseNode="leftCornerBase" rightCornerBaseNode="rightCornerBase"
+                    leftCornerSlopeNode="leftCornerSlope" rightCornerSlopeNode="rightCornerSlope"
                     leftCollisionNode="leftWallCollision" rightCollisionNode="rightWallCollision" rearCollisionNode="rearWallCollision"
                     floorCollisionNode="floorPlateCollision"
                     leftBaseCollisionNode="leftWallBaseCollision" rightBaseCollisionNode="rightWallBaseCollision" rearBaseCollisionNode="rearWallBaseCollision"
                     leftSlopeCollisionNode="leftWallSlopeCollision" rightSlopeCollisionNode="rightWallSlopeCollision" rearSlopeCollisionNode="rearWallSlopeCollision"
+                    leftCornerBaseCollisionNode="leftCornerBaseCollision" rightCornerBaseCollisionNode="rightCornerBaseCollision"
+                    leftCornerSlopeCollisionNode="leftCornerSlopeCollision" rightCornerSlopeCollisionNode="rightCornerSlopeCollision"
+                    leftTipCollisionNode="leftTipCollision" rightTipCollisionNode="rightTipCollision" rearTipCollisionNode="rearTipCollision"
                     interactionTriggerNode="siloTrigger"
                     siloAreaStartNode="siloAreaStart" siloAreaWidthNode="siloAreaWidth" siloAreaHeightNode="siloAreaHeight"
                     innerAreaStartNode="innerAreaStart" innerAreaWidthNode="innerAreaWidth" innerAreaHeightNode="innerAreaHeight"
                     clearAreaStartNode="clearAreaStart" clearAreaWidthNode="clearAreaWidth" clearAreaHeightNode="clearAreaHeight"
                     levelAreaStartNode="levelAreaStart" levelAreaWidthNode="levelAreaWidth" levelAreaHeightNode="levelAreaHeight"
                     testAreaStartNode="testAreaStart" testAreaEndNode="testAreaEnd"
-                    tipOcclusionStartNode="tipOcclusionStart" tipOcclusionEndNode="tipOcclusionEnd">
+                    tipOcclusionStartNode="tipOcclusionStart" tipOcclusionEndNode="tipOcclusionEnd"
+                    inputStationRootNode="inputStationRoot" inputExactFillRootNode="inputExactFillRoot" inputMarkerNode="inputMarker"
+                    inputClearAreaStartNode="inputClearAreaStart" inputClearAreaWidthNode="inputClearAreaWidth" inputClearAreaHeightNode="inputClearAreaHeight"
+                    inputLevelAreaStartNode="inputLevelAreaStart" inputLevelAreaWidthNode="inputLevelAreaWidth" inputLevelAreaHeightNode="inputLevelAreaHeight"
+                    inputTestAreaStartNode="inputTestAreaStart" inputTestAreaEndNode="inputTestAreaEnd"
+                    outputStationRootNode="outputStationRoot" outputLoadTriggerNode="outputLoadTrigger"
+                    outputMarkerNode="outputMarker" inputBaleTriggerNode="inputBaleTrigger"
+                    outputClearAreaStartNode="outputClearAreaStart" outputClearAreaWidthNode="outputClearAreaWidth" outputClearAreaHeightNode="outputClearAreaHeight"
+                    outputLevelAreaStartNode="outputLevelAreaStart" outputLevelAreaWidthNode="outputLevelAreaWidth" outputLevelAreaHeightNode="outputLevelAreaHeight"
+                    outputTestAreaStartNode="outputTestAreaStart" outputTestAreaEndNode="outputTestAreaEnd"
+                    compactionMarkerNode="compactionMarker">
         <VariableBunkerWidthConfigurations title="$l10n_configuration_VariableBunkerWidth">
             <VariableBunkerWidthConfiguration name="6 m" meters="6" saveId="6m" />
             <VariableBunkerWidthConfiguration name="7 m" meters="7" saveId="7m" />
             <VariableBunkerWidthConfiguration name="8 m" meters="8" saveId="8m" />
             <VariableBunkerWidthConfiguration name="9 m" meters="9" saveId="9m" />
-            <VariableBunkerWidthConfiguration name="10 m" meters="10" isDefault="true" saveId="10m" />
+            <VariableBunkerWidthConfiguration name="10 m" meters="10" saveId="10m" />
             <VariableBunkerWidthConfiguration name="11 m" meters="11" saveId="11m" />
             <VariableBunkerWidthConfiguration name="12 m" meters="12" saveId="12m" />
             <VariableBunkerWidthConfiguration name="13 m" meters="13" saveId="13m" />
@@ -96,7 +117,7 @@
             <VariableBunkerWidthConfiguration name="25 m" meters="25" saveId="25m" />
             <VariableBunkerWidthConfiguration name="30 m" meters="30" saveId="30m" />
             <VariableBunkerWidthConfiguration name="35 m" meters="35" saveId="35m" />
-            <VariableBunkerWidthConfiguration name="40 m" meters="40" saveId="40m" />
+            <VariableBunkerWidthConfiguration name="40 m" meters="40" isDefault="true" saveId="40m" />
             <VariableBunkerWidthConfiguration name="45 m" meters="45" saveId="45m" />
             <VariableBunkerWidthConfiguration name="50 m" meters="50" saveId="50m" />
             <VariableBunkerWidthConfiguration name="55 m" meters="55" saveId="55m" />
@@ -116,10 +137,10 @@
             <VariableBunkerLengthConfiguration name="25 m" meters="25" saveId="25m" />
             <VariableBunkerLengthConfiguration name="30 m" meters="30" saveId="30m" />
             <VariableBunkerLengthConfiguration name="35 m" meters="35" saveId="35m" />
-            <VariableBunkerLengthConfiguration name="40 m" meters="40" isDefault="true" saveId="40m" />
+            <VariableBunkerLengthConfiguration name="40 m" meters="40" saveId="40m" />
             <VariableBunkerLengthConfiguration name="45 m" meters="45" saveId="45m" />
             <VariableBunkerLengthConfiguration name="50 m" meters="50" saveId="50m" />
-            <VariableBunkerLengthConfiguration name="60 m" meters="60" saveId="60m" />
+            <VariableBunkerLengthConfiguration name="60 m" meters="60" isDefault="true" saveId="60m" />
             <VariableBunkerLengthConfiguration name="70 m" meters="70" saveId="70m" />
             <VariableBunkerLengthConfiguration name="80 m" meters="80" saveId="80m" />
             <VariableBunkerLengthConfiguration name="90 m" meters="90" saveId="90m" />
@@ -146,17 +167,62 @@
             <VariableBunkerHeightConfiguration name="8 m" meters="8" saveId="8m" />
         </VariableBunkerHeightConfigurations>
 
+        <VariableBunkerTypeConfigurations title="$l10n_configuration_VariableBunkerType">
+            <VariableBunkerTypeConfiguration name="$l10n_option_VariableBunkerTypeBunker" isDefault="true" saveId="bunker" />
+            <VariableBunkerTypeConfiguration name="$l10n_option_VariableBunkerTypeDriveThrough" saveId="driveThrough" />
+        </VariableBunkerTypeConfigurations>
+
         <VariableBunkerFloorConfigurations title="$l10n_configuration_VariableBunkerFloor">
             <VariableBunkerFloorConfiguration name="$l10n_option_VariableBunkerFloorOff" isDefault="true" saveId="off" />
             <VariableBunkerFloorConfiguration name="$l10n_option_VariableBunkerFloorFlush" saveId="flush" />
             <VariableBunkerFloorConfiguration name="$l10n_option_VariableBunkerFloorExtended" saveId="on" />
         </VariableBunkerFloorConfigurations>
 
+        <VariableBunkerInputConfigurations title="$l10n_configuration_VariableBunkerInput">
+            <VariableBunkerInputConfiguration name="$l10n_option_VariableBunkerStationOff" side="off" isDefault="true" saveId="off" />
+            <VariableBunkerInputConfiguration name="$l10n_option_VariableBunkerStationOn" side="front" price="10000" saveId="front" />
+        </VariableBunkerInputConfigurations>
+
+        <VariableBunkerOutputConfigurations title="$l10n_configuration_VariableBunkerOutput">
+            <VariableBunkerOutputConfiguration name="$l10n_option_VariableBunkerStationOff" side="off" isDefault="true" saveId="off" />
+            <VariableBunkerOutputConfiguration name="$l10n_option_VariableBunkerStationOn" side="front" price="10000" saveId="front" />
+        </VariableBunkerOutputConfigurations>
+
+        <VariableBunkerCompactionConfigurations title="$l10n_configuration_VariableBunkerCompaction">
+            <VariableBunkerCompactionConfiguration name="$l10n_option_VariableBunkerCompactionOff" isDefault="true" saveId="off" />
+            <VariableBunkerCompactionConfiguration name="$l10n_option_VariableBunkerCompactionOn" price="5000" saveId="on" />
+        </VariableBunkerCompactionConfigurations>
+
         <VariableBunkerAutoDriveConfigurations title="$l10n_configuration_VariableBunkerAutoDrive">
             <VariableBunkerAutoDriveConfiguration name="$l10n_option_VariableBunkerAutoDriveOff" isDefault="true" saveId="off" />
-            <VariableBunkerAutoDriveConfiguration name="$l10n_option_VariableBunkerAutoDriveOn" saveId="on" />
+            <VariableBunkerAutoDriveConfiguration name="$l10n_option_VariableBunkerAutoDriveOn" price="5000" saveId="on" />
         </VariableBunkerAutoDriveConfigurations>
+
+        <inputStation node="inputStationRoot" stationName="$l10n_station_VariableBunkerInput" supportsExtension="false">
+            <unloadTrigger exactFillRootNode="inputExactFillRoot" fillTypes="CHAFF GRASS_WINDROW DRYGRASS_WINDROW">
+                <fillTypeConversion incomingFillType="GRASS_WINDROW" outgoingFillType="CHAFF" ratio="1" />
+                <fillTypeConversion incomingFillType="DRYGRASS_WINDROW" outgoingFillType="CHAFF" ratio="1" />
+            </unloadTrigger>
+            <baleTrigger triggerNode="inputBaleTrigger" deleteLitersPerSecond="10000" fillTypes="CHAFF GRASS_WINDROW DRYGRASS_WINDROW">
+                <fillTypeConversion incomingFillType="GRASS_WINDROW" outgoingFillType="CHAFF" ratio="1" />
+                <fillTypeConversion incomingFillType="DRYGRASS_WINDROW" outgoingFillType="CHAFF" ratio="1" />
+            </baleTrigger>
+        </inputStation>
+
+        <outputStation node="outputStationRoot" stationName="$l10n_station_VariableBunkerOutput" supportsExtension="false" fillTypes="SILAGE">
+            <loadTrigger triggerNode="outputLoadTrigger" fillLitersPerSecond="6000" fillTypes="SILAGE" dischargeNode="outputDischargeNode" dischargeWidth="1" dischargeLength="1" />
+        </outputStation>
     </VariableBunker>
+
+    <dynamicallyLoadedParts>
+        <dynamicallyLoadedPart filename="$data/placeables/shared/sellingStationGeneric/sellingStationGenericNoCoverWideGrid.i3d" node="0" linkNode="inputGridLink" />
+    </dynamicallyLoadedParts>
+
+    <triggerMarkers>
+        <triggerMarker node="inputMarker" filename="$data/shared/assets/marker/markerIconUnload.i3d" />
+        <triggerMarker node="outputMarker" filename="$data/shared/assets/marker/markerIconLoad.i3d" />
+        <triggerMarker node="compactionMarker" filename="$data/shared/assets/marker/markerIconWrench.i3d" />
+    </triggerMarkers>
 
     <bunkerSilo isExtendable="false" acceptedFillTypes="chaff grass_windrow dryGrass_windrow" inputFillType="chaff" outputFillType="silage" distanceToCompactedFillLevel="100" openingLength="5">
         <area startNode="siloAreaStart" widthNode="siloAreaWidth" heightNode="siloAreaHeight" />
@@ -177,6 +243,10 @@
         <i3dMapping id="leftWallSlope" node="0>0|7" />
         <i3dMapping id="rightWallSlope" node="0>0|8" />
         <i3dMapping id="rearWallSlope" node="0>0|9" />
+        <i3dMapping id="leftCornerBase" node="0>0|10" />
+        <i3dMapping id="rightCornerBase" node="0>0|11" />
+        <i3dMapping id="leftCornerSlope" node="0>0|12" />
+        <i3dMapping id="rightCornerSlope" node="0>0|13" />
         <i3dMapping id="leftWallCollision" node="0>1|0" />
         <i3dMapping id="rightWallCollision" node="0>1|1" />
         <i3dMapping id="rearWallCollision" node="0>1|2" />
@@ -187,6 +257,13 @@
         <i3dMapping id="leftWallSlopeCollision" node="0>1|7" />
         <i3dMapping id="rightWallSlopeCollision" node="0>1|8" />
         <i3dMapping id="rearWallSlopeCollision" node="0>1|9" />
+        <i3dMapping id="leftCornerBaseCollision" node="0>1|10" />
+        <i3dMapping id="rightCornerBaseCollision" node="0>1|11" />
+        <i3dMapping id="leftCornerSlopeCollision" node="0>1|12" />
+        <i3dMapping id="rightCornerSlopeCollision" node="0>1|13" />
+        <i3dMapping id="leftTipCollision" node="0>1|14" />
+        <i3dMapping id="rightTipCollision" node="0>1|15" />
+        <i3dMapping id="rearTipCollision" node="0>1|16" />
         <i3dMapping id="clearAreaStart" node="0>2|0" />
         <i3dMapping id="clearAreaWidth" node="0>2|0|0" />
         <i3dMapping id="clearAreaHeight" node="0>2|0|1" />
@@ -204,5 +281,31 @@
         <i3dMapping id="innerAreaStart" node="0>6|1|0" />
         <i3dMapping id="innerAreaWidth" node="0>6|1|1" />
         <i3dMapping id="innerAreaHeight" node="0>6|1|2" />
+        <i3dMapping id="inputStationRoot" node="0>7|0" />
+        <i3dMapping id="inputBaleTrigger" node="0>7|0|0" />
+        <i3dMapping id="inputExactFillRoot" node="0>7|0|1" />
+        <i3dMapping id="inputGridLink" node="0>7|0|2" />
+        <i3dMapping id="inputMarker" node="0>7|0|3" />
+        <i3dMapping id="inputClearAreaStart" node="0>7|0|4" />
+        <i3dMapping id="inputClearAreaWidth" node="0>7|0|4|0" />
+        <i3dMapping id="inputClearAreaHeight" node="0>7|0|4|1" />
+        <i3dMapping id="inputLevelAreaStart" node="0>7|0|5" />
+        <i3dMapping id="inputLevelAreaWidth" node="0>7|0|5|0" />
+        <i3dMapping id="inputLevelAreaHeight" node="0>7|0|5|1" />
+        <i3dMapping id="inputTestAreaStart" node="0>7|0|6" />
+        <i3dMapping id="inputTestAreaEnd" node="0>7|0|6|0" />
+        <i3dMapping id="outputStationRoot" node="0>7|1" />
+        <i3dMapping id="outputLoadTrigger" node="0>7|1|0" />
+        <i3dMapping id="outputMarker" node="0>7|1|1" />
+        <i3dMapping id="outputClearAreaStart" node="0>7|1|2" />
+        <i3dMapping id="outputClearAreaWidth" node="0>7|1|2|0" />
+        <i3dMapping id="outputClearAreaHeight" node="0>7|1|2|1" />
+        <i3dMapping id="outputLevelAreaStart" node="0>7|1|3" />
+        <i3dMapping id="outputLevelAreaWidth" node="0>7|1|3|0" />
+        <i3dMapping id="outputLevelAreaHeight" node="0>7|1|3|1" />
+        <i3dMapping id="outputTestAreaStart" node="0>7|1|4" />
+        <i3dMapping id="outputTestAreaEnd" node="0>7|1|4|0" />
+        <i3dMapping id="outputDischargeNode" node="0>7|1|5" />
+        <i3dMapping id="compactionMarker" node="0>7|2" />
     </i3dMappings>
 </placeable>
