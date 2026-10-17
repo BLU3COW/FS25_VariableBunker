@@ -1038,6 +1038,7 @@ end
 
 function VariableBunkerStorage:cutFaceWindow(geometry, heightTypes, unitsPerMeter)
     local rootNode = self.placeable.rootNode
+    local maxUnits = 2 ^ (DensityMapHeightUtil.heightNumChannels or 6) - 1
     local faceZ = self.faceZ
     local fromZ = math.max(faceZ - geometry.pixel, geometry.frontZ)
     local toZ = math.min(faceZ + geometry.run + geometry.pixel, geometry.rearZ)
@@ -1050,7 +1051,8 @@ function VariableBunkerStorage:cutFaceWindow(geometry, heightTypes, unitsPerMete
         end
         local z1 = math.min(z0 + geometry.pixel, geometry.rearZ)
         local cap = math.max((z0 + z1) * 0.5 - faceZ, 0) * geometry.slope
-        if cap < geometry.maxHeight then
+        local capUnits = math.floor(cap * unitsPerMeter)
+        if cap < geometry.maxHeight and capUnits < maxUnits then
             local sx, sz, wx, wz, hx, hz = getLocalArea(
                 rootNode,
                 geometry.outerHalfWidth,
@@ -1058,7 +1060,7 @@ function VariableBunkerStorage:cutFaceWindow(geometry, heightTypes, unitsPerMete
                 z1 + PIXEL_MARGIN,
                 z0 - PIXEL_MARGIN
             )
-            removed = removed + capHeapAtArea(sx, sz, wx, wz, hx, hz, math.floor(cap * unitsPerMeter), heightTypes)
+            removed = removed + capHeapAtArea(sx, sz, wx, wz, hx, hz, capUnits, heightTypes)
         end
         row = row + 1
     end
