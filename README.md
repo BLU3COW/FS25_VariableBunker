@@ -52,7 +52,7 @@
 
 <div align="center">With <strong>VariableBunker</strong>, you get a single silo that adapts to your farm instead of the other way around. Choose between a <strong>bunker silo</strong> with rear wall and a <strong>drive-through silo</strong> open at both ends, and set the interior width, length, and wall height freely in construction mode. Walls, collisions, the silo area, and all placement areas follow the selected dimensions, and the purchase price grows with the size.
 <br><br>
-An optional concrete floor slab, configurable filling and extraction stations, and an automatically generated <strong>AutoDrive</strong> course complete the silo. Further improvements are already being considered. Want to help shape the project? Feel free to get involved and share your requests, suggestions, or ideas for improvement.</div>
+An optional concrete floor slab, an unloading grid, a loading point, a compaction service, and an automatically generated <strong>AutoDrive</strong> course complete the silo. Further improvements are already being considered. Want to help shape the project? Feel free to get involved and share your requests, suggestions, or ideas for improvement.</div>
 <br>
 <div align="center">
 
@@ -61,7 +61,7 @@ An optional concrete floor slab, configurable filling and extraction stations, a
 <br>
 <div align="center">Mit <strong>VariableBunker</strong> bekommst du ein einziges Silo, das sich deinem Hof anpasst und nicht umgekehrt. Wähle zwischen einem <strong>Bunkersilo</strong> mit Rückwand und einem <strong>Fahrsilo</strong>, das an beiden Enden offen ist, und stelle Innenbreite, Länge und Wandhöhe im Baumodus frei ein. Wände, Kollisionen, Silobereich und alle Platzierungsflächen folgen den gewählten Abmessungen, und der Kaufpreis wächst mit der Größe.
 <br><br>
-Eine optionale Beton-Bodenplatte, zuschaltbare Befüll- und Entnahmestationen und ein automatisch erzeugter <strong>AutoDrive</strong>-Kurs runden das Silo ab. Weitere Verbesserungen sind bereits in Überlegung. Du möchtest das Projekt mitgestalten? Dann bring dich gerne ein und teile deine Wünsche, Vorschläge oder Ideen zur Verbesserung.</div>
+Eine optionale Beton-Bodenplatte, eine Abladestelle mit Bodengitter, eine Ladestelle, ein Verdichtungsservice und ein automatisch erzeugter <strong>AutoDrive</strong>-Kurs runden das Silo ab. Weitere Verbesserungen sind bereits in Überlegung. Du möchtest das Projekt mitgestalten? Dann bring dich gerne ein und teile deine Wünsche, Vorschläge oder Ideen zur Verbesserung.</div>
 </details>
 </div>
 <br>
@@ -122,14 +122,14 @@ Eine optionale Beton-Bodenplatte, zuschaltbare Befüll- und Entnahmestationen un
 </div>
 <br>
 
-<div align="center">All dimensions are configured in construction mode before placing the silo. The estimated capacity updates directly in the configuration list as the dimensions or design change. The wall insides stay vertical, while the outside rises vertically for 1.5 m and then slopes inward, so taller walls automatically receive a wider base. <br><br><strong>Price:</strong> 100 € per square meter of interior floor with 4 m walls; every meter of wall height above or below changes the price by 12.5 % (2 m: 75 %, 8 m: 150 %). A 40 × 60 m silo with 4 m walls costs 240,000 €. The total price is shown in the configuration list, and the price per square meter can be changed in the settings. As with the base game silos, the daily upkeep is one thousandth of the price.<br><br><strong>Fill height:</strong> bulk material piles up to the wall height at most, and never higher than the map allows (base game maps: 4 m above the ground). Walls higher than the map limit add no extra volume.</div>
+<div align="center">All dimensions are set in construction mode before the silo is placed. The configuration list shows the estimated capacity and the total price and updates both with every change. The wall insides stay vertical; on the outside, each wall rises vertically for 1.5 m and then slopes inward, so taller walls automatically get a wider base.<br><br><strong>Price:</strong> 100 € per square meter of interior floor with 4 m walls. Each meter of wall height above or below 4 m changes the price by 12.5 % (2 m: 75 %, 8 m: 150 %), so a 40 × 60 m silo with 4 m walls costs 240,000 €. The price per square meter can be changed in the settings. As with the base game silos, the daily upkeep is one thousandth of the price, 240 € per day for the default silo.<br><br><strong>Fill height:</strong> bulk material piles up to the wall height at most, and never higher than the map allows (base game maps: 4 m above the ground). Walls higher than the map limit add no extra volume.</div>
 <br>
 <div align="center">
 
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Alle Abmessungen werden im Baumodus vor dem Platzieren eingestellt. Das geschätzte Fassungsvermögen wird direkt in der Konfigurationsliste aktualisiert, sobald sich Maße oder Bauart ändern. Die Wandinnenseiten bleiben senkrecht, während die Außenseite 1,5 m senkrecht ansteigt und danach schräg nach innen verläuft, sodass höhere Wände automatisch einen breiteren Fuß bekommen. <br><br><strong>Preis:</strong> 100 € je Quadratmeter Innenfläche bei 4 m Wandhöhe; jeder Meter Wandhöhe mehr oder weniger ändert den Preis um 12,5 % (2 m: 75 %, 8 m: 150 %). Ein Silo mit 40 × 60 m und 4 m Wänden kostet 240.000 €. Der Gesamtpreis steht in der Konfigurationsliste, der Preis je Quadratmeter lässt sich in den Einstellungen ändern. Wie bei den Silos aus dem Basisspiel beträgt der tägliche Unterhalt ein Tausendstel des Preises.<br><br><strong>Füllhöhe:</strong> Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt (Basisspiel-Karten: 4 m über dem Boden). Wände höher als diese Grenze bringen kein zusätzliches Volumen.</div>
+<div align="center">Alle Abmessungen werden im Baumodus vor dem Platzieren eingestellt. Die Konfigurationsliste zeigt das geschätzte Fassungsvermögen und den Gesamtpreis und aktualisiert beides bei jeder Änderung. Die Wandinnenseiten bleiben senkrecht; außen steigt jede Wand 1,5 m senkrecht an und verläuft danach schräg nach innen, sodass höhere Wände automatisch einen breiteren Fuß bekommen.<br><br><strong>Preis:</strong> 100 € je Quadratmeter Innenfläche bei 4 m Wandhöhe. Jeder Meter Wandhöhe mehr oder weniger als 4 m ändert den Preis um 12,5 % (2 m: 75 %, 8 m: 150 %), ein Silo mit 40 × 60 m und 4 m Wänden kostet also 240.000 €. Der Preis je Quadratmeter lässt sich in den Einstellungen ändern. Wie bei den Silos aus dem Basisspiel beträgt der tägliche Unterhalt ein Tausendstel des Preises, beim Standardsilo 240 € pro Tag.<br><br><strong>Füllhöhe:</strong> Schüttgut liegt höchstens bis zur Wandhöhe und nie höher, als die Karte erlaubt (Basisspiel-Karten: 4 m über dem Boden). Wände höher als diese Grenze bringen kein zusätzliches Volumen.</div>
 </details>
 </div>
 <br>
@@ -218,23 +218,39 @@ Eine optionale Beton-Bodenplatte, zuschaltbare Befüll- und Entnahmestationen un
 
 | Option | Choices | Default | Price |
 | --- | --- | --- | --- |
-| Concrete floor slab | Without floor slab / Up to the front edge / With extended apron | Without floor slab | free |
-| Floor grid for filling | Off / On | Off | 10,000 € |
-| Loading point | Off / On | Off | 10,000 € |
+| Floor (concrete slab) | None / Standard / Extended | None | free |
+| Unloading (floor grid) | Off / On | Off | 10,000 € |
+| Loading (loading point) | Off / On | Off | 10,000 € |
 | Compaction service | Off / On | Off | 5,000 € |
 | AutoDrive course | Off / Generate automatically | Off | 5,000 € |
 
 </div>
 <br>
 
-<div align="center">The <strong>concrete floor slab</strong> covers the complete outside width including the wall bases. It can end flush with the silo or include an extended apron: 30 m in front of a bunker silo, or 30 m in front of the entrance and 20 m behind the exit of a drive-through silo. The floor grid accepts chaff, grass, and hay while the silo is open; grass and hay are converted to chaff liter for liter. The grid sits 4 m in front of the entrance. The loading point at the same spot (no grid of its own; loading rate adjustable with AdjustSuite ADR-P) loads silage after fermentation; chaff is only taken in at the grid, never handed out. It cuts the silage from the entrance towards the back as a clean 40° face from wall to wall and opens the cover just ahead of it. Filling builds a rear-to-front wedge in the bunker silo and distributes material broadly across the drive-through silo. These stations do not create AutoDrive routes or targets. With the <strong>compaction service</strong>, press the activate key at the grid to have the remaining material compacted to 100 % at once; the price follows the remaining liters and is billed like a contractor working 300,000 l per hour (helper wage and 40 € wear per hour scaled by the economic difficulty, plus 20 l diesel per hour). While you are at the silo, an <strong>info box</strong> shows the fill level, compaction, fermentation with the remaining time, and the next step. The <strong>AutoDrive course</strong> option is only shown when AutoDrive is active in the savegame.</div>
+<div align="center">The <strong>floor</strong> is a concrete slab across the complete outside width, wall bases included. <strong>Standard</strong> ends flush with the silo, <strong>Extended</strong> adds an apron: 30 m in front of a bunker silo, or 30 m in front of the entrance and 20 m behind the exit of a drive-through silo.
+<br><br>
+<strong>Unloading</strong> places a floor grid 4 m in front of the entrance. While the silo is open, it takes chaff, grass, and hay from trailers and bales; grass and hay become chaff liter for liter. The bunker silo fills as a wedge from the rear wall towards the entrance, the drive-through silo in even layers across its whole length.
+<br><br>
+<strong>Loading</strong> uses the same spot without a grid of its own and hands out only silage, after fermentation. It cuts the silage from the entrance towards the back as a clean 40° face from wall to wall and opens the cover just ahead of the face. The loading rate can be adjusted with AdjustSuite ADR-P.
+<br><br>
+The <strong>compaction service</strong> is ordered on foot at the grid with the activate key and compacts the remaining material to 100 % at once. It is billed like a contractor working 300,000 l per hour: helper wage plus 40 € wear per hour, both scaled by the economic difficulty, plus 20 l of diesel per hour.
+<br><br>
+The <strong>AutoDrive course</strong> option only appears when AutoDrive is active in the savegame (see below); the stations themselves do not create AutoDrive routes or targets. While you are at the silo, an <strong>info box</strong> shows the fill level, compaction, fermentation with the remaining time, and the next step.</div>
 <br>
 <div align="center">
 
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Die <strong>Beton-Bodenplatte</strong> deckt die gesamte Außenbreite einschließlich der Wandfüße ab. Sie endet wahlweise bündig mit dem Silo oder hat einen Vorplatz: 30 m vor einem Bunkersilo, bzw. 30 m vor der Einfahrt und 20 m hinter der Ausfahrt eines Fahrsilos. Das Bodengitter nimmt im offenen Silo Häckselgut, Gras und Heu an; Gras und Heu werden Liter für Liter in Häckselgut umgewandelt. Das Gitter liegt 4 m vor der Einfahrt. Die Ladestelle an derselben Stelle (ohne eigenes Gitter; Laderate mit AdjustSuite ADR-P einstellbar) lädt nach der Gärung Silage; Häckselgut wird am Gitter nur angenommen, nie ausgegeben. Dabei wird die Silage von der Einfahrt nach hinten als saubere 40°-Anschnittfläche von Wand zu Wand abgetragen und die Abdeckung kurz davor geöffnet. Beim Befüllen entsteht im Bunkersilo ein Keil von der Rückwand zur Einfahrt, während das Fahrsilo breitflächig gefüllt wird. Die Stationen erzeugen keine AutoDrive-Kurse oder Ziele. Mit dem <strong>Verdichtungsservice</strong> lässt sich das restliche Material am Gitter per Aktivieren-Taste sofort auf 100 % verdichten; der Preis richtet sich nach der Restmenge und wird wie ein Lohnunternehmer mit 300.000 l pro Stunde abgerechnet (Helferlohn und 40 € Verschleiß pro Stunde, skaliert mit dem Wirtschaftsschwierigkeitsgrad, dazu 20 l Diesel pro Stunde). Am Silo zeigt eine <strong>Infobox</strong> Füllstand, Verdichtung, Gärung mit Restzeit und den nächsten Schritt. Die Option <strong>AutoDrive-Kurs</strong> wird nur angezeigt, wenn AutoDrive im Spielstand aktiv ist.</div>
+<div align="center">Die <strong>Bodenplatte</strong> ist eine Betonplatte über die gesamte Außenbreite einschließlich der Wandfüße. <strong>Standard</strong> endet bündig mit dem Silo, <strong>Erweitert</strong> ergänzt einen Vorplatz: 30 m vor einem Bunkersilo, bzw. 30 m vor der Einfahrt und 20 m hinter der Ausfahrt eines Fahrsilos.
+<br><br>
+Die <strong>Abladestelle</strong> setzt ein Bodengitter 4 m vor die Einfahrt. Solange das Silo offen ist, nimmt es Häckselgut, Gras und Heu von Anhängern und aus Ballen an; Gras und Heu werden Liter für Liter zu Häckselgut. Das Bunkersilo füllt sich als Keil von der Rückwand zur Einfahrt, das Fahrsilo in gleichmäßigen Schichten über die ganze Länge.
+<br><br>
+Die <strong>Ladestelle</strong> liegt an derselben Stelle, ohne eigenes Gitter, und gibt nach der Gärung ausschließlich Silage aus. Sie trägt die Silage von der Einfahrt nach hinten als saubere 40°-Anschnittfläche von Wand zu Wand ab und öffnet die Abdeckung kurz vor der Anschnittkante. Die Laderate lässt sich mit AdjustSuite ADR-P einstellen.
+<br><br>
+Den <strong>Verdichtungsservice</strong> bestellst du zu Fuß am Gitter per Aktivieren-Taste; er verdichtet das restliche Material sofort auf 100 %. Abgerechnet wird wie bei einem Lohnunternehmer mit 300.000 l pro Stunde: Helferlohn plus 40 € Verschleiß pro Stunde, beides skaliert mit dem Wirtschaftsschwierigkeitsgrad, dazu 20 l Diesel pro Stunde.
+<br><br>
+Die Option <strong>AutoDrive-Kurs</strong> erscheint nur, wenn AutoDrive im Spielstand aktiv ist (siehe unten); die Stationen selbst erzeugen keine AutoDrive-Kurse oder Ziele. Am Silo zeigt eine <strong>Infobox</strong> Füllstand, Verdichtung, Gärung mit Restzeit und den nächsten Schritt.</div>
 </details>
 </div>
 <br>
@@ -249,19 +265,19 @@ Eine optionale Beton-Bodenplatte, zuschaltbare Befüll- und Entnahmestationen un
 | Design | Lanes | Lane layout | Destinations |
 | --- | --- | --- | --- |
 | Bunker silo | One per 5 m of width (20 at 100 m) | Two-way, cross connections 4 m and 26 m in front of the silo, turnaround 27 m in front | 2 m before the rear wall |
-| Drive-through silo | One per 3.5 m of width | One-way from 5 m before the entry to 19 m beyond the exit | At the end of each lane |
+| Drive-through silo | One per 3.5 m of width | One-way from 25 m before the entrance to 15 m beyond the exit | At the end of each lane |
 
 </div>
 <br>
 
-<div align="center">When the option is enabled, a visual course preview appears while the silo is being configured and positioned. The actual course is created only once after placement and adapts to the selected width and length. The layouts follow the AutoDrive reference courses for the BGA bunker silo and the large bunker silo. Cancelling placement creates no waypoints, loading a savegame never creates duplicate nodes, and without AutoDrive the silo works completely on its own.</div>
+<div align="center">When the option is enabled, a visual course preview appears while the silo is being configured and positioned. The actual course is created only once after placement and adapts to the selected width and length. The layouts follow the AutoDrive reference courses for the BGA bunker silo and the large bunker silo. Cancelling placement creates no waypoints, loading a savegame never creates duplicate nodes, and selling the silo removes its waypoints again. Without AutoDrive, the silo works completely on its own.</div>
 <br>
 <div align="center">
 
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Ist die Option aktiviert, erscheint während der Konfiguration und Positionierung eine visuelle Kursvorschau. Der eigentliche Kurs wird erst nach dem Platzieren einmalig erzeugt und passt sich an die gewählte Breite und Länge an. Die Aufteilung folgt den AutoDrive-Referenzkursen für das BGA-Bunkersilo und das große Fahrsilo des Basisspiels. Ein Abbruch erzeugt keine Wegpunkte, beim Laden eines Spielstands entstehen nie doppelte Knoten, und ohne AutoDrive funktioniert das Silo vollständig eigenständig.</div>
+<div align="center">Ist die Option aktiviert, erscheint während der Konfiguration und Positionierung eine visuelle Kursvorschau. Der eigentliche Kurs wird erst nach dem Platzieren einmalig erzeugt und passt sich an die gewählte Breite und Länge an. Die Aufteilung folgt den AutoDrive-Referenzkursen für das BGA-Bunkersilo und das große Fahrsilo des Basisspiels. Ein Abbruch erzeugt keine Wegpunkte, beim Laden eines Spielstands entstehen nie doppelte Knoten, und beim Verkauf des Silos werden seine Wegpunkte wieder entfernt. Ohne AutoDrive funktioniert das Silo vollständig eigenständig.</div>
 </details>
 </div>
 <br>
@@ -285,12 +301,10 @@ Eine optionale Beton-Bodenplatte, zuschaltbare Befüll- und Entnahmestationen un
 </div>
 <br>
 
-<div align="center">With <strong>allowWallHeightsAboveFourMeters</strong> set to <strong>false</strong>, newly built silos are limited to 4 m; existing silos keep their height. <strong>allowInputStation</strong>, <strong>allowOutputStation</strong> and <strong>allowCompactionService</strong> switch the floor grid, the loading point and the compaction service on or off; disabled choices are hidden for new silos, and on existing silos they are switched off without losing their configuration. <strong>compactionPricePercent</strong> scales the price of the compaction service. <strong>pricePerSquareMeter</strong> sets the purchase price of new silos; silos you already own keep the price you paid.
-<br>
-<br>
-<strong>display#showInfoBox</strong> and the <strong>debug</strong> settings only apply to your own game and are not taken from the host. The debug output writes filling, extraction, station accounting and compaction to the log (<strong>logFilling</strong>, <strong>logExtraction</strong>, <strong>logStations</strong>, <strong>logCompaction</strong>), adds height grids of the silo after loading, after each state change and when the fill level settles (<strong>heightDumps</strong>), and shows band numbers, the active filling band and the extraction face at the silo (<strong>showOverlay</strong>). All of these sub-switches default to <strong>true</strong> and only take effect while <strong>enabled</strong> is <strong>true</strong>.
-<br>
-<br>
+<div align="center">With <strong>allowWallHeightsAboveFourMeters</strong> set to <strong>false</strong>, newly built silos are limited to 4 m walls; existing silos keep their height. <strong>allowInputStation</strong>, <strong>allowOutputStation</strong>, and <strong>allowCompactionService</strong> switch the floor grid, the loading point, and the compaction service on or off. Disabled choices are hidden for new silos and switched off on existing ones without losing their configuration. <strong>compactionPricePercent</strong> scales the compaction price, and <strong>pricePerSquareMeter</strong> sets the purchase price of new silos; silos you already own keep the price you paid.
+<br><br>
+<strong>display#showInfoBox</strong> and the <strong>debug</strong> settings only apply to your own game. <strong>debug#enabled</strong> writes detailed troubleshooting output to the log. Its sub-switches <strong>logFilling</strong>, <strong>logExtraction</strong>, <strong>logStations</strong>, <strong>logCompaction</strong>, <strong>heightDumps</strong>, and <strong>showOverlay</strong> are on by default and narrow down what is logged or drawn at the silo.
+<br><br>
 Restart the game after editing the file. In multiplayer, the host or dedicated server settings are authoritative and are sent to joining players.</div>
 <br>
 <div align="center">
@@ -298,12 +312,10 @@ Restart the game after editing the file. In multiplayer, the host or dedicated s
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Steht <strong>allowWallHeightsAboveFourMeters</strong> auf <strong>false</strong>, sind neu gebaute Silos auf 4 m begrenzt; bestehende Silos behalten ihre Höhe. <strong>allowInputStation</strong>, <strong>allowOutputStation</strong> und <strong>allowCompactionService</strong> schalten Bodengitter, Ladestelle und Verdichtungsservice ein oder aus; deaktivierte Optionen werden bei Neubauten ausgeblendet und an bestehenden Silos ohne Verlust ihrer Konfiguration abgeschaltet. <strong>compactionPricePercent</strong> skaliert den Preis des Verdichtungsservice. <strong>pricePerSquareMeter</strong> legt den Kaufpreis neuer Silos fest; bereits gebaute Silos behalten ihren bezahlten Preis.
-<br>
-<br>
-<strong>display#showInfoBox</strong> und die <strong>debug</strong>-Einstellungen gelten nur für das eigene Spiel und werden nicht vom Host übernommen. Die Debug-Ausgabe schreibt Befüllen, Entnahme, Abrechnung der Stationen und Verdichtung in die Log (<strong>logFilling</strong>, <strong>logExtraction</strong>, <strong>logStations</strong>, <strong>logCompaction</strong>), ergänzt Höhenraster des Silos nach dem Laden, nach jedem Zustandswechsel und sobald sich der Füllstand beruhigt hat (<strong>heightDumps</strong>), und zeigt am Silo Bandnummern, das aktive Befüllband und die Anschnittfläche (<strong>showOverlay</strong>). Alle Unterschalter stehen standardmäßig auf <strong>true</strong> und wirken nur, solange <strong>enabled</strong> auf <strong>true</strong> steht.
-<br>
-<br>
+<div align="center">Steht <strong>allowWallHeightsAboveFourMeters</strong> auf <strong>false</strong>, sind neu gebaute Silos auf 4 m Wandhöhe begrenzt; bestehende Silos behalten ihre Höhe. <strong>allowInputStation</strong>, <strong>allowOutputStation</strong> und <strong>allowCompactionService</strong> schalten Bodengitter, Ladestelle und Verdichtungsservice ein oder aus. Deaktivierte Optionen werden bei Neubauten ausgeblendet und an bestehenden Silos abgeschaltet, ohne dass ihre Konfiguration verloren geht. <strong>compactionPricePercent</strong> skaliert den Preis des Verdichtungsservice, <strong>pricePerSquareMeter</strong> legt den Kaufpreis neuer Silos fest; bereits gebaute Silos behalten ihren bezahlten Preis.
+<br><br>
+<strong>display#showInfoBox</strong> und die <strong>debug</strong>-Einstellungen gelten nur für das eigene Spiel. <strong>debug#enabled</strong> schreibt ausführliche Ausgaben zur Fehlersuche in die Log. Die Unterschalter <strong>logFilling</strong>, <strong>logExtraction</strong>, <strong>logStations</strong>, <strong>logCompaction</strong>, <strong>heightDumps</strong> und <strong>showOverlay</strong> sind standardmäßig an und grenzen ein, was protokolliert oder am Silo angezeigt wird.
+<br><br>
 Nach einer Änderung muss das Spiel neu gestartet werden. Im Mehrspieler gelten die Einstellungen des Hosts oder Dedicated Servers und werden an beitretende Spieler übertragen.</div>
 </details>
 </div>
@@ -312,7 +324,7 @@ Nach einer Änderung muss das Spiel neu gestartet werden. Im Mehrspieler gelten 
 <div align="center">
 
 <details>
-  <summary><div align="center"><strong>‼️Click to View “FS25_VariableBunker.xml” | Hier Klicken um „FS25_VariableBunker.xml“ anzuzeigen‼️</strong></div></summary>
+  <summary><div align="center"><strong>‼️Click to view “FS25_VariableBunker.xml” | Hier klicken, um „FS25_VariableBunker.xml“ anzuzeigen‼️</strong></div></summary>
 
 ### <div align="center"><strong><code>C:\Users\YourPC\Documents\My Games\FarmingSimulator2025\modSettings\FS25_VariableBunker.xml</code></strong></div>
 <br>
@@ -335,8 +347,7 @@ The <strong>“FS25_VariableBunker.xml”</strong> file is created automatically
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">Die Datei <strong>„FS25_VariableBunker.xml“</strong> wird automatisch erstellt, sobald der Mod zum ersten Mal gestartet wird.
-<br>
+<div align="center">Die Datei <strong>„FS25_VariableBunker.xml“</strong> wird automatisch erstellt, sobald der Mod zum ersten Mal gestartet wird.</div>
 </details>
 </div>
 
@@ -359,13 +370,16 @@ The <strong>“FS25_VariableBunker.xml”</strong> file is created automatically
 
 <div align="center">There is no fixed roadmap yet. Suggestions, ideas, and feedback are always welcome via Issues or Discussions.</div>
 
+<br>
+<div align="center">
+
 <details>
 <summary><div align="center"><img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" /> ➡️​ <strong>Deutsch</strong> ⬅️ <img width="15"  alt="flag-german" src=".github/assets/badges/flag-german.svg" />​</div></summary>
   <br>
-<div align="center">
-Es gibt noch keinen festen Fahrplan. Vorschläge, Ideen und Feedback sind über Issues oder Discussions jederzeit willkommen.</div>
+<div align="center">Es gibt noch keinen festen Fahrplan. Vorschläge, Ideen und Feedback sind über Issues oder Discussions jederzeit willkommen.</div>
 </details>
-  <br>
+</div>
+<br>
 
 
 
