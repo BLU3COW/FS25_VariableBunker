@@ -76,7 +76,7 @@ Eine optionale Beton-Bodenplatte, zuschaltbare Befüll- und Entnahmestationen un
 
 <img width="1600" height="900" alt="variablebunker-ai" src=".github/assets/screenshots/variablebunker_ai.png" />
 
-<img width="1600" height="900" alt="variablebunker-gif" src=".github/assets/screenshots/variablebunker-gif.gif" />
+<img width="1600" height="900" alt="variablebunker-gif" src=".github/assets/screenshots/variablebunker_gif.gif" />
 
 </div>
 <br>
@@ -339,6 +339,9 @@ The <strong>“FS25_VariableBunker.xml”</strong> file is created automatically
 <br>
 </details>
 </div>
+
+<br>
+<img width="1600" height="900" alt="variablebunker_modsettings" src=".github/assets/screenshots/variablebunker_modsettings.png" />
 </details>
 </div>
 
@@ -427,5 +430,8 @@ Du kannst das Projekt auch aktiv unterstützen, indem du Wünsche, Ideen, Verbes
 
 <img width="1600" height="900" alt="variablebunker_001" src=".github/assets/screenshots/variablebunker_001.png" />
 <img width="1600" height="900" alt="variablebunker_002" src=".github/assets/screenshots/variablebunker_002.png" />
+<img width="1600" height="900" alt="variablebunker_003" src=".github/assets/screenshots/variablebunker_003.png" />
+<img width="1600" height="900" alt="variablebunker_004" src=".github/assets/screenshots/variablebunker_004.png" />
+<img width="1600" height="900" alt="variablebunker_005" src=".github/assets/screenshots/variablebunker_005.png" />
 
 </div>
