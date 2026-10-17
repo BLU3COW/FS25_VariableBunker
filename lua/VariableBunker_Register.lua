@@ -573,8 +573,8 @@ local function addDebugInfoLines(box, placeable, bunkerSilo)
         box:addLine(
             "Debug output",
             string.format(
-                "band %s, buffer %.0f l",
-                tostring(outputStorage.outputBandIndex),
+                "face %s, buffer %.0f l",
+                outputStorage.faceZ ~= nil and string.format("%.1f m", outputStorage.faceZ) or "-",
                 outputStorage.outputBuffers[FillType.SILAGE] or 0
             )
         )

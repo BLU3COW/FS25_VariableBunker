@@ -16,12 +16,12 @@ local FULL_HEIGHT_TOLERANCE = 0.15
 local FULL_RELEASE_LITERS = 1000
 local FULL_RELEASE_SHARE = 0.002
 local SURFACE_ANGLE = math.rad(40)
-local RESIDUE_CELL_WIDTH = 1
 local PIXEL_MARGIN = 0.01
-local CLEAR_DONE_LITERS_PER_METER = 25
-local CLEAR_BANDS_PER_CALL = 4
-local STRANDED_CHECKS_PER_CALL = 16
 local DEFAULT_WALL_CORE = 0.4
+local DEFAULT_PIXEL_SIZE = 0.5
+local FACE_APRON = 1
+local FACE_HEIGHT_MARGIN = 0.5
+local FACE_MAX_STEPS = 40
 local DEBUG_DUMP_CELL = 0.5
 local DEBUG_DUMP_CHARS = "123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 local DEBUG_LABEL_STEP = 10
@@ -47,18 +47,13 @@ local function debugNumber(value)
     return string.format("%.3f", value)
 end
 
-local function debugOffset(value)
-    if value == nil then
-        return "-"
+local function getDensityPixelSize()
+    local manager = g_densityMapHeightManager
+    local size = manager ~= nil and manager.densityToWorldMap or nil
+    if size == nil or size <= 0 then
+        return DEFAULT_PIXEL_SIZE
     end
-    return string.format("%.0f", value)
-end
-
-local function getMinRemovableLiters(fillTypeIndex)
-    if g_densityMapHeightManager == nil or g_densityMapHeightManager.getMinValidLiterValue == nil then
-        return 0
-    end
-    return g_densityMapHeightManager:getMinValidLiterValue(fillTypeIndex) or 0
+    return size
 end
 
 local function getLocalArea(rootNode, x0, x1, z0, z1)
@@ -81,21 +76,41 @@ local heapModifiers = nil
 
 local function getHeapModifiers()
     if heapModifiers == nil and DensityMapHeightUtil.terrainDetailHeightId ~= nil then
+        local height = DensityMapModifier.new(
+            DensityMapHeightUtil.terrainDetailHeightId,
+            DensityMapHeightUtil.heightFirstChannel,
+            DensityMapHeightUtil.heightNumChannels
+        )
+        local type = DensityMapModifier.new(
+            DensityMapHeightUtil.terrainDetailHeightId,
+            DensityMapHeightUtil.typeFirstChannel,
+            DensityMapHeightUtil.typeNumChannels
+        )
         heapModifiers = {
-            height = DensityMapModifier.new(
-                DensityMapHeightUtil.terrainDetailHeightId,
-                DensityMapHeightUtil.heightFirstChannel,
-                DensityMapHeightUtil.heightNumChannels
-            ),
-            type = DensityMapModifier.new(
-                DensityMapHeightUtil.terrainDetailHeightId,
-                DensityMapHeightUtil.typeFirstChannel,
-                DensityMapHeightUtil.typeNumChannels
-            ),
-            filters = {},
+            height = height,
+            type = type,
+            aboveFilter = DensityMapFilter.new(height),
+            emptyFilter = DensityMapFilter.new(height),
+            typeFilters = {},
         }
+        heapModifiers.emptyFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 0)
     end
     return heapModifiers
+end
+
+local function getHeapTypeFilter(modifiers, heightTypeIndex)
+    local filter = modifiers.typeFilters[heightTypeIndex]
+    if filter == nil then
+        filter = DensityMapFilter.new(modifiers.type)
+        filter:setValueCompareParams(DensityValueCompareType.EQUAL, heightTypeIndex)
+        modifiers.typeFilters[heightTypeIndex] = filter
+    end
+    return filter
+end
+
+local function setHeapArea(modifiers, sx, sz, wx, wz, hx, hz)
+    modifiers.height:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
+    modifiers.type:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
 end
 
 local function removeHeapTypeAtArea(sx, sz, wx, wz, hx, hz, heightTypeIndex)
@@ -103,18 +118,35 @@ local function removeHeapTypeAtArea(sx, sz, wx, wz, hx, hz, heightTypeIndex)
     if modifiers == nil then
         return 0
     end
-    local filter = modifiers.filters[heightTypeIndex]
-    if filter == nil then
-        filter = DensityMapFilter.new(modifiers.type)
-        filter:setValueCompareParams(DensityValueCompareType.EQUAL, heightTypeIndex)
-        modifiers.filters[heightTypeIndex] = filter
-    end
-    modifiers.height:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
-    modifiers.type:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
+    local filter = getHeapTypeFilter(modifiers, heightTypeIndex)
+    setHeapArea(modifiers, sx, sz, wx, wz, hx, hz)
     local density = modifiers.height:executeGet(filter)
     modifiers.height:executeSet(0, filter)
     modifiers.type:executeSet(0, filter)
     return density or 0
+end
+
+local function capHeapAtArea(sx, sz, wx, wz, hx, hz, capUnits, heightTypes)
+    local modifiers = getHeapModifiers()
+    if modifiers == nil then
+        return 0
+    end
+    setHeapArea(modifiers, sx, sz, wx, wz, hx, hz)
+    modifiers.aboveFilter:setValueCompareParams(DensityValueCompareType.GREATER, capUnits)
+    local removed = 0
+    for _, heightType in ipairs(heightTypes) do
+        local filter = getHeapTypeFilter(modifiers, heightType.index)
+        local before = modifiers.height:executeGet(filter) or 0
+        if before > 0 then
+            modifiers.height:executeSet(capUnits, filter, modifiers.aboveFilter)
+            local after = modifiers.height:executeGet(filter) or 0
+            removed = removed + (before - after) * heightType.liters
+            if capUnits == 0 then
+                modifiers.type:executeSet(0, filter, modifiers.emptyFilter)
+            end
+        end
+    end
+    return removed
 end
 
 local function removeLocalArea(rootNode, x0, x1, z0, z1, fillTypes)
@@ -263,7 +295,6 @@ local function createBands(placeable)
             length = bandLength,
             radius = radius,
             inputOffsetKey = "input_" .. index,
-            outputOffsetKeys = {},
         }
         band.sx, band.sy, band.sz = localToWorld(rootNode, halfWidth, 0, startZ)
         band.wx, band.wy, band.wz = localToWorld(rootNode, -halfWidth, 0, startZ)
@@ -287,10 +318,6 @@ local function getBands(storage)
     return storage.bands
 end
 
-local function getBandCenter(band)
-    return (band.wx + band.hx) * 0.5, (band.wy + band.hy) * 0.5, (band.wz + band.hz) * 0.5
-end
-
 local function getBandHeightLimit(placeable, bands, index, fillTypeIndex)
     local spec = placeable.spec_VariableBunker
     local count = #bands
@@ -302,37 +329,30 @@ local function getBandHeightLimit(placeable, bands, index, fillTypeIndex)
     return math.min(limit, spec.heightMeters or 0)
 end
 
-local function moveAtArea(storage, area, liters, fillTypeIndex, offsetKey, addMaterial, lineHeight)
-    if math.abs(liters) < 0.001 then
+local function addAtBand(storage, band, liters, fillTypeIndex, lineHeight)
+    if liters < 0.001 then
         return 0
     end
-    local lsy = area.lsy
-    local ley = area.ley
-    local delta = addMaterial and liters or -liters
-    if addMaterial then
-        local _, topY, _ = localToWorld(storage.placeable.rootNode, 0, lineHeight, 0)
-        lsy = topY
-        ley = topY
-    end
+    local _, topY, _ = localToWorld(storage.placeable.rootNode, 0, lineHeight, 0)
     local moved, lineOffset = DensityMapHeightUtil.tipToGroundAroundLine(
         nil,
-        delta,
+        liters,
         fillTypeIndex,
-        area.lsx,
-        lsy,
-        area.lsz,
-        area.lex,
-        ley,
-        area.lez,
-        area.radius,
-        area.radius,
-        storage.lineOffsets[offsetKey],
-        addMaterial,
+        band.lsx,
+        topY,
+        band.lsz,
+        band.lex,
+        topY,
+        band.lez,
+        band.radius,
+        band.radius,
+        storage.lineOffsets[band.inputOffsetKey],
+        true,
         nil,
         false,
         true
     )
-    storage.lineOffsets[offsetKey] = lineOffset
+    storage.lineOffsets[band.inputOffsetKey] = lineOffset
     return math.abs(moved)
 end
 
@@ -384,14 +404,6 @@ local function getDebugBands(placeable)
     return createBands(placeable)
 end
 
-local function getDebugOutputOffset(outputStorage, band)
-    if outputStorage == nil then
-        return nil
-    end
-    local offsetKey = band.outputOffsetKeys[FillType.SILAGE]
-    return offsetKey ~= nil and outputStorage.lineOffsets[offsetKey] or nil
-end
-
 function VariableBunkerStorage.debugDump(placeable, reason)
     local spec = placeable ~= nil and placeable.spec_VariableBunker or nil
     local bunkerSilo = getBunkerSilo(placeable)
@@ -404,7 +416,7 @@ function VariableBunkerStorage.debugDump(placeable, reason)
     local inputStorage, outputStorage = getDebugStorages(placeable)
     local bands = getDebugBands(placeable)
     local inputBand = inputStorage ~= nil and inputStorage.inputBandIndex or nil
-    local outputBand = outputStorage ~= nil and outputStorage.outputBandIndex or nil
+    local faceZ = outputStorage ~= nil and outputStorage.faceZ or nil
     local x, _, z = getWorldTranslation(rootNode)
     VariableBunker.debugLog(
         "dump",
@@ -436,8 +448,8 @@ function VariableBunkerStorage.debugDump(placeable, reason)
     if outputStorage ~= nil then
         VariableBunker.debugLog(
             "dump",
-            "output: band %s, silage buffer %.0f l",
-            tostring(outputBand),
+            "output: face at %s m, silage buffer %.0f l",
+            debugNumber(faceZ),
             outputStorage.outputBuffers[FillType.SILAGE] or 0
         )
     end
@@ -448,7 +460,7 @@ function VariableBunkerStorage.debugDump(placeable, reason)
     )
     VariableBunker.debugLog(
         "dump",
-        "thickness in dm: . = 0, 1-9, A-Z = 10-35, a-z = 36-61, # = more; > input band, < output band"
+        "thickness in dm: . = 0, 1-9, A-Z = 10-35, a-z = 36-61, # = more; > input band, < foot of the face"
     )
     local columns = math.max(math.floor(width / DEBUG_DUMP_CELL + 0.5), 1)
     local length = spec.lengthMeters or 0
@@ -467,36 +479,35 @@ function VariableBunkerStorage.debugDump(placeable, reason)
     end
     VariableBunker.debugLog("dump", "outer columns and the rear row lie under the wall core")
     if spec.hasRearWall then
-        VariableBunker.debugLog("dump", "rear %s %s", string.rep(" ", 18), getRow(length * 0.5 + DEBUG_DUMP_CELL * 0.5))
+        VariableBunker.debugLog("dump", "rear  %s", getRow(length * 0.5 + DEBUG_DUMP_CELL * 0.5))
     end
     for index, band in ipairs(bands) do
         local rows = math.max(math.floor(band.length / DEBUG_DUMP_CELL + 0.5), 1)
         local startZ = length * 0.5 - (index - 1) * band.length
-        local marker = (index == inputBand and ">" or " ") .. (index == outputBand and "<" or " ")
-        local offsetText = debugNumber(getDebugOutputOffset(outputStorage, band))
+        local hasFace = faceZ ~= nil and faceZ <= band.startZ and faceZ > band.endZ
+        local marker = (index == inputBand and ">" or " ") .. (hasFace and "<" or " ")
         for row = 1, rows do
             local cellZ = startZ - (row - 0.5) * band.length / rows
             if row == 1 then
                 VariableBunker.debugLog(
                     "dump",
-                    "b%03d%s offset %9s %s %.0f l",
+                    "b%03d%s %s %.0f l",
                     index,
                     marker,
-                    offsetText,
                     getRow(cellZ),
                     getDebugBandLevel(bunkerSilo, band)
                 )
             else
-                VariableBunker.debugLog("dump", "%s%s", string.rep(" ", 23), getRow(cellZ))
+                VariableBunker.debugLog("dump", "%s%s", string.rep(" ", 6), getRow(cellZ))
             end
         end
     end
     VariableBunker.debugLog("dump", "end")
 end
 
-local function drawDebugBandLine(rootNode, band, halfWidth, y, red, green, blue)
-    local x1, y1, z1 = localToWorld(rootNode, halfWidth, y, band.centerZ)
-    local x2, y2, z2 = localToWorld(rootNode, -halfWidth, y, band.centerZ)
+local function drawDebugCrossLine(rootNode, halfWidth, y, z, red, green, blue)
+    local x1, y1, z1 = localToWorld(rootNode, halfWidth, y, z)
+    local x2, y2, z2 = localToWorld(rootNode, -halfWidth, y, z)
     drawDebugLine(x1, y1, z1, red, green, blue, x2, y2, z2, red, green, blue)
     return x1, y1, z1, x2, y2, z2
 end
@@ -533,7 +544,7 @@ function VariableBunkerStorage.debugDraw(placeable)
     local inputBand = inputStorage ~= nil and bands[inputStorage.inputBandIndex or 0] or nil
     if inputBand ~= nil then
         local lineHeight = spec.hasRearWall and (spec.heightMeters or 0) or (inputStorage.layerHeight or LAYER_STEP)
-        local x, y, z = drawDebugBandLine(rootNode, inputBand, halfWidth, lineHeight, 0, 1, 0)
+        local x, y, z = drawDebugCrossLine(rootNode, halfWidth, lineHeight, inputBand.centerZ, 0, 1, 0)
         Utils.renderTextAtWorldPosition(
             x,
             y + 0.5,
@@ -543,28 +554,10 @@ function VariableBunkerStorage.debugDraw(placeable)
             0
         )
     end
-    local outputBand = outputStorage ~= nil and bands[outputStorage.outputBandIndex or 0] or nil
-    if outputBand ~= nil then
-        local x1, y1, z1, x2, y2, z2 = drawDebugBandLine(rootNode, outputBand, halfWidth, top + 0.2, 1, 0, 0)
-        local offset = getDebugOutputOffset(outputStorage, outputBand)
-        Utils.renderTextAtWorldPosition(
-            x2,
-            y2 + 0.5,
-            z2,
-            string.format("OUT b%d offset %s", outputBand.index, debugNumber(offset)),
-            0.015,
-            0
-        )
-        if offset ~= nil then
-            local lineLength = MathUtil.vector3Length(x2 - x1, y2 - y1, z2 - z1)
-            if lineLength > 0.001 then
-                local share = math.clamp(offset / lineLength, 0, 1)
-                local px = x1 + (x2 - x1) * share
-                local py = y1 + (y2 - y1) * share
-                local pz = z1 + (z2 - z1) * share
-                drawDebugLine(px, py - top - 0.2, pz, 1, 1, 0, px, py + 1, pz, 1, 1, 0)
-            end
-        end
+    local faceZ = outputStorage ~= nil and outputStorage.faceZ or nil
+    if faceZ ~= nil and faceZ > -halfLength - 1 and faceZ < halfLength + 1 then
+        local _, _, _, x, y, z = drawDebugCrossLine(rootNode, halfWidth, 0.2, faceZ, 1, 0, 0)
+        Utils.renderTextAtWorldPosition(x, y + 0.5, z, string.format("FACE %.1f m", faceZ), 0.015, 0)
     end
 end
 
@@ -587,7 +580,7 @@ function VariableBunkerStorage.new(placeable, mode, customMt)
     self.fullCheckResult = false
     self.openBandIndex = 1
     self.layerHeight = nil
-    self.outputBandIndex = nil
+    self.faceZ = nil
     self.outputBuffers = {}
     self.reportedFillLevels = {}
     self.reportedFillLevelTime = nil
@@ -814,7 +807,7 @@ function VariableBunkerStorage:fillBand(bands, index, liters, fillTypeIndex, lin
         return 0
     end
     local band = bands[index]
-    return moveAtArea(self, band, liters, fillTypeIndex, band.inputOffsetKey, true, height)
+    return addAtBand(self, band, liters, fillTypeIndex, height)
 end
 
 function VariableBunkerStorage:fillBandsToWallHeight(liters, fillTypeIndex)
@@ -976,41 +969,128 @@ function VariableBunkerStorage:addMaterial(liters, fillTypeIndex)
     return self:fillBandsInLayers(bunkerSilo, liters, fillTypeIndex)
 end
 
-local function openFermentedBand(bunkerSilo, band)
-    local fermentingFillType = bunkerSilo.fermentingFillType
-    if fermentingFillType == nil or getAreaFillLevel(band, fermentingFillType) < 0.001 then
-        return
-    end
-    local x, y, z = getBandCenter(band)
-    bunkerSilo:onChangedFillLevelCallback(nil, -1, bunkerSilo.outputFillType, x, y, z)
-    if getAreaFillLevel(band, fermentingFillType) > 0.001 then
-        debugLog("extraction", "band %d still covered, converting it to silage", band.index)
-        DensityMapHeightUtil.changeFillTypeAtArea(
-            band.sx,
-            band.sz,
-            band.wx,
-            band.wz,
-            band.hx,
-            band.hz,
-            fermentingFillType,
-            bunkerSilo.outputFillType
-        )
-    end
-end
-
 function VariableBunkerStorage:openFermentedSide(bunkerSilo)
     if bunkerSilo.state == BunkerSilo.STATE_FERMENTED then
-        self.residueBandIndex = nil
-        self.clearBandIndex = nil
+        self.faceZ = nil
         local area = bunkerSilo.bunkerSiloArea
         bunkerSilo:openSilo(area.hx + area.dwx * 0.5, area.hy + area.dwy * 0.5, area.hz + area.dwz * 0.5)
     end
 end
 
+function VariableBunkerStorage:getFaceGeometry(fillTypeIndex)
+    local spec = self.placeable.spec_VariableBunker
+    local wallCore = getWallCore(self.placeable)
+    local halfLength = (spec.lengthMeters or 0) * 0.5
+    local maxHeight = spec.heightMeters or 0
+    local mapHeightLimit = getMapHeightLimit()
+    if mapHeightLimit ~= nil then
+        maxHeight = math.min(maxHeight, mapHeightLimit)
+    end
+    maxHeight = maxHeight + FACE_HEIGHT_MARGIN
+    local slope = getSurfaceSlope(fillTypeIndex)
+    return {
+        frontZ = -halfLength - FACE_APRON,
+        rearZ = halfLength + (spec.hasRearWall and wallCore or FACE_APRON),
+        outerHalfWidth = (spec.widthMeters or 0) * 0.5 + wallCore + PIXEL_MARGIN,
+        maxHeight = maxHeight,
+        slope = slope,
+        run = maxHeight / slope,
+        pixel = getDensityPixelSize(),
+    }
+end
+
+local function getFaceHeightTypes(bunkerSilo, fillTypeIndex)
+    local manager = g_densityMapHeightManager
+    local heightTypes = {}
+    if manager == nil then
+        return heightTypes
+    end
+    for _, fillType in ipairs(getRemovableFillTypes(bunkerSilo, fillTypeIndex)) do
+        local heightType = manager:getDensityMapHeightTypeByFillTypeIndex(fillType)
+        if heightType ~= nil then
+            table.insert(heightTypes, { index = heightType.index, liters = manager:getMinValidLiterValue(fillType) })
+        end
+    end
+    return heightTypes
+end
+
+function VariableBunkerStorage:findFaceStart(geometry, fillTypes)
+    local rootNode = self.placeable.rootNode
+    local z = geometry.frontZ
+    while z < geometry.rearZ do
+        local z1 = math.min(z + geometry.pixel, geometry.rearZ)
+        local level = getLocalAreaFillLevel(
+            rootNode,
+            geometry.outerHalfWidth,
+            -geometry.outerHalfWidth,
+            z1 + PIXEL_MARGIN,
+            z - PIXEL_MARGIN,
+            fillTypes
+        )
+        if level >= 0.001 then
+            return z - geometry.run
+        end
+        z = z1
+    end
+    return geometry.rearZ + geometry.run
+end
+
+function VariableBunkerStorage:cutFaceWindow(geometry, heightTypes, unitsPerMeter)
+    local rootNode = self.placeable.rootNode
+    local faceZ = self.faceZ
+    local fromZ = math.max(faceZ - geometry.pixel, geometry.frontZ)
+    local toZ = math.min(faceZ + geometry.run + geometry.pixel, geometry.rearZ)
+    local removed = 0
+    local row = math.floor((fromZ - geometry.frontZ) / geometry.pixel)
+    while true do
+        local z0 = geometry.frontZ + row * geometry.pixel
+        if z0 >= toZ then
+            break
+        end
+        local z1 = math.min(z0 + geometry.pixel, geometry.rearZ)
+        local cap = math.max((z0 + z1) * 0.5 - faceZ, 0) * geometry.slope
+        if cap < geometry.maxHeight then
+            local sx, sz, wx, wz, hx, hz = getLocalArea(
+                rootNode,
+                geometry.outerHalfWidth,
+                -geometry.outerHalfWidth,
+                z1 + PIXEL_MARGIN,
+                z0 - PIXEL_MARGIN
+            )
+            removed = removed + capHeapAtArea(sx, sz, wx, wz, hx, hz, math.floor(cap * unitsPerMeter), heightTypes)
+        end
+        row = row + 1
+    end
+    return removed
+end
+
+function VariableBunkerStorage:uncoverAtFace(bunkerSilo, geometry)
+    if bunkerSilo.state ~= BunkerSilo.STATE_DRAIN or bunkerSilo.onChangedFillLevelCallback == nil then
+        return
+    end
+    local rootNode = self.placeable.rootNode
+    local topZ = math.min(self.faceZ + geometry.run, geometry.rearZ)
+    local x, y, z = localToWorld(rootNode, 0, 0, topZ)
+    bunkerSilo:onChangedFillLevelCallback(nil, -1, bunkerSilo.outputFillType, x, y, z)
+    local fermentingFillType = bunkerSilo.fermentingFillType
+    if fermentingFillType ~= nil and fermentingFillType ~= bunkerSilo.outputFillType then
+        local sx, sz, wx, wz, hx, hz = getLocalArea(
+            rootNode,
+            geometry.outerHalfWidth,
+            -geometry.outerHalfWidth,
+            math.min(topZ + geometry.pixel, geometry.rearZ),
+            math.max(self.faceZ - geometry.pixel, geometry.frontZ)
+        )
+        DensityMapHeightUtil.changeFillTypeAtArea(sx, sz, wx, wz, hx, hz, fermentingFillType, bunkerSilo.outputFillType)
+    end
+end
+
 function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
     local bunkerSilo = getBunkerSilo(self.placeable)
+    local manager = g_densityMapHeightManager
     if
         bunkerSilo == nil
+        or manager == nil
         or not self:getIsOutputEnabled()
         or not self:getIsFillTypeAvailable(bunkerSilo, fillTypeIndex)
     then
@@ -1019,227 +1099,36 @@ function VariableBunkerStorage:removeMaterial(liters, fillTypeIndex)
     if fillTypeIndex == FillType.SILAGE then
         self:openFermentedSide(bunkerSilo)
     end
-    local bands = getBands(self)
-    local bandCount = #bands
-    if bandCount == 0 then
+    local geometry = self:getFaceGeometry(fillTypeIndex)
+    local heightTypes = getFaceHeightTypes(bunkerSilo, fillTypeIndex)
+    local unitsPerMeter = manager.heightToDensityValue or 0
+    if #heightTypes == 0 or unitsPerMeter <= 0 or getHeapModifiers() == nil then
         return 0
     end
-    local startIndex = math.min(self.outputBandIndex or bandCount, bandCount)
-    local index = startIndex
-    local moved = 0
-    local minRemovable = getMinRemovableLiters(fillTypeIndex)
-    local delivered = isDebug("extraction") and {} or nil
-    local walked = 0
-    local stoppedBelowMinimum = false
-    local passedOver = {}
-    local wrapped = false
-    for _ = 1, bandCount do
-        local band = bands[index]
-        walked = walked + 1
-        if fillTypeIndex == FillType.SILAGE then
-            openFermentedBand(bunkerSilo, band)
-        end
-        local offsetKey = band.outputOffsetKeys[fillTypeIndex]
-        if offsetKey == nil then
-            offsetKey = string.format("output_%d_%d", fillTypeIndex, index)
-            band.outputOffsetKeys[fillTypeIndex] = offsetKey
-        end
-        local offsetBefore = self.lineOffsets[offsetKey]
-        local removed = moveAtArea(self, band, liters - moved, fillTypeIndex, offsetKey, false)
-        if removed < 0.001 and moved < 0.001 and not wrapped then
-            table.insert(passedOver, index)
-        end
-        moved = moved + removed
-        if delivered ~= nil and removed >= 0.001 then
-            table.insert(
-                delivered,
-                string.format(
-                    "b%d:%.0f(%s>%s)",
-                    index,
-                    removed,
-                    debugOffset(offsetBefore),
-                    debugOffset(self.lineOffsets[offsetKey])
-                )
-            )
-        end
-        if liters - moved < 0.001 then
-            break
-        end
-        index = index - 1
-        if index < 1 then
-            index = bandCount
-            wrapped = true
-        end
-        if moved >= 0.001 and liters - moved < minRemovable then
-            stoppedBelowMinimum = true
-            index = startIndex
-            break
-        end
+    if self.faceZ == nil then
+        self.faceZ = self:findFaceStart(geometry, getRemovableFillTypes(bunkerSilo, fillTypeIndex))
     end
-    self.outputBandIndex = index
-    local lineMoved = moved
-    local residue = 0
-    if moved < 0.001 then
-        residue = self:removeResidue(bunkerSilo, bands, liters, fillTypeIndex)
-        moved = residue
-    end
-    local behindFace = self:removeBehindFace(bunkerSilo, bands, fillTypeIndex)
-    if lineMoved >= 0.001 then
-        behindFace = behindFace + self:removeStrandedBand(bunkerSilo, bands, passedOver, fillTypeIndex)
-    end
-    moved = moved + behindFace
-    if delivered ~= nil and (moved >= 0.001 or not self.debugFruitlessLogged) then
-        self.debugFruitlessLogged = moved < 0.001
-        debugLog(
-            "extraction",
-            "request %.0f, removed %.0f (line %.0f, residue %.0f, behind face %.0f), band %d -> %d, %d bands walked%s, delivered by %s",
-            liters,
-            moved,
-            moved - residue - behindFace,
-            residue,
-            behindFace,
-            startIndex,
-            index,
-            walked,
-            stoppedBelowMinimum and string.format(", stopped below %.0f l", minRemovable) or "",
-            #delivered > 0 and table.concat(delivered, " ") or "-"
-        )
-    end
-    return moved
-end
-
-function VariableBunkerStorage:removeBehindFace(bunkerSilo, bands, fillTypeIndex)
-    local spec = self.placeable.spec_VariableBunker
-    local rootNode = self.placeable.rootNode
-    local bandCount = #bands
-    local index = math.min(self.clearBandIndex or bandCount, bandCount)
-    if index < 1 then
-        return 0
-    end
-    local wallCore = getWallCore(self.placeable)
-    local halfWidth = bands[1].halfWidth
-    local centerHalfWidth = halfWidth * 0.5
-    local outerHalfWidth = halfWidth + wallCore + PIXEL_MARGIN
-    local fillTypes = getRemovableFillTypes(bunkerSilo, fillTypeIndex)
-    local doneLimit = CLEAR_DONE_LITERS_PER_METER * centerHalfWidth * 2
+    self:uncoverAtFace(bunkerSilo, geometry)
+    local endZ = geometry.rearZ + geometry.run
+    local step = 1 / unitsPerMeter / geometry.slope
     local removed = 0
-    local cleared = isDebug("extraction") and {} or nil
-    for _ = 1, CLEAR_BANDS_PER_CALL do
-        if index < 1 then
-            break
-        end
-        local band = bands[index]
-        local center =
-            getLocalAreaFillLevel(rootNode, centerHalfWidth, -centerHalfWidth, band.startZ, band.endZ, fillTypes)
-        if center >= doneLimit then
-            break
-        end
-        local startZ = band.startZ + PIXEL_MARGIN
-        if index == 1 and spec.hasRearWall then
-            startZ = band.startZ + wallCore + PIXEL_MARGIN
-        end
-        local bandRemoved =
-            removeLocalArea(rootNode, outerHalfWidth, -outerHalfWidth, startZ, band.endZ - PIXEL_MARGIN, fillTypes)
-        removed = removed + bandRemoved
-        if cleared ~= nil then
-            table.insert(cleared, string.format("b%d:%.0f", index, bandRemoved))
-        end
-        index = index - 1
+    local steps = 0
+    while removed < liters and self.faceZ < endZ and steps < FACE_MAX_STEPS do
+        self.faceZ = math.min(self.faceZ + step, endZ)
+        removed = removed + self:cutFaceWindow(geometry, heightTypes, unitsPerMeter)
+        steps = steps + 1
     end
-    self.clearBandIndex = index
-    if cleared ~= nil and #cleared > 0 then
-        debugLog("extraction", "behind face: bands cleared wall to wall %s", table.concat(cleared, " "))
-    end
+    debugLog(
+        "extraction",
+        "request %.0f, removed %.0f, face at %.2f m (%.2f to %.2f), %d steps",
+        liters,
+        removed,
+        self.faceZ,
+        geometry.frontZ,
+        endZ,
+        steps
+    )
     return removed
-end
-
-function VariableBunkerStorage:removeStrandedBand(bunkerSilo, bands, passedOver, fillTypeIndex)
-    if #passedOver == 0 then
-        return 0
-    end
-    local spec = self.placeable.spec_VariableBunker
-    local rootNode = self.placeable.rootNode
-    local wallCore = getWallCore(self.placeable)
-    local fillTypes = getRemovableFillTypes(bunkerSilo, fillTypeIndex)
-    local halfWidth = bands[1].halfWidth
-    local outerHalfWidth = halfWidth + wallCore + PIXEL_MARGIN
-    local doneLimit = CLEAR_DONE_LITERS_PER_METER * halfWidth * 2
-    for checked, index in ipairs(passedOver) do
-        if checked > STRANDED_CHECKS_PER_CALL then
-            break
-        end
-        local band = bands[index]
-        local startZ = band.startZ + PIXEL_MARGIN
-        if index == 1 and spec.hasRearWall then
-            startZ = band.startZ + wallCore + PIXEL_MARGIN
-        end
-        local endZ = band.endZ - PIXEL_MARGIN
-        if getLocalAreaFillLevel(rootNode, outerHalfWidth, -outerHalfWidth, startZ, endZ, fillTypes) >= doneLimit then
-            local removed = removeLocalArea(rootNode, outerHalfWidth, -outerHalfWidth, startZ, endZ, fillTypes)
-            debugLog(
-                "extraction",
-                "stranded: band %d lay in front of the face and gave nothing, cleared wall to wall, %.0f l removed",
-                index,
-                removed
-            )
-            return removed
-        end
-    end
-    return 0
-end
-
-function VariableBunkerStorage:removeResidue(bunkerSilo, bands, liters, fillTypeIndex)
-    local spec = self.placeable.spec_VariableBunker
-    local rootNode = self.placeable.rootNode
-    local fermentingFillType = fillTypeIndex == FillType.SILAGE and bunkerSilo.fermentingFillType or nil
-    local fillTypes = getRemovableFillTypes(bunkerSilo, fillTypeIndex)
-    local wallCore = getWallCore(self.placeable)
-    local moved = 0
-    local cleared = 0
-    local index = math.min(self.residueBandIndex or #bands, #bands)
-    while index >= 1 do
-        local band = bands[index]
-        local hasMaterial = getAreaFillLevel(band, fillTypeIndex) >= 0.001
-            or (fermentingFillType ~= nil and getAreaFillLevel(band, fermentingFillType) >= 0.001)
-        if hasMaterial then
-            if fermentingFillType ~= nil then
-                openFermentedBand(bunkerSilo, band)
-            end
-            local outerHalfWidth = band.halfWidth + wallCore + PIXEL_MARGIN
-            local startZ = band.startZ + PIXEL_MARGIN
-            if index == 1 and spec.hasRearWall then
-                startZ = band.startZ + wallCore + PIXEL_MARGIN
-            end
-            local endZ = band.endZ - PIXEL_MARGIN
-            local cellCount = math.max(math.ceil(outerHalfWidth * 2 / RESIDUE_CELL_WIDTH), 1)
-            local cellWidth = outerHalfWidth * 2 / cellCount
-            for cell = 1, cellCount do
-                local x0 = outerHalfWidth - (cell - 1) * cellWidth + PIXEL_MARGIN
-                local x1 = x0 - cellWidth - PIXEL_MARGIN * 2
-                if getLocalAreaFillLevel(rootNode, x0, x1, startZ, endZ, fillTypes) >= 0.001 then
-                    moved = moved + removeLocalArea(rootNode, x0, x1, startZ, endZ, fillTypes)
-                    cleared = cleared + 1
-                    if liters - moved < 0.001 then
-                        self.residueBandIndex = index
-                        debugLog(
-                            "extraction",
-                            "residue: band %d, %d cells cleared, %.0f l removed",
-                            index,
-                            cleared,
-                            moved
-                        )
-                        return moved
-                    end
-                end
-            end
-        end
-        index = index - 1
-    end
-    self.residueBandIndex = nil
-    if cleared > 0 then
-        debugLog("extraction", "residue: last cells cleared (%d), %.0f l removed", cleared, moved)
-    end
-    return moved
 end
 
 function VariableBunkerStorage:setReportedFillLevel(fillTypeIndex, fillLevel)
