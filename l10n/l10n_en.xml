@@ -17,7 +17,7 @@
         <text name="option_VariableBunkerAutoDriveOn" text="Generate automatically" />
         <text name="configuration_VariableBunkerEstimatedCapacity" text="Estimated capacity" />
         <text name="configuration_VariableBunkerTotalPrice" text="Total price" />
-        <text name="capacity_VariableBunkerMapLimit" text="map limit %s m" />
+        <text name="capacity_VariableBunkerMapLimit" text="Map limit %s m" />
         <text name="configuration_VariableBunkerInput" text="Unloading" />
         <text name="configuration_VariableBunkerOutput" text="Loading" />
         <text name="option_VariableBunkerStationOff" text="Off" />
@@ -33,8 +33,8 @@
         <text name="info_VariableBunkerCompaction" text="Compaction" />
         <text name="info_VariableBunkerFermentation" text="Fermentation" />
         <text name="info_VariableBunkerStatus" text="Status" />
-        <text name="info_VariableBunkerRemainingHours" text="%d h left" />
-        <text name="info_VariableBunkerRemainingDays" text="%d d %d h left" />
+        <text name="info_VariableBunkerRemainingHours" text="Remaining: %d h" />
+        <text name="info_VariableBunkerRemainingDays" text="Remaining: %d d %d h" />
         <text name="status_VariableBunkerFill" text="Fill" />
         <text name="status_VariableBunkerCompact" text="Compact" />
         <text name="status_VariableBunkerCover" text="Cover" />

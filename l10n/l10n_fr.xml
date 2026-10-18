@@ -17,7 +17,7 @@
         <text name="option_VariableBunkerAutoDriveOn" text="Générer automatiquement" />
         <text name="configuration_VariableBunkerEstimatedCapacity" text="Capacité estimée" />
         <text name="configuration_VariableBunkerTotalPrice" text="Prix total" />
-        <text name="capacity_VariableBunkerMapLimit" text="limite de carte %s m" />
+        <text name="capacity_VariableBunkerMapLimit" text="Limite de carte %s m" />
         <text name="configuration_VariableBunkerInput" text="Point de déchargement" />
         <text name="configuration_VariableBunkerOutput" text="Point de chargement" />
         <text name="option_VariableBunkerStationOff" text="Désactivé" />
@@ -33,8 +33,8 @@
         <text name="info_VariableBunkerCompaction" text="Compactage" />
         <text name="info_VariableBunkerFermentation" text="Fermentation" />
         <text name="info_VariableBunkerStatus" text="État" />
-        <text name="info_VariableBunkerRemainingHours" text="encore %d h" />
-        <text name="info_VariableBunkerRemainingDays" text="encore %d j %d h" />
+        <text name="info_VariableBunkerRemainingHours" text="Reste : %d h" />
+        <text name="info_VariableBunkerRemainingDays" text="Reste : %d j %d h" />
         <text name="status_VariableBunkerFill" text="Remplir" />
         <text name="status_VariableBunkerCompact" text="Compacter" />
         <text name="status_VariableBunkerCover" text="Couvrir" />

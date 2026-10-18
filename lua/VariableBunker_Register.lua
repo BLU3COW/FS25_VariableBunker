@@ -510,11 +510,12 @@ local function getCapacityText(screen, storeItem)
     local text = "~ " .. g_i18n:formatNumber(liters, 0, true) .. " l"
     if mapHeightLimit ~= nil and selectedHeight > mapHeightLimit + 0.01 then
         text = text
-            .. ", "
+            .. " ("
             .. string.format(
                 g_i18n:getText("capacity_VariableBunkerMapLimit"),
                 g_i18n:formatNumber(mapHeightLimit, 1, true)
             )
+            .. ")"
     end
     return text
 end
