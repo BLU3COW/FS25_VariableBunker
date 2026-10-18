@@ -8,8 +8,7 @@
     </title>
 
     <description>
-        <en><![CDATA[VariableBunker
-Category: Grain silos
+        <en><![CDATA[Category: Grain silos
 Price: $100 per m² of interior floor (40 × 60 × 4 m: $240,000)
 Daily upkeep: 0.1 % of the price (40 × 60 × 4 m: $240)
 
@@ -41,8 +40,7 @@ Options:
 While you are at the silo, an info box shows the fill level, compaction, fermentation and the next step.
 
 The settings file modSettings/FS25_VariableBunker.xml is created after the first start. It can allow wall heights above 4 meters for maps with a higher fill limit, switch the floor grid, the loading point and the compaction service on or off, set the compaction price in percent and the silo price per square meter, and hide the info box. In multiplayer, the host settings apply.]]></en>
-        <de><![CDATA[VariableBunker
-Shopkategorie: Getreidesilos
+        <de><![CDATA[Shopkategorie: Getreidesilos
 Preis: 100€ je m² Innenfläche (40 × 60 × 4 m: 240.000€)
 Täglicher Unterhalt: 0,1 % des Preises (40 × 60 × 4 m: 240€)
 
@@ -74,8 +72,7 @@ Optionen:
 Am Silo zeigt eine Infobox Füllstand, Verdichtung, Gärung und den nächsten Schritt.
 
 Die Einstellungsdatei modSettings/FS25_VariableBunker.xml wird nach dem ersten Start erstellt. Darin lassen sich Wandhöhen über 4 Meter für Karten mit höherer Füllgrenze freischalten, Bodengitter, Ladestelle und Verdichtungsservice ein- oder ausschalten, der Preis des Verdichtungsservice in Prozent sowie der Silopreis je Quadratmeter festlegen und die Infobox ausblenden. Im Mehrspieler gelten die Einstellungen des Hosts.]]></de>
-        <fr><![CDATA[VariableBunker
-Catégorie: Silos à grains
+        <fr><![CDATA[Catégorie: Silos à grains
 Prix: 100€ par m² de surface intérieure (40 × 60 × 4 m : 240 000€)
 Entretien quotidien: 0,1 % du prix (40 × 60 × 4 m : 240€)
 
